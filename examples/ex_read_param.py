@@ -1,13 +1,20 @@
-# Read parameter 1107, Maximum current of AC source, (Modbus register 14) from the first Xtender
+# First check the version compatibility, then read the serial number, the modbus tcp port and earthing
+# scheme relay status.
 # Run this example within the 'examples/' folder using 'python ex_read_param.py' from a CLI after installing
-#   xcom485i package with 'pip install xcom485i'
+# nxmodbus package with 'pip install nxmodbus'
 
 import serial
-from xcom485i.client import Xcom485i
+import sys
+import os
 
-SERIAL_PORT_NAME = 'COM4'  # your serial port interface name
-SERIAL_PORT_BAUDRATE = 9600  # baudrate used by your serial interface
-DIP_SWITCHES_ADDRESS_OFFSET = 0  # your modbus address offset as set inside the Xcom485i device
+sys.path.append(os.path.abspath('..'))
+from nxmodbus.client import NextModbus
+from nxmodbus.proptypes import PropType
+
+SERIAL_PORT_NAME = 'COM4'       # your serial port interface name
+SERIAL_PORT_BAUDRATE = 9600     # baudrate used by your serial interface
+ADDRESS_OFFSET = 0              # your modbus address offset as set inside the Next system
+INSTANCE = 0                    # The instance of the requested device
 
 if __name__ == "__main__":
     try:
@@ -15,21 +22,27 @@ if __name__ == "__main__":
     except serial.serialutil.SerialException as e:
         print("Check your serial configuration : ", e)
     else:
-        xcom485i = Xcom485i(serial_port, DIP_SWITCHES_ADDRESS_OFFSET, debug=True)
+        nextModbus = NextModbus(serial_port, ADDRESS_OFFSET, debug=False)
 
-        # read actual value stored into flash memory
-        read_value = xcom485i.read_parameter(xcom485i.addresses.xt_1_device_id,
-                                             14 + xcom485i.addresses.read_param_flash_offset)
-        print('read_value:', read_value)
+        # check the version
+        if not nextModbus.check_version():
+            print("WARNING : The version is not correct")
 
-        # read minimum value of this parameter
-        read_value = xcom485i.read_parameter(xcom485i.addresses.xt_1_device_id,
-                                             14 + xcom485i.addresses.read_param_min_offset)
-        assert read_value == 2.0  # only for 1107 parameter
-        print('read_min_value:', read_value)
+        # Read the serial number
+        read_value = nextModbus.read_parameter( nextModbus.addresses.device_address_nextgateway + INSTANCE,
+                                                nextModbus.addresses.nextgateway_idcard_serialnumber,
+                                                PropType.STRING,
+                                                8)
+        print('Serial number:', read_value)
 
-        # read maximum value of this parameter
-        read_value = xcom485i.read_parameter(xcom485i.addresses.xt_1_device_id,
-                                             14 + xcom485i.addresses.read_param_max_offset)
-        assert read_value == 50.0  # only for 1107 parameter
-        print('read_max_value:', read_value)
+        # Read the modbus TCP port used by the TCP modbus server
+        read_value = nextModbus.read_parameter( nextModbus.addresses.device_address_nextgateway + INSTANCE,
+                                                nextModbus.addresses.nextgateway_modbus_modbustcpport,
+                                                PropType.UINT)
+        print('Modbus TCP port:', read_value)
+
+        # Read the Earthing relay status
+        read_value = nextModbus.read_parameter( nextModbus.addresses.device_address_system,
+                                                nextModbus.addresses.system_earthingscheme_relayisclosed,
+                                                PropType.BOOL)
+        print('Earthing scheme relay status:', read_value)
