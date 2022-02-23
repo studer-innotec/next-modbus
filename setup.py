@@ -8,9 +8,9 @@ current_directory = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(current_directory, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
-name = "xcom485i"
-version = "0.9"
-release = "0.9.1"
+name = "nxmodbus"
+version = "0.1"
+release = "0.1.1"
 
 setuptools.setup(
     name=name,
@@ -18,14 +18,14 @@ setuptools.setup(
     author="Studer Innotec SA",
     author_email="develop@studer-innotec.com",  # create a dev general email
     maintainer_email="develop@studer-innotec.com",
-    description="Package that let easily interact with the Xcom-485i device over Modbus RTU",
+    description="Package that let easily interact with the Next devices over Modbus RTU",
     long_description=long_description,
     long_description_content_type="text/x-rst",
-    url="https://github.com/studer-innotec/xcom485i",
+    url="https://github.com/studer-innotec/nxmodbus",
     project_urls={
-        "Documentation": "https://xcom485i.readthedocs.io/en/latest/index.html",
-        "Issues tracker": "https://github.com/studer-innotec/xcom485i/issues",
-        "Source Code": "https://github.com/studer-innotec/xcom485i",
+        "Documentation": "https://nxmodbus.readthedocs.io/en/latest/index.html",
+        "Issues tracker": "https://github.com/studer-innotec/nxmodbus/issues",
+        "Source Code": "https://github.com/studer-innotec/nxmodbus",
     },
     packages=setuptools.find_packages(),
     include_package_data=True,

@@ -1,11 +1,11 @@
 .. _client:
 
-**xcom485i.client** *module*
+**nxmodbus.client** *module*
 ====================================
 
-.. automodule:: xcom485i.client
+.. automodule:: nxmodbus.client
    :members:
    :undoc-members:
    :show-inheritance:
 
-   .. automethod:: Xcom485i.__init__
+   .. automethod:: nxmodbus.__init__

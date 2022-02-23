@@ -1,9 +1,9 @@
 .. _addresses:
 
-**xcom485i.addresses** *module*
+**nxmodbus.addresses** *module*
 ====================================
 
-.. automodule:: xcom485i.addresses
+.. automodule:: nxmodbus.addresses
    :members:
    :undoc-members:
    :show-inheritance:
