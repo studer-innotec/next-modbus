@@ -8,4 +8,4 @@
    :undoc-members:
    :show-inheritance:
 
-   .. automethod:: nxmodbus.__init__
+   .. automethod:: NextModbus.__init__
