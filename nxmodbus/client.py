@@ -345,7 +345,7 @@ class NextModbus:
         Returns
         -------
         bool
-            True if the addresses class version is same as the nx-gateway.
+            True if the addresses class version is same as the nx-gateway (minor and major).
 
         See also
         --------

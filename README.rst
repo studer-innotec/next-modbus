@@ -21,9 +21,7 @@ Getting Started
 2. Hardware installation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-- Connect your *Next-Modbus* (Studer side) to your installation using the cable provided with the device
-- Connect your *Next-Modbus* (External side) to your controller (personal computer, Raspberry Pi, etc.) using a *USB* to *RS-485* adapter
-- Please refer to the *Next-Modbus* manual for more information about commissioning the device
+- Connect your Next installation through a Next gateway (e.g. nx-interface) to your controller (personal computer, Raspberry Pi, etc.) using a *USB* to *RS-485* adapter
 
 3. Serial configuration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -59,7 +57,7 @@ Warnings
 ----------------
 
 - **Use** devices addresses generated into `addresses file`_
-- It is strongly recommended **NOT** to spam the *nxmodbus* with multiple requests. The correct way to communicate with the *nxmodbus* is to send a request and to **wait** for the response before sending the next request. If no response comes from the *nxmodbus* after a delay of 1 second, we can consider that the timeout is over and another request can be send. It is also how *Modbus RTU* is intended to work.
+- It is strongly recommended **NOT** to spam the *Next gateway* with multiple requests. The correct way to communicate with the *Next gateway* is to send a request and to **wait** for the response before sending the next request. If no response comes from the *nxmodbus* after a delay of 1 second, we can consider that the timeout is over and another request can be send. It is also how *Modbus RTU* is intended to work.
 
 Authors
 ----------------
