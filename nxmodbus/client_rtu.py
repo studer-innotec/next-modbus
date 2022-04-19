@@ -11,7 +11,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class NextModbus:
+class NextModbusRtu:
     """
     This class act as a *Modbus* master in order to communicate with the *Next* gateway (slave)
 
@@ -287,7 +287,6 @@ class NextModbus:
         elif prop_type == PropType.UINT:
             size = 2
             ba = pack('>I', value)
-            print(ba)
         elif prop_type == PropType.INT64:
             size = 4
             ba = pack('>q', value)
