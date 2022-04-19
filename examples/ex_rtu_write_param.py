@@ -1,14 +1,14 @@
 # First check the version compatibility, then write the HMI display brightness, the GUI unlock code and 
 # the nominal frequency of the tri-phased inverters.
-# Run this example within the 'examples/' folder using 'python ex_write_param.py' from a CLI after installing
-#   nxmodbus package with 'pip install nxmodbus'
+# Run this example within the 'examples/' folder using 'python ex_rtu_write_param.py' from a CLI after installing
+# nxmodbus package with 'pip install nxmodbus'
 
 import serial
 import sys
 import os
 
 sys.path.append(os.path.abspath('..'))
-from nxmodbus.client import NextModbus
+from nxmodbus.client_rtu import NextModbusRtu
 from nxmodbus.proptypes import PropType
 
 SERIAL_PORT_NAME = 'COM4'       # your serial port interface name
@@ -22,7 +22,7 @@ if __name__ == "__main__":
     except serial.serialutil.SerialException as e:
         print("Check your serial configuration : ", e)
     else:
-        nextModbus = NextModbus(serial_port, ADDRESS_OFFSET, debug=False)
+        nextModbus = NextModbusRtu(serial_port, ADDRESS_OFFSET, debug=False)
 
         value = 20  # Brightness level at 10
         echo = nextModbus.write_parameter(  nextModbus.addresses.device_address_nextgateway + INSTANCE,

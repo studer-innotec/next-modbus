@@ -9,8 +9,8 @@ with open(os.path.join(current_directory, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 name = "nxmodbus"
-version = "0.1"
-release = "0.1.1"
+version = "0.2"
+release = "0.2.0"
 
 setuptools.setup(
     name=name,
@@ -40,7 +40,7 @@ setuptools.setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     python_requires='>=3.6.8',
-    install_requires=['uModbus==1.0.3', 'pyserial>=3.4'],
+    install_requires=['uModbus==1.0.3', 'pyserial>=3.4', 'pyModbusTCP==0.1.10'],
     # these are optional and override conf.py settings
     command_options={
         'build_sphinx': {

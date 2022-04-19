@@ -21,7 +21,9 @@ Getting Started
 2. Hardware installation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-- Connect your Next installation through a Next gateway (e.g. nx-interface) to your controller (personal computer, Raspberry Pi, etc.) using a *USB* to *RS-485* adapter
+- Connect your Next installation through a Next gateway (e.g. nx-interface) to your controller (personal computer, Raspberry Pi, etc.)
+  - (RTU) using a *USB* to *RS-485* adapter.
+  - (TCP) using the Ethernet interface connecting to your local area network.
 
 3. Serial configuration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -44,7 +46,8 @@ Go to */examples* folder with a terminal and execute this script
 
 .. code-block:: console
 
-    $ python ex_read_param.py
+    $ python ex_rtu_read_param.py
+    $ python ex_tcp_read_param.py
 
 Check `client file`_ to understand it.
 

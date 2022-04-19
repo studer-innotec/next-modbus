@@ -1,6 +1,6 @@
 # First check the version compatibility, then read the serial number, the modbus tcp port and earthing
 # scheme relay status.
-# Run this example within the 'examples/' folder using 'python ex_read_param.py' from a CLI after installing
+# Run this example within the 'examples/' folder using 'python ex_rtu_read_param.py' from a CLI after installing
 # nxmodbus package with 'pip install nxmodbus'
 
 import serial
@@ -8,7 +8,7 @@ import sys
 import os
 
 sys.path.append(os.path.abspath('..'))
-from nxmodbus.client import NextModbus
+from nxmodbus.client_rtu import NextModbusRtu
 from nxmodbus.proptypes import PropType
 
 SERIAL_PORT_NAME = 'COM4'       # your serial port interface name
@@ -22,7 +22,7 @@ if __name__ == "__main__":
     except serial.serialutil.SerialException as e:
         print("Check your serial configuration : ", e)
     else:
-        nextModbus = NextModbus(serial_port, ADDRESS_OFFSET, debug=False)
+        nextModbus = NextModbusRtu(serial_port, ADDRESS_OFFSET, debug=False)
 
         # check the version
         if not nextModbus.check_version():
