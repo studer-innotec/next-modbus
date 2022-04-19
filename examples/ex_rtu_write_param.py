@@ -24,6 +24,10 @@ if __name__ == "__main__":
     else:
         nextModbus = NextModbusRtu(serial_port, ADDRESS_OFFSET, debug=False)
 
+        # check the version
+        if not nextModbus.check_version():
+            print("WARNING : The version is not correct")
+
         value = True  # Earthing scheme disable check at TRUE
         echo = nextModbus.write_parameter(  nextModbus.addresses.device_address_system + INSTANCE,
                                             nextModbus.addresses.system_earthingscheme_disablecheck,

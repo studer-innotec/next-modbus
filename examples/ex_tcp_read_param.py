@@ -18,6 +18,7 @@ SERVER_PORT = 502                                       # listening port of nx-i
 if __name__ == "__main__":
 
     nextModbus = NextModbusTcp(SERVER_HOST, SERVER_PORT, ADDRESS_OFFSET, False)
+    
     # check the version
     if not nextModbus.check_version():
         print("WARNING : The version is not correct")

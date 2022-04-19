@@ -18,6 +18,10 @@ SERVER_PORT = 502                                       # listening port of nx-i
 if __name__ == "__main__":
 
     nextModbus = NextModbusTcp(SERVER_HOST, SERVER_PORT, ADDRESS_OFFSET, debug=False)
+    
+    # check the version
+    if not nextModbus.check_version():
+        print("WARNING : The version is not correct")
 
     value = True  # Earthing scheme disable check at TRUE
     ok = nextModbus.write_parameter(nextModbus.addresses.device_address_system + INSTANCE,
