@@ -83,7 +83,7 @@ class NextModbusRtu:
 
             # First check the version compatibility, then read the serial number, the modbus tcp port and earthing
             # scheme relay status.
-            # Run this example within the 'examples/' folder using 'python ex_read_param.py' from a CLI after installing
+            # Run this example within the 'examples/' folder using 'python ex_rtu_read_param.py' from a CLI after installing
             # nxmodbus package with 'pip install nxmodbus'
 
             import serial
@@ -229,8 +229,8 @@ class NextModbusRtu:
 
             # First check the version compatibility, then write the HMI display brightness, the GUI unlock code and 
             # the nominal frequency of the tri-phased inverters.
-            # Run this example within the 'examples/' folder using 'python ex_write_param.py' from a CLI after installing
-            #   nxmodbus package with 'pip install nxmodbus'
+            # Run this example within the 'examples/' folder using 'python ex_rtu_write_param.py' from a CLI after installing
+            # nxmodbus package with 'pip install nxmodbus'
 
             import serial
             import sys
@@ -357,5 +357,7 @@ class NextModbusRtu:
         unpack('>HH', ba)
         omv_major = ba[0] << 8 | ba[1]
         omv_minor = ba[2] << 8 | ba[3]
+        logger.debug("-> Gateway OMV version : %s.%s", omv_major, omv_minor)
+        logger.debug("-> Class OMV version : %s.%s", self.addresses.version_major, self.addresses.version_minor)
         return omv_major == self.addresses.version_major and \
                 omv_minor == self.addresses.version_minor

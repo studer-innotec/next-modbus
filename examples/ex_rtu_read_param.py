@@ -1,6 +1,6 @@
 # First check the version compatibility, then read the serial number, the modbus tcp port and earthing
 # scheme relay status.
-# Run this example within the 'examples/' folder using 'python ex_read_param.py' from a CLI after installing
+# Run this example within the 'examples/' folder using 'python ex_rtu_read_param.py' from a CLI after installing
 # nxmodbus package with 'pip install nxmodbus'
 
 import serial

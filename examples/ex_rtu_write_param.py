@@ -1,7 +1,7 @@
 # First check the version compatibility, then write the HMI display brightness, the GUI unlock code and 
 # the nominal frequency of the tri-phased inverters.
-# Run this example within the 'examples/' folder using 'python ex_write_param.py' from a CLI after installing
-#   nxmodbus package with 'pip install nxmodbus'
+# Run this example within the 'examples/' folder using 'python ex_rtu_write_param.py' from a CLI after installing
+# nxmodbus package with 'pip install nxmodbus'
 
 import serial
 import sys
