@@ -1,7 +1,7 @@
 Package **nxmodbus**
 =========================
 
-Python library to access Studer-Innotec Next devices through Modbus RTU over a serial port
+Python library to access Studer-Innotec Next devices through Modbus RTU/TCP.
 
 Prerequisites
 ----------------
@@ -22,8 +22,8 @@ Getting Started
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 - Connect your Next installation through a Next gateway (e.g. nx-interface) to your controller (personal computer, Raspberry Pi, etc.)
-  - (RTU) using a *USB* to *RS-485* adapter.
-  - (TCP) using the Ethernet interface connecting to your local area network.
+    - (RTU) using a *USB* to *RS-485* adapter.
+    - (TCP) using the Ethernet interface connecting to your local area network.
 
 3. Serial configuration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -74,8 +74,9 @@ This project is licensed under the MIT License - see the `LICENSE`_ file for det
 
 .. External References:
 .. _Studer Innotec SA: https://www.studer-innotec.com
-.. _addresses file: https://nxmodbus.readthedocs.io/en/latest/addresses.html
-.. _client file: https://nxmodbus.readthedocs.io/en/latest/client.html
-.. _Read The Docs: https://nxmodbus.readthedocs.io/en/latest/index.html
-.. _LICENSE: https://nxmodbus.readthedocs.io/en/latest/license.html
+.. _addresses file: https://next-modbus.readthedocs.io/en/latest/addresses.html
+.. _client_rtu file: https://next-modbus.readthedocs.io/en/latest/client_rtu.html
+.. _client_tcp file: https://next-modbus.readthedocs.io/en/latest/client_tcp.html
+.. _Read The Docs: https://next-modbus.readthedocs.io/en/latest/index.html
+.. _LICENSE: https://next-modbus.readthedocs.io/en/latest/license.html
 .. _pyserial: https://pyserial.readthedocs.io/en/latest/shortintro.html
