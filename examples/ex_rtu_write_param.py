@@ -24,6 +24,14 @@ if __name__ == "__main__":
     else:
         nextModbus = NextModbusRtu(serial_port, ADDRESS_OFFSET, debug=False)
 
+        value = True  # Earthing scheme disable check at TRUE
+        echo = nextModbus.write_parameter(  nextModbus.addresses.device_address_system + INSTANCE,
+                                            nextModbus.addresses.system_earthingscheme_disablecheck,
+                                            value,
+                                            PropType.BOOL)
+        assert echo == 1  # a value of 1 is expected on write action, represent the number of registers written
+        print('Number of registers written:', echo)
+
         value = 20  # Brightness level at 10
         echo = nextModbus.write_parameter(  nextModbus.addresses.device_address_nextgateway + INSTANCE,
                                             nextModbus.addresses.nextgateway_hmidisplay_brightness,

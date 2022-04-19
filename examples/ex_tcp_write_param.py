@@ -19,6 +19,16 @@ if __name__ == "__main__":
 
     nextModbus = NextModbusTcp(SERVER_HOST, SERVER_PORT, ADDRESS_OFFSET, debug=False)
 
+    value = True  # Earthing scheme disable check at TRUE
+    ok = nextModbus.write_parameter(nextModbus.addresses.device_address_system + INSTANCE,
+                                    nextModbus.addresses.system_earthingscheme_disablecheck,
+                                    value,
+                                    PropType.BOOL)
+    if ok:
+        print('Disable check written successfully')
+    else:
+        print('Error when writing disable check')
+
     value = 10  # Brightness level at 10
     ok = nextModbus.write_parameter(nextModbus.addresses.device_address_nextgateway + INSTANCE,
                                     nextModbus.addresses.nextgateway_hmidisplay_brightness,
