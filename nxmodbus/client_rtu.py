@@ -361,11 +361,12 @@ class NextModbusRtu:
         omv_remote = self.read_parameter(self.addresses.device_address_nextgateway, 
                                             self.addresses.nextgateway_idcard_objectmodelversion,
                                             PropType.UINT)
-        ba = pack('>I', omv_remote)
-        unpack('>HH', ba)
-        omv_major = ba[0] << 8 | ba[1]
-        omv_minor = ba[2] << 8 | ba[3]
-        logger.debug("-> Gateway OMV version : %s.%s", omv_major, omv_minor)
-        logger.debug("-> Class OMV version : %s.%s", self.addresses.version_major, self.addresses.version_minor)
-        return omv_major == self.addresses.version_major and \
-                omv_minor == self.addresses.version_minor
+        if omv_remote is not None:
+            ba = pack('>I', omv_remote)
+            unpack('>HH', ba)
+            omv_major = ba[0] << 8 | ba[1]
+            omv_minor = ba[2] << 8 | ba[3]
+            logger.debug("--> Gateway OMV version : %s.%s", omv_major, omv_minor)
+            logger.debug("--> Class OMV version : %s.%s", self.addresses.version_major, self.addresses.version_minor)
+            return omv_major == self.addresses.version_major and \
+                    omv_minor == self.addresses.version_minor
