@@ -288,7 +288,7 @@ class NextModbusRtu:
         """
         if prop_type == PropType.BOOL or prop_type == PropType.SIGNAL:
             size = 1
-            ba = pack('>?', value)
+            ba = b'\x00' + pack('>?', value)
         elif prop_type == PropType.INT:
             size = 2
             ba = pack('>i', value)
