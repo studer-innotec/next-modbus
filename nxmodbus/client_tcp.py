@@ -151,6 +151,8 @@ class NextModbusTcp:
                 prop_type == PropType.FLOAT64:
             size = 4
         self.client.unit_id(slave_id)
+        if not self.client.is_open():
+            self.client.open()
         try:
             response = self.client.read_holding_registers(reg_addr=address, reg_nb=size)
         except (ValueError, KeyError) as e:
@@ -272,7 +274,7 @@ class NextModbusTcp:
         """
         if prop_type == PropType.BOOL or prop_type == PropType.SIGNAL:
             size = 1
-            ba = pack('>?', value)
+            ba = b'\x00' + pack('>?', value)
         elif prop_type == PropType.INT:
             size = 2
             ba = pack('>i', value)
@@ -305,6 +307,8 @@ class NextModbusTcp:
         registers = unpack(unpack_format, ba)
 
         self.client.unit_id(slave_id)
+        if not self.client.is_open():
+            self.client.open()
         try:
             response = self.client.write_multiple_registers(regs_addr=address, regs_value=registers)
         except (ValueError, KeyError) as e:
