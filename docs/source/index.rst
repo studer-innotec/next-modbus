@@ -22,6 +22,7 @@ This documentation will let you know how to interact with your Next devices usin
    :caption: Files
 
    addresses
-   client
+   client_rtu
+   client_tcp
    changelog
 
