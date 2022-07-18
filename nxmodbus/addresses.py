@@ -7,7 +7,7 @@ class Addresses:
     """
     def __init__(self, offset):
         self.version_major = 10
-        self.version_minor = 0
+        self.version_minor = 16
 
         self.deviceAddressDefault = offset + 1
         self.device_address_system = offset + 1;
@@ -103,6 +103,7 @@ class Addresses:
         self.system_triphaseinverter_errorobservationperiod = self.system_triphaseinverter_start_address + 116;
         self.system_triphaseinverter_insmstrength = self.system_triphaseinverter_start_address + 132;
         self.system_triphaseinverter_status = self.system_triphaseinverter_start_address + 134;
+        self.system_triphaseinverter_phaseexistance = self.system_triphaseinverter_start_address + 136;
 
         # Object InverterL1 Modbus Address
         self.system_inverterl1_start_address = 3000;
@@ -444,7 +445,11 @@ class Addresses:
         self.system_systemtotal_acsourcedayproducedenergy = self.system_systemtotal_start_address + 16;
         self.system_systemtotal_errorshalted = self.system_systemtotal_start_address + 18;
         self.system_systemtotal_errorsrestartingorhalted = self.system_systemtotal_start_address + 20;
+        self.system_systemtotal_cmdentryidxforemergencystop = self.system_systemtotal_start_address + 22;
+        self.system_systemtotal_acsourcenbr = self.system_systemtotal_start_address + 24;
         self.system_systemtotal_consummersdayconsumedenergy = self.system_systemtotal_start_address + 26;
+        self.system_systemtotal_acflexloadnbr = self.system_systemtotal_start_address + 28;
+        self.system_systemtotal_status = self.system_systemtotal_start_address + 30;
 
         # Object BatteryCommonAll Modbus Address
         self.system_batterycommonall_start_address = 8400;
@@ -521,6 +526,12 @@ class Addresses:
         self.battery_battery_forcedtargetchargingcurrent = self.battery_battery_start_address + 72;
         self.battery_battery_limitslevel = self.battery_battery_start_address + 74;
         self.battery_battery_setpointslevel = self.battery_battery_start_address + 76;
+        self.battery_battery_adaptivesocforbackupundervoltageincrement = self.battery_battery_start_address + 111;
+        self.battery_battery_allowperiodicalfullcharge = self.battery_battery_start_address + 113;
+        self.battery_battery_waitingtimebetweenperiodicalfullcharge = self.battery_battery_start_address + 114;
+        self.battery_battery_timefullychargedbeforeresetingperiodicalfullcharge = self.battery_battery_start_address + 116;
+        self.battery_battery_socforendofdischargeinpercent = self.battery_battery_start_address + 118;
+        self.battery_battery_cmdentryidxtoprohibitcharging = self.battery_battery_start_address + 120;
 
         # Object BatteryCycle Modbus Address
         self.battery_batterycycle_start_address = 600;
@@ -714,7 +725,6 @@ class Addresses:
         self.acsource_source_compensateloaddccurrent = self.acsource_source_start_address + 17;
         self.acsource_source_enablefastenvelopedetection = self.acsource_source_start_address + 20;
         self.acsource_source_envelopetolerance = self.acsource_source_start_address + 21;
-        self.acsource_source_enabledantiislanding = self.acsource_source_start_address + 23;
         self.acsource_source_antiislandingdetectionlevel = self.acsource_source_start_address + 24;
         self.acsource_source_antiislandingfrequency = self.acsource_source_start_address + 26;
         self.acsource_source_antiislandingperturbationamplitude = self.acsource_source_start_address + 28;
@@ -817,6 +827,10 @@ class Addresses:
         self.acsource_source_usetriphasetargetactivepower = self.acsource_source_start_address + 229;
         self.acsource_source_targetactivepowerperphase = self.acsource_source_start_address + 230;
         self.acsource_source_setpointslevel = self.acsource_source_start_address + 232;
+        self.acsource_source_phaseexistance = self.acsource_source_start_address + 240;
+        self.acsource_source_antiislanding = self.acsource_source_start_address + 242;
+        self.acsource_source_antiislandingrocofthreshold = self.acsource_source_start_address + 244;
+        self.acsource_source_antiislandingrocofoperatetime = self.acsource_source_start_address + 246;
 
         # Object L1Source Modbus Address
         self.acsource_l1source_start_address = 1800;
@@ -994,6 +1008,7 @@ class Addresses:
         self.acflexload_l1flexloadcontrrelay_presetsolarexcessoffgridpowdeactth = self.acflexload_l1flexloadcontrrelay_start_address + 39;
         self.acflexload_l1flexloadcontrrelay_presetcmdentryidx = self.acflexload_l1flexloadcontrrelay_start_address + 41;
         self.acflexload_l1flexloadcontrrelay_preseterrorwarningselect = self.acflexload_l1flexloadcontrrelay_start_address + 43;
+        self.acflexload_l1flexloadcontrrelay_presetonsourceselect = self.acflexload_l1flexloadcontrrelay_start_address + 45;
 
         # Object L2FlexLoadContrRelay Modbus Address
         self.acflexload_l2flexloadcontrrelay_start_address = 1500;
@@ -1019,6 +1034,7 @@ class Addresses:
         self.acflexload_l2flexloadcontrrelay_presetsolarexcessoffgridpowdeactth = self.acflexload_l2flexloadcontrrelay_start_address + 39;
         self.acflexload_l2flexloadcontrrelay_presetcmdentryidx = self.acflexload_l2flexloadcontrrelay_start_address + 41;
         self.acflexload_l2flexloadcontrrelay_preseterrorwarningselect = self.acflexload_l2flexloadcontrrelay_start_address + 43;
+        self.acflexload_l2flexloadcontrrelay_presetonsourceselect = self.acflexload_l2flexloadcontrrelay_start_address + 45;
 
         # Object L3FlexLoadContrRelay Modbus Address
         self.acflexload_l3flexloadcontrrelay_start_address = 1800;
@@ -1044,6 +1060,7 @@ class Addresses:
         self.acflexload_l3flexloadcontrrelay_presetsolarexcessoffgridpowdeactth = self.acflexload_l3flexloadcontrrelay_start_address + 39;
         self.acflexload_l3flexloadcontrrelay_presetcmdentryidx = self.acflexload_l3flexloadcontrrelay_start_address + 41;
         self.acflexload_l3flexloadcontrrelay_preseterrorwarningselect = self.acflexload_l3flexloadcontrrelay_start_address + 43;
+        self.acflexload_l3flexloadcontrrelay_presetonsourceselect = self.acflexload_l3flexloadcontrrelay_start_address + 45;
 
         # Object L1FlexLoadTimeCtrl Modbus Address
         self.acflexload_l1flexloadtimectrl_start_address = 2100;
@@ -1107,6 +1124,11 @@ class Addresses:
         self.acflexload_l3flexloadtimectrl_endingdate = self.acflexload_l3flexloadtimectrl_start_address + 30;
         self.acflexload_l3flexloadtimectrl_nbrofoccurrences = self.acflexload_l3flexloadtimectrl_start_address + 32;
         self.acflexload_l3flexloadtimectrl_resettimecontrolled = self.acflexload_l3flexloadtimectrl_start_address + 34;
+
+        # Object FlexLoad Modbus Address
+        self.acflexload_flexload_start_address = 3000;
+        self.acflexload_flexload_phaseexistance = self.acflexload_flexload_start_address + 0;
+        self.acflexload_flexload_allowindividualphaseoperation = self.acflexload_flexload_start_address + 2;
 
 
         # Group Next3 Modbus Address
@@ -1304,6 +1326,7 @@ class Addresses:
         self.next3_relayaux1_presetsolarexcessoffgridpowdeactth = self.next3_relayaux1_start_address + 39;
         self.next3_relayaux1_presetcmdentryidx = self.next3_relayaux1_start_address + 41;
         self.next3_relayaux1_preseterrorwarningselect = self.next3_relayaux1_start_address + 43;
+        self.next3_relayaux1_presetonsourceselect = self.next3_relayaux1_start_address + 45;
 
         # Object RelayAux2 Modbus Address
         self.next3_relayaux2_start_address = 8400;
@@ -1329,6 +1352,7 @@ class Addresses:
         self.next3_relayaux2_presetsolarexcessoffgridpowdeactth = self.next3_relayaux2_start_address + 39;
         self.next3_relayaux2_presetcmdentryidx = self.next3_relayaux2_start_address + 41;
         self.next3_relayaux2_preseterrorwarningselect = self.next3_relayaux2_start_address + 43;
+        self.next3_relayaux2_presetonsourceselect = self.next3_relayaux2_start_address + 45;
 
         # Object RelayAux1TimeCtrl Modbus Address
         self.next3_relayaux1timectrl_start_address = 8700;
@@ -1476,6 +1500,7 @@ class Addresses:
         self.next1_relayaux1_presetsolarexcessoffgridpowdeactth = self.next1_relayaux1_start_address + 39;
         self.next1_relayaux1_presetcmdentryidx = self.next1_relayaux1_start_address + 41;
         self.next1_relayaux1_preseterrorwarningselect = self.next1_relayaux1_start_address + 43;
+        self.next1_relayaux1_presetonsourceselect = self.next1_relayaux1_start_address + 45;
 
         # Object RelayAux2 Modbus Address
         self.next1_relayaux2_start_address = 3300;
@@ -1501,6 +1526,7 @@ class Addresses:
         self.next1_relayaux2_presetsolarexcessoffgridpowdeactth = self.next1_relayaux2_start_address + 39;
         self.next1_relayaux2_presetcmdentryidx = self.next1_relayaux2_start_address + 41;
         self.next1_relayaux2_preseterrorwarningselect = self.next1_relayaux2_start_address + 43;
+        self.next1_relayaux2_presetonsourceselect = self.next1_relayaux2_start_address + 45;
 
         # Object RelayAux1TimeCtrl Modbus Address
         self.next1_relayaux1timectrl_start_address = 3600;
@@ -1667,12 +1693,33 @@ class Addresses:
 
         # Object NetworkInterfaceEthernet Modbus Address
         self.nextgateway_networkinterfaceethernet_start_address = 5100;
+        self.nextgateway_networkinterfaceethernet_interfacetype = self.nextgateway_networkinterfaceethernet_start_address + 0;
+        self.nextgateway_networkinterfaceethernet_interfacestatus = self.nextgateway_networkinterfaceethernet_start_address + 2;
+        self.nextgateway_networkinterfaceethernet_interfacename = self.nextgateway_networkinterfaceethernet_start_address + 4;
+        self.nextgateway_networkinterfaceethernet_hardwareaddress = self.nextgateway_networkinterfaceethernet_start_address + 14;
+        self.nextgateway_networkinterfaceethernet_ipaddressv4 = self.nextgateway_networkinterfaceethernet_start_address + 24;
+        self.nextgateway_networkinterfaceethernet_netmaskv4 = self.nextgateway_networkinterfaceethernet_start_address + 34;
+        self.nextgateway_networkinterfaceethernet_broadcastv4 = self.nextgateway_networkinterfaceethernet_start_address + 44;
 
         # Object NetworkInterfaceWifi Modbus Address
         self.nextgateway_networkinterfacewifi_start_address = 5400;
+        self.nextgateway_networkinterfacewifi_interfacetype = self.nextgateway_networkinterfacewifi_start_address + 0;
+        self.nextgateway_networkinterfacewifi_interfacestatus = self.nextgateway_networkinterfacewifi_start_address + 2;
+        self.nextgateway_networkinterfacewifi_interfacename = self.nextgateway_networkinterfacewifi_start_address + 4;
+        self.nextgateway_networkinterfacewifi_hardwareaddress = self.nextgateway_networkinterfacewifi_start_address + 14;
+        self.nextgateway_networkinterfacewifi_ipaddressv4 = self.nextgateway_networkinterfacewifi_start_address + 24;
+        self.nextgateway_networkinterfacewifi_netmaskv4 = self.nextgateway_networkinterfacewifi_start_address + 34;
+        self.nextgateway_networkinterfacewifi_broadcastv4 = self.nextgateway_networkinterfacewifi_start_address + 44;
 
         # Object NetworkInterfaceExternal Modbus Address
         self.nextgateway_networkinterfaceexternal_start_address = 5700;
+        self.nextgateway_networkinterfaceexternal_interfacetype = self.nextgateway_networkinterfaceexternal_start_address + 0;
+        self.nextgateway_networkinterfaceexternal_interfacestatus = self.nextgateway_networkinterfaceexternal_start_address + 2;
+        self.nextgateway_networkinterfaceexternal_interfacename = self.nextgateway_networkinterfaceexternal_start_address + 4;
+        self.nextgateway_networkinterfaceexternal_hardwareaddress = self.nextgateway_networkinterfaceexternal_start_address + 14;
+        self.nextgateway_networkinterfaceexternal_ipaddressv4 = self.nextgateway_networkinterfaceexternal_start_address + 24;
+        self.nextgateway_networkinterfaceexternal_netmaskv4 = self.nextgateway_networkinterfaceexternal_start_address + 34;
+        self.nextgateway_networkinterfaceexternal_broadcastv4 = self.nextgateway_networkinterfaceexternal_start_address + 44;
 
         # Object GatewayUserLevel Modbus Address
         self.nextgateway_gatewayuserlevel_start_address = 6000;
@@ -1681,6 +1728,9 @@ class Addresses:
 
         # Object Webportal Modbus Address
         self.nextgateway_webportal_start_address = 6300;
+        self.nextgateway_webportal_certificateeffectivedate = self.nextgateway_webportal_start_address + 4;
+        self.nextgateway_webportal_certificateexpirydate = self.nextgateway_webportal_start_address + 6;
+        self.nextgateway_webportal_uploaddebugdata = self.nextgateway_webportal_start_address + 8;
 
         # Object UsbInterface1 Modbus Address
         self.nextgateway_usbinterface1_start_address = 6600;
