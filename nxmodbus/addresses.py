@@ -7,7 +7,7 @@ class Addresses:
     """
     def __init__(self, offset):
         self.version_major = 10
-        self.version_minor = 16
+        self.version_minor = 34
 
         self.deviceAddressDefault = offset + 1
         self.device_address_system = offset + 1;
@@ -20,12 +20,6 @@ class Addresses:
         self.device_address_last_valid_address = offset + self.device_address_nextgateway + 1;
 
         # Group System Modbus Address
-        # Object InstallationTopology Modbus Address
-        self.system_installationtopology_start_address = 0;
-
-        # Object TimeBase Modbus Address
-        self.system_timebase_start_address = 900;
-
         # Object EarthingScheme Modbus Address
         self.system_earthingscheme_start_address = 1200;
         self.system_earthingscheme_earthingmodeselection = self.system_earthingscheme_start_address + 0;
@@ -33,9 +27,6 @@ class Addresses:
         self.system_earthingscheme_isearthingmaster = self.system_earthingscheme_start_address + 3;
         self.system_earthingscheme_relayisclosed = self.system_earthingscheme_start_address + 4;
         self.system_earthingscheme_earthingerrors = self.system_earthingscheme_start_address + 5;
-
-        # Object PowerFlowDispatcher Modbus Address
-        self.system_powerflowdispatcher_start_address = 1500;
 
         # Object EnergyPolicy Modbus Address
         self.system_energypolicy_start_address = 1800;
@@ -504,7 +495,7 @@ class Addresses:
         self.battery_battery_userdefinedlimitwithcommunicatingbatteryenabled = self.battery_battery_start_address + 31;
         self.battery_battery_maxdischargingcurrentlimit = self.battery_battery_start_address + 32;
         self.battery_battery_maxchargingcurrentlimit = self.battery_battery_start_address + 34;
-        self.battery_battery_ratiocurrentlimitovercurrent = self.battery_battery_start_address + 36;
+        self.battery_battery_currentlimitsmargingfactor = self.battery_battery_start_address + 36;
         self.battery_battery_managementofenergy = self.battery_battery_start_address + 38;
         self.battery_battery_socslopeforlimits = self.battery_battery_start_address + 40;
         self.battery_battery_socforendofchargeinpercent = self.battery_battery_start_address + 42;
@@ -532,6 +523,12 @@ class Addresses:
         self.battery_battery_timefullychargedbeforeresetingperiodicalfullcharge = self.battery_battery_start_address + 116;
         self.battery_battery_socforendofdischargeinpercent = self.battery_battery_start_address + 118;
         self.battery_battery_cmdentryidxtoprohibitcharging = self.battery_battery_start_address + 120;
+        self.battery_battery_ignorebmsrecommendedcurrents = self.battery_battery_start_address + 122;
+        self.battery_battery_bmsmaxchargingcurrent = self.battery_battery_start_address + 123;
+        self.battery_battery_bmsmaxdischargingcurrent = self.battery_battery_start_address + 125;
+        self.battery_battery_bmsrecommendedchargingcurrent = self.battery_battery_start_address + 127;
+        self.battery_battery_bmsrecommendeddischargingcurrent = self.battery_battery_start_address + 129;
+        self.battery_battery_communicationlosstimeout = self.battery_battery_start_address + 131;
 
         # Object BatteryCycle Modbus Address
         self.battery_batterycycle_start_address = 600;
@@ -1144,18 +1141,6 @@ class Addresses:
         self.next3_idcardtransfer_softwarepackageversion = self.next3_idcardtransfer_start_address + 14;
         self.next3_idcardtransfer_objectmodelversion = self.next3_idcardtransfer_start_address + 30;
 
-        # Object BaseAppConverter Modbus Address
-        self.next3_baseappconverter_start_address = 600;
-
-        # Object BaseAppTransfer Modbus Address
-        self.next3_baseapptransfer_start_address = 900;
-
-        # Object EmbeddedNvmsConverter Modbus Address
-        self.next3_embeddednvmsconverter_start_address = 1200;
-
-        # Object EmbeddedNvmsTransfer Modbus Address
-        self.next3_embeddednvmstransfer_start_address = 1500;
-
         # Object CanNodeConverter Modbus Address
         self.next3_cannodeconverter_start_address = 1800;
         self.next3_cannodeconverter_status = self.next3_cannodeconverter_start_address + 2;
@@ -1170,31 +1155,10 @@ class Addresses:
         self.next3_cannodetransfer_rxerrorcounter = self.next3_cannodetransfer_start_address + 6;
         self.next3_cannodetransfer_busterminationset = self.next3_cannodetransfer_start_address + 8;
 
-        # Object FpgaFastComConverter Modbus Address
-        self.next3_fpgafastcomconverter_start_address = 2400;
-
-        # Object FpgaFastComTransfer Modbus Address
-        self.next3_fpgafastcomtransfer_start_address = 2700;
-
-        # Object BaseDebuggerConverter Modbus Address
-        self.next3_basedebuggerconverter_start_address = 3000;
-
-        # Object BaseDebuggerTransfer Modbus Address
-        self.next3_basedebuggertransfer_start_address = 3300;
-
-        # Object DebugNext3Converter Modbus Address
-        self.next3_debugnext3converter_start_address = 3600;
-
         # Object Device Modbus Address
         self.next3_device_start_address = 4200;
         self.next3_device_blinkingstate = self.next3_device_start_address + 0;
         self.next3_device_totalfunctioningtimesec = self.next3_device_start_address + 5;
-
-        # Object LedPanel Modbus Address
-        self.next3_ledpanel_start_address = 4500;
-
-        # Object Next3Transfer Modbus Address
-        self.next3_next3transfer_start_address = 4800;
 
         # Object Next3Converter Modbus Address
         self.next3_next3converter_start_address = 5100;
@@ -1207,9 +1171,10 @@ class Addresses:
         self.next3_next3converter_fan5speed = self.next3_next3converter_start_address + 12;
         self.next3_next3converter_externalpowersupplycurrent = self.next3_next3converter_start_address + 14;
         self.next3_next3converter_powersupplyvoltage = self.next3_next3converter_start_address + 16;
-
-        # Object DebugNext3Transfer Modbus Address
-        self.next3_debugnext3transfer_start_address = 5400;
+        self.next3_next3converter_warningnoisedadcchannels = self.next3_next3converter_start_address + 56;
+        self.next3_next3converter_errornoisedadcchannels = self.next3_next3converter_start_address + 58;
+        self.next3_next3converter_selectedadcchannel = self.next3_next3converter_start_address + 60;
+        self.next3_next3converter_selectedadcchannelnoise = self.next3_next3converter_start_address + 62;
 
         # Object SolarCommonDevice Modbus Address
         self.next3_solarcommondevice_start_address = 5700;
@@ -1441,12 +1406,6 @@ class Addresses:
         self.next1_idcard_softwarepackageversion = self.next1_idcard_start_address + 14;
         self.next1_idcard_objectmodelversion = self.next1_idcard_start_address + 30;
 
-        # Object BaseApp Modbus Address
-        self.next1_baseapp_start_address = 300;
-
-        # Object EmbeddedNvms Modbus Address
-        self.next1_embeddednvms_start_address = 600;
-
         # Object CanNode Modbus Address
         self.next1_cannode_start_address = 900;
         self.next1_cannode_status = self.next1_cannode_start_address + 2;
@@ -1454,22 +1413,10 @@ class Addresses:
         self.next1_cannode_rxerrorcounter = self.next1_cannode_start_address + 6;
         self.next1_cannode_busterminationset = self.next1_cannode_start_address + 8;
 
-        # Object FpgaFastCom Modbus Address
-        self.next1_fpgafastcom_start_address = 1200;
-
-        # Object BaseDebugger Modbus Address
-        self.next1_basedebugger_start_address = 1500;
-
         # Object Device Modbus Address
         self.next1_device_start_address = 1800;
         self.next1_device_blinkingstate = self.next1_device_start_address + 0;
         self.next1_device_totalfunctioningtimesec = self.next1_device_start_address + 5;
-
-        # Object LedPanel Modbus Address
-        self.next1_ledpanel_start_address = 2100;
-
-        # Object DebugNext1 Modbus Address
-        self.next1_debugnext1_start_address = 2400;
 
         # Object Next1 Modbus Address
         self.next1_next1_start_address = 2700;
@@ -1615,9 +1562,6 @@ class Addresses:
         self.nextgateway_idcard_softwarepackageversion = self.nextgateway_idcard_start_address + 14;
         self.nextgateway_idcard_objectmodelversion = self.nextgateway_idcard_start_address + 30;
 
-        # Object BaseApplication Modbus Address
-        self.nextgateway_baseapplication_start_address = 300;
-
         # Object CanNode Modbus Address
         self.nextgateway_cannode_start_address = 600;
         self.nextgateway_cannode_status = self.nextgateway_cannode_start_address + 2;
@@ -1629,9 +1573,6 @@ class Addresses:
         self.nextgateway_device_start_address = 900;
         self.nextgateway_device_blinkingstate = self.nextgateway_device_start_address + 0;
         self.nextgateway_device_totalfunctioningtimesec = self.nextgateway_device_start_address + 5;
-
-        # Object GatewayModule Modbus Address
-        self.nextgateway_gatewaymodule_start_address = 1200;
 
         # Object HmiDisplay Modbus Address
         self.nextgateway_hmidisplay_start_address = 1500;
@@ -1656,24 +1597,6 @@ class Addresses:
         self.nextgateway_canicommunicationbus_stopbits = self.nextgateway_canicommunicationbus_start_address + 7;
         self.nextgateway_canicommunicationbus_databits = self.nextgateway_canicommunicationbus_start_address + 9;
 
-        # Object MemoryPartitionEmmcRootfs Modbus Address
-        self.nextgateway_memorypartitionemmcrootfs_start_address = 2400;
-
-        # Object MemoryPartitionEmmcConfig Modbus Address
-        self.nextgateway_memorypartitionemmcconfig_start_address = 2700;
-
-        # Object MemoryPartitionEmmcData Modbus Address
-        self.nextgateway_memorypartitionemmcdata_start_address = 3000;
-
-        # Object MemoryPartitionUsb1 Modbus Address
-        self.nextgateway_memorypartitionusb1_start_address = 3300;
-
-        # Object MemoryPartitionUsb2 Modbus Address
-        self.nextgateway_memorypartitionusb2_start_address = 3600;
-
-        # Object MemoryPartitionUsb3 Modbus Address
-        self.nextgateway_memorypartitionusb3_start_address = 3900;
-
         # Object Modbus Modbus Address
         self.nextgateway_modbus_start_address = 4200;
         self.nextgateway_modbus_baseaddress = self.nextgateway_modbus_start_address + 0;
@@ -1687,9 +1610,6 @@ class Addresses:
         self.nextgateway_modbususerlevel_start_address = 4500;
         self.nextgateway_modbususerlevel_userlevel = self.nextgateway_modbususerlevel_start_address + 0;
         self.nextgateway_modbususerlevel_userlevelcodeinput = self.nextgateway_modbususerlevel_start_address + 2;
-
-        # Object TermsAndConditions Modbus Address
-        self.nextgateway_termsandconditions_start_address = 4800;
 
         # Object NetworkInterfaceEthernet Modbus Address
         self.nextgateway_networkinterfaceethernet_start_address = 5100;
@@ -1731,18 +1651,6 @@ class Addresses:
         self.nextgateway_webportal_certificateeffectivedate = self.nextgateway_webportal_start_address + 4;
         self.nextgateway_webportal_certificateexpirydate = self.nextgateway_webportal_start_address + 6;
         self.nextgateway_webportal_uploaddebugdata = self.nextgateway_webportal_start_address + 8;
-
-        # Object UsbInterface1 Modbus Address
-        self.nextgateway_usbinterface1_start_address = 6600;
-
-        # Object UsbInterface2 Modbus Address
-        self.nextgateway_usbinterface2_start_address = 6900;
-
-        # Object UsbInterface3 Modbus Address
-        self.nextgateway_usbinterface3_start_address = 7200;
-
-        # Object UsbInterface4 Modbus Address
-        self.nextgateway_usbinterface4_start_address = 7500;
 
         # Object HmiSettings Modbus Address
         self.nextgateway_hmisettings_start_address = 7800;
