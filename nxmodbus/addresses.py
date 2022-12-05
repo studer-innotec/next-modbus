@@ -7,7 +7,7 @@ class Addresses:
     """
     def __init__(self, offset):
         self.version_major = 10
-        self.version_minor = 34
+        self.version_minor = 43
 
         self.deviceAddressDefault = offset + 1
         self.device_address_system = offset + 1;
@@ -1422,6 +1422,10 @@ class Addresses:
         self.next1_next1_start_address = 2700;
         self.next1_next1_status = self.next1_next1_start_address + 0;
         self.next1_next1_errors = self.next1_next1_start_address + 2;
+        self.next1_next1_fan1speed = self.next1_next1_start_address + 32;
+        self.next1_next1_fan2speed = self.next1_next1_start_address + 34;
+        self.next1_next1_fan3speed = self.next1_next1_start_address + 36;
+        self.next1_next1_externalpowersupplycurrent = self.next1_next1_start_address + 42;
 
         # Object RelayAux1 Modbus Address
         self.next1_relayaux1_start_address = 3000;
@@ -1574,6 +1578,10 @@ class Addresses:
         self.nextgateway_device_blinkingstate = self.nextgateway_device_start_address + 0;
         self.nextgateway_device_totalfunctioningtimesec = self.nextgateway_device_start_address + 5;
 
+        # Object GatewayModule Modbus Address
+        self.nextgateway_gatewaymodule_start_address = 1200;
+        self.nextgateway_gatewaymodule_cputemperature = self.nextgateway_gatewaymodule_start_address + 16;
+
         # Object HmiDisplay Modbus Address
         self.nextgateway_hmidisplay_start_address = 1500;
         self.nextgateway_hmidisplay_brightness = self.nextgateway_hmidisplay_start_address + 0;
@@ -1596,6 +1604,48 @@ class Addresses:
         self.nextgateway_canicommunicationbus_parity = self.nextgateway_canicommunicationbus_start_address + 5;
         self.nextgateway_canicommunicationbus_stopbits = self.nextgateway_canicommunicationbus_start_address + 7;
         self.nextgateway_canicommunicationbus_databits = self.nextgateway_canicommunicationbus_start_address + 9;
+
+        # Object MemoryPartitionEmmcRootfs Modbus Address
+        self.nextgateway_memorypartitionemmcrootfs_start_address = 2400;
+        self.nextgateway_memorypartitionemmcrootfs_media = self.nextgateway_memorypartitionemmcrootfs_start_address + 0;
+        self.nextgateway_memorypartitionemmcrootfs_filesystem = self.nextgateway_memorypartitionemmcrootfs_start_address + 2;
+        self.nextgateway_memorypartitionemmcrootfs_totalsizekib = self.nextgateway_memorypartitionemmcrootfs_start_address + 4;
+        self.nextgateway_memorypartitionemmcrootfs_usedsizekib = self.nextgateway_memorypartitionemmcrootfs_start_address + 6;
+
+        # Object MemoryPartitionEmmcConfig Modbus Address
+        self.nextgateway_memorypartitionemmcconfig_start_address = 2700;
+        self.nextgateway_memorypartitionemmcconfig_media = self.nextgateway_memorypartitionemmcconfig_start_address + 0;
+        self.nextgateway_memorypartitionemmcconfig_filesystem = self.nextgateway_memorypartitionemmcconfig_start_address + 2;
+        self.nextgateway_memorypartitionemmcconfig_totalsizekib = self.nextgateway_memorypartitionemmcconfig_start_address + 4;
+        self.nextgateway_memorypartitionemmcconfig_usedsizekib = self.nextgateway_memorypartitionemmcconfig_start_address + 6;
+
+        # Object MemoryPartitionEmmcData Modbus Address
+        self.nextgateway_memorypartitionemmcdata_start_address = 3000;
+        self.nextgateway_memorypartitionemmcdata_media = self.nextgateway_memorypartitionemmcdata_start_address + 0;
+        self.nextgateway_memorypartitionemmcdata_filesystem = self.nextgateway_memorypartitionemmcdata_start_address + 2;
+        self.nextgateway_memorypartitionemmcdata_totalsizekib = self.nextgateway_memorypartitionemmcdata_start_address + 4;
+        self.nextgateway_memorypartitionemmcdata_usedsizekib = self.nextgateway_memorypartitionemmcdata_start_address + 6;
+
+        # Object MemoryPartitionUsb1 Modbus Address
+        self.nextgateway_memorypartitionusb1_start_address = 3300;
+        self.nextgateway_memorypartitionusb1_media = self.nextgateway_memorypartitionusb1_start_address + 0;
+        self.nextgateway_memorypartitionusb1_filesystem = self.nextgateway_memorypartitionusb1_start_address + 2;
+        self.nextgateway_memorypartitionusb1_totalsizekib = self.nextgateway_memorypartitionusb1_start_address + 4;
+        self.nextgateway_memorypartitionusb1_usedsizekib = self.nextgateway_memorypartitionusb1_start_address + 6;
+
+        # Object MemoryPartitionUsb2 Modbus Address
+        self.nextgateway_memorypartitionusb2_start_address = 3600;
+        self.nextgateway_memorypartitionusb2_media = self.nextgateway_memorypartitionusb2_start_address + 0;
+        self.nextgateway_memorypartitionusb2_filesystem = self.nextgateway_memorypartitionusb2_start_address + 2;
+        self.nextgateway_memorypartitionusb2_totalsizekib = self.nextgateway_memorypartitionusb2_start_address + 4;
+        self.nextgateway_memorypartitionusb2_usedsizekib = self.nextgateway_memorypartitionusb2_start_address + 6;
+
+        # Object MemoryPartitionUsb3 Modbus Address
+        self.nextgateway_memorypartitionusb3_start_address = 3900;
+        self.nextgateway_memorypartitionusb3_media = self.nextgateway_memorypartitionusb3_start_address + 0;
+        self.nextgateway_memorypartitionusb3_filesystem = self.nextgateway_memorypartitionusb3_start_address + 2;
+        self.nextgateway_memorypartitionusb3_totalsizekib = self.nextgateway_memorypartitionusb3_start_address + 4;
+        self.nextgateway_memorypartitionusb3_usedsizekib = self.nextgateway_memorypartitionusb3_start_address + 6;
 
         # Object Modbus Modbus Address
         self.nextgateway_modbus_start_address = 4200;
@@ -1648,9 +1698,28 @@ class Addresses:
 
         # Object Webportal Modbus Address
         self.nextgateway_webportal_start_address = 6300;
+        self.nextgateway_webportal_webportalconnectionstatus = self.nextgateway_webportal_start_address + 0;
+        self.nextgateway_webportal_webportaldatalogsynchrostatus = self.nextgateway_webportal_start_address + 2;
         self.nextgateway_webportal_certificateeffectivedate = self.nextgateway_webportal_start_address + 4;
         self.nextgateway_webportal_certificateexpirydate = self.nextgateway_webportal_start_address + 6;
         self.nextgateway_webportal_uploaddebugdata = self.nextgateway_webportal_start_address + 8;
+        self.nextgateway_webportal_readonly = self.nextgateway_webportal_start_address + 9;
+
+        # Object UsbInterface1 Modbus Address
+        self.nextgateway_usbinterface1_start_address = 6600;
+        self.nextgateway_usbinterface1_usbportdevicetype = self.nextgateway_usbinterface1_start_address + 2;
+
+        # Object UsbInterface2 Modbus Address
+        self.nextgateway_usbinterface2_start_address = 6900;
+        self.nextgateway_usbinterface2_usbportdevicetype = self.nextgateway_usbinterface2_start_address + 2;
+
+        # Object UsbInterface3 Modbus Address
+        self.nextgateway_usbinterface3_start_address = 7200;
+        self.nextgateway_usbinterface3_usbportdevicetype = self.nextgateway_usbinterface3_start_address + 2;
+
+        # Object UsbInterface4 Modbus Address
+        self.nextgateway_usbinterface4_start_address = 7500;
+        self.nextgateway_usbinterface4_usbportdevicetype = self.nextgateway_usbinterface4_start_address + 2;
 
         # Object HmiSettings Modbus Address
         self.nextgateway_hmisettings_start_address = 7800;
