@@ -180,7 +180,9 @@ class NextModbusRtu:
 
             if prop_type == PropType.BOOL:
                 return unpack('>?', ba)[0]
-            elif prop_type == PropType.INT:
+            elif prop_type == PropType.INT or \
+                    prop_type == PropType.ENUM or \
+                    prop_type == PropType.BITFIELD:
                 return unpack('>i', ba)[0]
             elif prop_type == PropType.UINT:
                 return unpack('>I', ba)[0]
@@ -289,7 +291,9 @@ class NextModbusRtu:
         if prop_type == PropType.BOOL or prop_type == PropType.SIGNAL:
             size = 1
             ba = b'\x00' + pack('>?', value)
-        elif prop_type == PropType.INT:
+        elif prop_type == PropType.INT or \
+                prop_type == PropType.ENUM or \
+                prop_type == PropType.BITFIELD:
             size = 2
             ba = pack('>i', value)
         elif prop_type == PropType.UINT:
