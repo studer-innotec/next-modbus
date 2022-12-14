@@ -49,7 +49,7 @@ Go to */examples* folder with a terminal and execute this script
     $ python ex_rtu_read_param.py
     $ python ex_tcp_read_param.py
 
-Check `client file`_ to understand it.
+Check `client_rtu file`_ or `client_tcp file`_ to understand it.
 
 5. Open documentation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
