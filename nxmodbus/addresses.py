@@ -7,7 +7,7 @@ class Addresses:
     """
     def __init__(self, offset):
         self.version_major = 10
-        self.version_minor = 57
+        self.version_minor = 59
 
         self.deviceAddressDefault = offset + 1
         self.device_address_system = offset + 1;
@@ -1163,12 +1163,14 @@ class Addresses:
         self.next3_idcardconverter_start_address = 0;
         self.next3_idcardconverter_serialnumber = self.next3_idcardconverter_start_address + 4;
         self.next3_idcardconverter_softwarepackageversion = self.next3_idcardconverter_start_address + 14;
+        self.next3_idcardconverter_softwarerevisionsha1 = self.next3_idcardconverter_start_address + 18;
         self.next3_idcardconverter_objectmodelversion = self.next3_idcardconverter_start_address + 30;
 
         # Object IdCardTransfer Modbus Address
         self.next3_idcardtransfer_start_address = 300;
         self.next3_idcardtransfer_serialnumber = self.next3_idcardtransfer_start_address + 4;
         self.next3_idcardtransfer_softwarepackageversion = self.next3_idcardtransfer_start_address + 14;
+        self.next3_idcardtransfer_softwarerevisionsha1 = self.next3_idcardtransfer_start_address + 18;
         self.next3_idcardtransfer_objectmodelversion = self.next3_idcardtransfer_start_address + 30;
 
         # Object BaseAppConverter Modbus Address
@@ -1440,6 +1442,7 @@ class Addresses:
         self.next1_idcard_start_address = 0;
         self.next1_idcard_serialnumber = self.next1_idcard_start_address + 4;
         self.next1_idcard_softwarepackageversion = self.next1_idcard_start_address + 14;
+        self.next1_idcard_softwarerevisionsha1 = self.next1_idcard_start_address + 18;
         self.next1_idcard_objectmodelversion = self.next1_idcard_start_address + 30;
 
         # Object BaseApp Modbus Address
@@ -1602,6 +1605,7 @@ class Addresses:
         self.nextgateway_idcard_start_address = 0;
         self.nextgateway_idcard_serialnumber = self.nextgateway_idcard_start_address + 4;
         self.nextgateway_idcard_softwarepackageversion = self.nextgateway_idcard_start_address + 14;
+        self.nextgateway_idcard_softwarerevisionsha1 = self.nextgateway_idcard_start_address + 18;
         self.nextgateway_idcard_objectmodelversion = self.nextgateway_idcard_start_address + 30;
 
         # Object BaseApplication Modbus Address
@@ -1777,5 +1781,10 @@ class Addresses:
         self.nextgateway_systemview_start_address = 8100;
         self.nextgateway_systemview_installationstatus = self.nextgateway_systemview_start_address + 0;
         self.nextgateway_systemview_nodestatus = self.nextgateway_systemview_start_address + 2;
+
+        # Object Webcommand Modbus Address
+        self.nextgateway_webcommand_start_address = 8400;
+        self.nextgateway_webcommand_webcommandstatus = self.nextgateway_webcommand_start_address + 21;
+        self.nextgateway_webcommand_connections = self.nextgateway_webcommand_start_address + 23;
 
 
