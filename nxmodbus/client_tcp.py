@@ -37,15 +37,16 @@ class NextModbusTcp:
         debug: boolean
             Activate debug traces for tx/rx frames
         """
+        if debug is True:
+            logging.basicConfig(level=logging.DEBUG)
+        self.addresses = Addresses(offset)
         # Init modbus TCP client
         try:
             self.client = ModbusClient(host=server_host, port=server_port, debug=debug)
         except ValueError as e:
             logger.error("--> Modbus TCP client error : ", str(e))
+            return
         self.client.open()
-        if debug is True:
-            logging.basicConfig(level=logging.DEBUG)
-        self.addresses = Addresses(offset)
 
     def __del__(self):
         """
@@ -71,7 +72,7 @@ class NextModbusTcp:
         slave_id: int
             Slave identifier number (targeted device)
         address: int
-            Register starting address, see "Technical specification - Next Modbus appendix" for 
+            Register starting address, see "Technical specification - Next Modbus appendix" for
             the complete list of accessible register per device
         prop_type: PropType
             Property type given by the enum found in *proptypes.py*
@@ -132,8 +133,10 @@ class NextModbusTcp:
         """
         if (prop_type == PropType.STRING or prop_type == PropType.BYTEARRAY) and string_size == 0:
             logger.error("--> string_size parameter mandatory when reading a PropType.STRING")
+            return None
         if prop_type == PropType.SIGNAL:
             logger.error("--> PropType.SIGNAL is not readable")
+            return None
         if string_size % 2 == 0:
             size = int(string_size / 2)
         else:
@@ -154,12 +157,16 @@ class NextModbusTcp:
         if not self.client.is_open():
             if not self.client.open():
                 logger.error("--> TCP connection error")
-                return
+                return None
         try:
             response = self.client.read_holding_registers(reg_addr=address, reg_nb=size)
         except (ValueError, KeyError) as e:
             logger.error("--> Modbus error : " + str(e))
+            return None
         else:
+            if response is None:
+                logger.error("--> Modbus error : " + str(self.client.last_except_txt()))
+                return None
             if prop_type == PropType.STRING:
                 resp = bytearray()
                 for val in response:
@@ -173,7 +180,7 @@ class NextModbusTcp:
                 ba = pack('>HHHH', response[0], response[1], response[2], response[3])
             else:
                 logger.error("--> Unpossible to unpack the received data")
-
+                return None
             if prop_type == PropType.BOOL:
                 return unpack('>?', ba)[0]
             elif prop_type == PropType.INT or \
@@ -193,7 +200,8 @@ class NextModbusTcp:
             elif prop_type == PropType.STRING:
                 return resp.decode("utf-8")
             else:
-                raise Exception("Data type not supported")
+                logger.error("--> Data type not supported")
+                return None
 
     def write_parameter(self, slave_id, address, value, prop_type):
         """
@@ -209,7 +217,7 @@ class NextModbusTcp:
         slave_id: int
             Slave identifier number (targeted device)
         address: int
-            Register starting address, see "Technical specification - Next Modbus appendix" for 
+            Register starting address, see "Technical specification - Next Modbus appendix" for
             the complete list of accessible register per device.
         value
             The value to write at the given address.
@@ -225,7 +233,7 @@ class NextModbusTcp:
         --------
         .. code-block:: python
 
-            # First check the version compatibility, then write the HMI display brightness, the GUI unlock code and 
+            # First check the version compatibility, then write the HMI display brightness, the GUI unlock code and
             # the nominal frequency of the tri-phased inverters.
             # Run this example within the 'examples/' folder using 'python ex_tcp_write_param.py' from a CLI after installing
             # nxmodbus package with 'pip install nxmodbus'
@@ -255,7 +263,7 @@ class NextModbusTcp:
                     print('Disable check written successfully')
                 else:
                     print('Error when writing disable check')
-                    
+
                 value = 10  # Brightness level at 10
                 ok = nextModbus.write_parameter(nextModbus.addresses.device_address_nextgateway + INSTANCE,
                                                 nextModbus.addresses.nextgateway_hmidisplay_brightness,
@@ -317,7 +325,8 @@ class NextModbusTcp:
                 size = int(len(value) / 2) + 1
                 ba += b'\x00'
         else:
-            raise Exception("Data type not supported")
+            logger.error("--> Data type not supported")
+            return None
 
         unpack_format = '>' + size * 'H'
         registers = unpack(unpack_format, ba)
@@ -326,22 +335,25 @@ class NextModbusTcp:
         if not self.client.is_open():
             if not self.client.open():
                 logger.error("--> TCP connection error")
-                return
+                return None
         try:
             response = self.client.write_multiple_registers(regs_addr=address, regs_value=registers)
         except (ValueError, KeyError) as e:
             logger.error("--> Modbus error : ", e)
+            return None
         else:
+            if response is None:
+                logger.error("--> Modbus error : " + str(self.client.last_except_txt()))
             return response
 
     def check_version(self):
         """
-        Read the NextGateway parameter which corresponds to the Object Model Version and compare it with 
+        Read the NextGateway parameter which corresponds to the Object Model Version and compare it with
         the version of the generated file *addresses.py*
 
         Note
         -----
-        A different major version means that the compatibility is broken and it is recommanded to update 
+        A different major version means that the compatibility is broken and it is recommanded to update
         the addresses list.
         A different minor version means that small modifications have been made. Some addresses could be
         removed or added.
@@ -355,7 +367,7 @@ class NextModbusTcp:
         --------
         None
         """
-        omv_remote = self.read_parameter(self.addresses.device_address_nextgateway, 
+        omv_remote = self.read_parameter(self.addresses.device_address_nextgateway,
                                             self.addresses.nextgateway_idcard_objectmodelversion,
                                             PropType.UINT)
         if omv_remote is not None:
