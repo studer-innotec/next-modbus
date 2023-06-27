@@ -7,7 +7,7 @@ class Addresses:
     """
     def __init__(self, offset):
         self.version_major = 10
-        self.version_minor = 61
+        self.version_minor = 73
 
         self.deviceAddressDefault = offset + 1
         self.device_address_system = offset + 1;
@@ -77,7 +77,8 @@ class Addresses:
         self.system_triphaseinverter_rocofmax = self.system_triphaseinverter_start_address + 33;
         self.system_triphaseinverter_alternatefrequency = self.system_triphaseinverter_start_address + 84;
         self.system_triphaseinverter_cmdentryidxforalternatefrequency = self.system_triphaseinverter_start_address + 86;
-        self.system_triphaseinverter_allowpowersinkingfromacloadports = self.system_triphaseinverter_start_address + 88;
+        self.system_triphaseinverter_allowpowerproductiononacload = self.system_triphaseinverter_start_address + 88;
+        self.system_triphaseinverter_frequencyincreasetolimitacloadproducedpower = self.system_triphaseinverter_start_address + 89;
         self.system_triphaseinverter_standbysensitivity = self.system_triphaseinverter_start_address + 93;
         self.system_triphaseinverter_standbydetectionratio = self.system_triphaseinverter_start_address + 95;
         self.system_triphaseinverter_allowindividualphaseoperation = self.system_triphaseinverter_start_address + 97;
@@ -139,6 +140,8 @@ class Addresses:
         self.system_acloadtriphasemeasure_previousdayminactivepower = self.system_acloadtriphasemeasure_start_address + 50;
         self.system_acloadtriphasemeasure_daymaxactivepower = self.system_acloadtriphasemeasure_start_address + 52;
         self.system_acloadtriphasemeasure_previousdaymaxactivepower = self.system_acloadtriphasemeasure_start_address + 54;
+        self.system_acloadtriphasemeasure_producedactivepower = self.system_acloadtriphasemeasure_start_address + 56;
+        self.system_acloadtriphasemeasure_consumedactivepower = self.system_acloadtriphasemeasure_start_address + 58;
 
         # Object AcLoadL1Measure Modbus Address
         self.system_acloadl1measure_start_address = 4200;
@@ -235,6 +238,8 @@ class Addresses:
         self.system_acinverterstriphasemeasure_previousdayminactivepower = self.system_acinverterstriphasemeasure_start_address + 50;
         self.system_acinverterstriphasemeasure_daymaxactivepower = self.system_acinverterstriphasemeasure_start_address + 52;
         self.system_acinverterstriphasemeasure_previousdaymaxactivepower = self.system_acinverterstriphasemeasure_start_address + 54;
+        self.system_acinverterstriphasemeasure_producedactivepower = self.system_acinverterstriphasemeasure_start_address + 56;
+        self.system_acinverterstriphasemeasure_consumedactivepower = self.system_acinverterstriphasemeasure_start_address + 58;
 
         # Object AcInvertersL1Measure Modbus Address
         self.system_acinvertersl1measure_start_address = 5400;
@@ -331,6 +336,8 @@ class Addresses:
         self.system_allflexloadstriphaseacmeasure_previousdayminactivepower = self.system_allflexloadstriphaseacmeasure_start_address + 50;
         self.system_allflexloadstriphaseacmeasure_daymaxactivepower = self.system_allflexloadstriphaseacmeasure_start_address + 52;
         self.system_allflexloadstriphaseacmeasure_previousdaymaxactivepower = self.system_allflexloadstriphaseacmeasure_start_address + 54;
+        self.system_allflexloadstriphaseacmeasure_producedactivepower = self.system_allflexloadstriphaseacmeasure_start_address + 56;
+        self.system_allflexloadstriphaseacmeasure_consumedactivepower = self.system_allflexloadstriphaseacmeasure_start_address + 58;
 
         # Object AllFlexLoadsL1AcMeasure Modbus Address
         self.system_allflexloadsl1acmeasure_start_address = 6600;
@@ -427,8 +434,8 @@ class Addresses:
         self.system_systemtotal_turnoff = self.system_systemtotal_start_address + 2;
         self.system_systemtotal_onoffstate = self.system_systemtotal_start_address + 3;
         self.system_systemtotal_acsourcepower = self.system_systemtotal_start_address + 4;
-        self.system_systemtotal_consummerspower = self.system_systemtotal_start_address + 6;
-        self.system_systemtotal_consummerapparentpower = self.system_systemtotal_start_address + 8;
+        self.system_systemtotal_acloadandflexloadtotalpower = self.system_systemtotal_start_address + 6;
+        self.system_systemtotal_acloadandflexloadapparentpower = self.system_systemtotal_start_address + 8;
         self.system_systemtotal_warnings = self.system_systemtotal_start_address + 10;
         self.system_systemtotal_errorsrestarting = self.system_systemtotal_start_address + 12;
         self.system_systemtotal_acsourcedayconsumedenergy = self.system_systemtotal_start_address + 14;
@@ -437,9 +444,13 @@ class Addresses:
         self.system_systemtotal_errorsrestartingorhalted = self.system_systemtotal_start_address + 20;
         self.system_systemtotal_cmdentryidxforemergencystop = self.system_systemtotal_start_address + 22;
         self.system_systemtotal_acsourcenbr = self.system_systemtotal_start_address + 24;
-        self.system_systemtotal_consummersdayconsumedenergy = self.system_systemtotal_start_address + 26;
+        self.system_systemtotal_acloadandflexloaddaytotalenergy = self.system_systemtotal_start_address + 26;
         self.system_systemtotal_acflexloadnbr = self.system_systemtotal_start_address + 28;
         self.system_systemtotal_status = self.system_systemtotal_start_address + 30;
+        self.system_systemtotal_acloadandflexloadconsumedpower = self.system_systemtotal_start_address + 32;
+        self.system_systemtotal_acloadandflexloadproducedpower = self.system_systemtotal_start_address + 34;
+        self.system_systemtotal_acloadandflexloaddayconsumedenergy = self.system_systemtotal_start_address + 36;
+        self.system_systemtotal_acloadandflexloaddayproducedenergy = self.system_systemtotal_start_address + 38;
 
         # Object BatteryCommonAll Modbus Address
         self.system_batterycommonall_start_address = 8400;
@@ -505,7 +516,7 @@ class Addresses:
         self.battery_battery_timebeforeresetingadaptivesocforbackup = self.battery_battery_start_address + 51;
         self.battery_battery_socinpercenttoresetadaptivesocforbackup = self.battery_battery_start_address + 53;
         self.battery_battery_socinpercenttoincreaseadaptivesocforbackup = self.battery_battery_start_address + 55;
-        self.battery_battery_adaptivesocforbackupinpercent = self.battery_battery_start_address + 57;
+        self.battery_battery_currentsocforbackupinpercent = self.battery_battery_start_address + 57;
         self.battery_battery_voltageforgridfeeding = self.battery_battery_start_address + 59;
         self.battery_battery_voltageforbackup = self.battery_battery_start_address + 61;
         self.battery_battery_nominaltemperature = self.battery_battery_start_address + 63;
@@ -525,11 +536,11 @@ class Addresses:
         self.battery_battery_baudrate = self.battery_battery_start_address + 97;
         self.battery_battery_technology = self.battery_battery_start_address + 100;
         self.battery_battery_adaptivesocforbackupundervoltageincrement = self.battery_battery_start_address + 111;
-        self.battery_battery_allowperiodicalfullcharge = self.battery_battery_start_address + 113;
-        self.battery_battery_waitingtimebetweenperiodicalfullcharge = self.battery_battery_start_address + 114;
-        self.battery_battery_timefullychargedbeforeresetingperiodicalfullcharge = self.battery_battery_start_address + 116;
+        self.battery_battery_periodicalchargeanddischarge = self.battery_battery_start_address + 113;
+        self.battery_battery_delaybeforeperiodicalcharge = self.battery_battery_start_address + 114;
+        self.battery_battery_timebeforeresetingperiodicalchargeordischarge = self.battery_battery_start_address + 116;
         self.battery_battery_socforendofdischargeinpercent = self.battery_battery_start_address + 118;
-        self.battery_battery_cmdentryidxtoprohibitcharging = self.battery_battery_start_address + 120;
+        self.battery_battery_cmdentryidx = self.battery_battery_start_address + 120;
         self.battery_battery_ignorebmsrecommendedcurrents = self.battery_battery_start_address + 122;
         self.battery_battery_bmsmaxchargingcurrent = self.battery_battery_start_address + 123;
         self.battery_battery_bmsmaxdischargingcurrent = self.battery_battery_start_address + 125;
@@ -538,6 +549,17 @@ class Addresses:
         self.battery_battery_communicationlosstimeout = self.battery_battery_start_address + 131;
         self.battery_battery_chargingrecoverymode = self.battery_battery_start_address + 133;
         self.battery_battery_stopchargingrecoverymode = self.battery_battery_start_address + 135;
+        self.battery_battery_currentsocforendofchargeinpercent = self.battery_battery_start_address + 137;
+        self.battery_battery_currentsocforgridfeedinginpercent = self.battery_battery_start_address + 139;
+        self.battery_battery_periodicalchargesocinpercent = self.battery_battery_start_address + 141;
+        self.battery_battery_periodicaldischargesocinpercent = self.battery_battery_start_address + 143;
+        self.battery_battery_useacsourceduringperiodicalchargeordischargetransitions = self.battery_battery_start_address + 145;
+        self.battery_battery_delaybeforeperiodicaldischarge = self.battery_battery_start_address + 147;
+        self.battery_battery_cmdentryfunction = self.battery_battery_start_address + 149;
+        self.battery_battery_valueusedwhencmdentryisactivated = self.battery_battery_start_address + 151;
+        self.battery_battery_currentsocforendofdischargeinpercent = self.battery_battery_start_address + 153;
+        self.battery_battery_batterycontributorsvoltagedifferenceforerror = self.battery_battery_start_address + 155;
+        self.battery_battery_batterycontributorstemperaturedifferenceforwarning = self.battery_battery_start_address + 157;
 
         # Object BatteryCycle Modbus Address
         self.battery_batterycycle_start_address = 600;
@@ -648,6 +670,8 @@ class Addresses:
         self.acsource_triphasemeasure_previousdayminactivepower = self.acsource_triphasemeasure_start_address + 50;
         self.acsource_triphasemeasure_daymaxactivepower = self.acsource_triphasemeasure_start_address + 52;
         self.acsource_triphasemeasure_previousdaymaxactivepower = self.acsource_triphasemeasure_start_address + 54;
+        self.acsource_triphasemeasure_producedactivepower = self.acsource_triphasemeasure_start_address + 56;
+        self.acsource_triphasemeasure_consumedactivepower = self.acsource_triphasemeasure_start_address + 58;
 
         # Object L1Measure Modbus Address
         self.acsource_l1measure_start_address = 300;
@@ -858,6 +882,7 @@ class Addresses:
         self.acsource_source_cmdentryidxforreducofactivepowerat80 = self.acsource_source_start_address + 281;
         self.acsource_source_cmdentryidxforreducofactivepowerat90 = self.acsource_source_start_address + 283;
         self.acsource_source_phasebalancing = self.acsource_source_start_address + 285;
+        self.acsource_source_voltageandfrequencytolerance = self.acsource_source_start_address + 287;
 
         # Object L1Source Modbus Address
         self.acsource_l1source_start_address = 1800;
@@ -941,6 +966,8 @@ class Addresses:
         self.acflexload_triphasemeasure_previousdayminactivepower = self.acflexload_triphasemeasure_start_address + 50;
         self.acflexload_triphasemeasure_daymaxactivepower = self.acflexload_triphasemeasure_start_address + 52;
         self.acflexload_triphasemeasure_previousdaymaxactivepower = self.acflexload_triphasemeasure_start_address + 54;
+        self.acflexload_triphasemeasure_producedactivepower = self.acflexload_triphasemeasure_start_address + 56;
+        self.acflexload_triphasemeasure_consumedactivepower = self.acflexload_triphasemeasure_start_address + 58;
 
         # Object L1Measure Modbus Address
         self.acflexload_l1measure_start_address = 300;
@@ -1031,8 +1058,6 @@ class Addresses:
         self.acflexload_l1flexloadcontrrelay_presetpacpowdeactth = self.acflexload_l1flexloadcontrrelay_start_address + 31;
         self.acflexload_l1flexloadcontrrelay_presetsolarexcessongridpowactth = self.acflexload_l1flexloadcontrrelay_start_address + 33;
         self.acflexload_l1flexloadcontrrelay_presetsolarexcessongridpowdeactth = self.acflexload_l1flexloadcontrrelay_start_address + 35;
-        self.acflexload_l1flexloadcontrrelay_presetsolarexcessoffgridpowactth = self.acflexload_l1flexloadcontrrelay_start_address + 37;
-        self.acflexload_l1flexloadcontrrelay_presetsolarexcessoffgridpowdeactth = self.acflexload_l1flexloadcontrrelay_start_address + 39;
         self.acflexload_l1flexloadcontrrelay_presetcmdentryidx = self.acflexload_l1flexloadcontrrelay_start_address + 41;
         self.acflexload_l1flexloadcontrrelay_preseterrorwarningselect = self.acflexload_l1flexloadcontrrelay_start_address + 43;
         self.acflexload_l1flexloadcontrrelay_presetonsourceselect = self.acflexload_l1flexloadcontrrelay_start_address + 45;
@@ -1057,8 +1082,6 @@ class Addresses:
         self.acflexload_l2flexloadcontrrelay_presetpacpowdeactth = self.acflexload_l2flexloadcontrrelay_start_address + 31;
         self.acflexload_l2flexloadcontrrelay_presetsolarexcessongridpowactth = self.acflexload_l2flexloadcontrrelay_start_address + 33;
         self.acflexload_l2flexloadcontrrelay_presetsolarexcessongridpowdeactth = self.acflexload_l2flexloadcontrrelay_start_address + 35;
-        self.acflexload_l2flexloadcontrrelay_presetsolarexcessoffgridpowactth = self.acflexload_l2flexloadcontrrelay_start_address + 37;
-        self.acflexload_l2flexloadcontrrelay_presetsolarexcessoffgridpowdeactth = self.acflexload_l2flexloadcontrrelay_start_address + 39;
         self.acflexload_l2flexloadcontrrelay_presetcmdentryidx = self.acflexload_l2flexloadcontrrelay_start_address + 41;
         self.acflexload_l2flexloadcontrrelay_preseterrorwarningselect = self.acflexload_l2flexloadcontrrelay_start_address + 43;
         self.acflexload_l2flexloadcontrrelay_presetonsourceselect = self.acflexload_l2flexloadcontrrelay_start_address + 45;
@@ -1083,8 +1106,6 @@ class Addresses:
         self.acflexload_l3flexloadcontrrelay_presetpacpowdeactth = self.acflexload_l3flexloadcontrrelay_start_address + 31;
         self.acflexload_l3flexloadcontrrelay_presetsolarexcessongridpowactth = self.acflexload_l3flexloadcontrrelay_start_address + 33;
         self.acflexload_l3flexloadcontrrelay_presetsolarexcessongridpowdeactth = self.acflexload_l3flexloadcontrrelay_start_address + 35;
-        self.acflexload_l3flexloadcontrrelay_presetsolarexcessoffgridpowactth = self.acflexload_l3flexloadcontrrelay_start_address + 37;
-        self.acflexload_l3flexloadcontrrelay_presetsolarexcessoffgridpowdeactth = self.acflexload_l3flexloadcontrrelay_start_address + 39;
         self.acflexload_l3flexloadcontrrelay_presetcmdentryidx = self.acflexload_l3flexloadcontrrelay_start_address + 41;
         self.acflexload_l3flexloadcontrrelay_preseterrorwarningselect = self.acflexload_l3flexloadcontrrelay_start_address + 43;
         self.acflexload_l3flexloadcontrrelay_presetonsourceselect = self.acflexload_l3flexloadcontrrelay_start_address + 45;
@@ -1156,6 +1177,24 @@ class Addresses:
         self.acflexload_flexload_start_address = 3000;
         self.acflexload_flexload_phaseexistance = self.acflexload_flexload_start_address + 0;
         self.acflexload_flexload_allowindividualphaseoperation = self.acflexload_flexload_start_address + 2;
+
+        # Object L1FlexLoad Modbus Address
+        self.acflexload_l1flexload_start_address = 3300;
+        self.acflexload_l1flexload_status = self.acflexload_l1flexload_start_address + 0;
+        self.acflexload_l1flexload_errors = self.acflexload_l1flexload_start_address + 2;
+        self.acflexload_l1flexload_warnings = self.acflexload_l1flexload_start_address + 4;
+
+        # Object L2FlexLoad Modbus Address
+        self.acflexload_l2flexload_start_address = 3600;
+        self.acflexload_l2flexload_status = self.acflexload_l2flexload_start_address + 0;
+        self.acflexload_l2flexload_errors = self.acflexload_l2flexload_start_address + 2;
+        self.acflexload_l2flexload_warnings = self.acflexload_l2flexload_start_address + 4;
+
+        # Object L3FlexLoad Modbus Address
+        self.acflexload_l3flexload_start_address = 3900;
+        self.acflexload_l3flexload_status = self.acflexload_l3flexload_start_address + 0;
+        self.acflexload_l3flexload_errors = self.acflexload_l3flexload_start_address + 2;
+        self.acflexload_l3flexload_warnings = self.acflexload_l3flexload_start_address + 4;
 
 
         # Group Next3 Modbus Address
@@ -1327,8 +1366,6 @@ class Addresses:
         self.next3_relayaux1_presetpacpowdeactth = self.next3_relayaux1_start_address + 31;
         self.next3_relayaux1_presetsolarexcessongridpowactth = self.next3_relayaux1_start_address + 33;
         self.next3_relayaux1_presetsolarexcessongridpowdeactth = self.next3_relayaux1_start_address + 35;
-        self.next3_relayaux1_presetsolarexcessoffgridpowactth = self.next3_relayaux1_start_address + 37;
-        self.next3_relayaux1_presetsolarexcessoffgridpowdeactth = self.next3_relayaux1_start_address + 39;
         self.next3_relayaux1_presetcmdentryidx = self.next3_relayaux1_start_address + 41;
         self.next3_relayaux1_preseterrorwarningselect = self.next3_relayaux1_start_address + 43;
         self.next3_relayaux1_presetonsourceselect = self.next3_relayaux1_start_address + 45;
@@ -1353,8 +1390,6 @@ class Addresses:
         self.next3_relayaux2_presetpacpowdeactth = self.next3_relayaux2_start_address + 31;
         self.next3_relayaux2_presetsolarexcessongridpowactth = self.next3_relayaux2_start_address + 33;
         self.next3_relayaux2_presetsolarexcessongridpowdeactth = self.next3_relayaux2_start_address + 35;
-        self.next3_relayaux2_presetsolarexcessoffgridpowactth = self.next3_relayaux2_start_address + 37;
-        self.next3_relayaux2_presetsolarexcessoffgridpowdeactth = self.next3_relayaux2_start_address + 39;
         self.next3_relayaux2_presetcmdentryidx = self.next3_relayaux2_start_address + 41;
         self.next3_relayaux2_preseterrorwarningselect = self.next3_relayaux2_start_address + 43;
         self.next3_relayaux2_presetonsourceselect = self.next3_relayaux2_start_address + 45;
@@ -1490,8 +1525,6 @@ class Addresses:
         self.next1_relayaux1_presetpacpowdeactth = self.next1_relayaux1_start_address + 31;
         self.next1_relayaux1_presetsolarexcessongridpowactth = self.next1_relayaux1_start_address + 33;
         self.next1_relayaux1_presetsolarexcessongridpowdeactth = self.next1_relayaux1_start_address + 35;
-        self.next1_relayaux1_presetsolarexcessoffgridpowactth = self.next1_relayaux1_start_address + 37;
-        self.next1_relayaux1_presetsolarexcessoffgridpowdeactth = self.next1_relayaux1_start_address + 39;
         self.next1_relayaux1_presetcmdentryidx = self.next1_relayaux1_start_address + 41;
         self.next1_relayaux1_preseterrorwarningselect = self.next1_relayaux1_start_address + 43;
         self.next1_relayaux1_presetonsourceselect = self.next1_relayaux1_start_address + 45;
@@ -1516,8 +1549,6 @@ class Addresses:
         self.next1_relayaux2_presetpacpowdeactth = self.next1_relayaux2_start_address + 31;
         self.next1_relayaux2_presetsolarexcessongridpowactth = self.next1_relayaux2_start_address + 33;
         self.next1_relayaux2_presetsolarexcessongridpowdeactth = self.next1_relayaux2_start_address + 35;
-        self.next1_relayaux2_presetsolarexcessoffgridpowactth = self.next1_relayaux2_start_address + 37;
-        self.next1_relayaux2_presetsolarexcessoffgridpowdeactth = self.next1_relayaux2_start_address + 39;
         self.next1_relayaux2_presetcmdentryidx = self.next1_relayaux2_start_address + 41;
         self.next1_relayaux2_preseterrorwarningselect = self.next1_relayaux2_start_address + 43;
         self.next1_relayaux2_presetonsourceselect = self.next1_relayaux2_start_address + 45;
@@ -1631,6 +1662,7 @@ class Addresses:
         self.nextgateway_gatewaymodule_emmctotalsizekib = self.nextgateway_gatewaymodule_start_address + 6;
         self.nextgateway_gatewaymodule_usbmountedpartitionsnumber = self.nextgateway_gatewaymodule_start_address + 10;
         self.nextgateway_gatewaymodule_cputemperature = self.nextgateway_gatewaymodule_start_address + 16;
+        self.nextgateway_gatewaymodule_internetstatus = self.nextgateway_gatewaymodule_start_address + 20;
 
         # Object HmiDisplay Modbus Address
         self.nextgateway_hmidisplay_start_address = 1500;
@@ -1711,6 +1743,13 @@ class Addresses:
         self.nextgateway_modbususerlevel_start_address = 4500;
         self.nextgateway_modbususerlevel_userlevel = self.nextgateway_modbususerlevel_start_address + 0;
         self.nextgateway_modbususerlevel_userlevelcodeinput = self.nextgateway_modbususerlevel_start_address + 2;
+
+        # Object TermsAndConditions Modbus Address
+        self.nextgateway_termsandconditions_start_address = 4800;
+        self.nextgateway_termsandconditions_acceptedversion = self.nextgateway_termsandconditions_start_address + 0;
+        self.nextgateway_termsandconditions_acceptationdatetime = self.nextgateway_termsandconditions_start_address + 6;
+        self.nextgateway_termsandconditions_acceptationextent = self.nextgateway_termsandconditions_start_address + 8;
+        self.nextgateway_termsandconditions_acceptationorigin = self.nextgateway_termsandconditions_start_address + 10;
 
         # Object NetworkInterfaceEthernet Modbus Address
         self.nextgateway_networkinterfaceethernet_start_address = 5100;
