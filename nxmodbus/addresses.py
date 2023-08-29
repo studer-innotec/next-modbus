@@ -7,7 +7,7 @@ class Addresses:
     """
     def __init__(self, offset):
         self.version_major = 10
-        self.version_minor = 73
+        self.version_minor = 82
 
         self.deviceAddressDefault = offset + 1
         self.device_address_system = offset + 1;
@@ -1314,6 +1314,8 @@ class Addresses:
         self.next3_solar1_warnings = self.next3_solar1_start_address + 14;
         self.next3_solar1_depolarizationstate = self.next3_solar1_start_address + 16;
         self.next3_solar1_limitationstate = self.next3_solar1_start_address + 18;
+        self.next3_solar1_usercurrentlimit = self.next3_solar1_start_address + 20;
+        self.next3_solar1_userpowerlimit = self.next3_solar1_start_address + 22;
 
         # Object Solar2 Modbus Address
         self.next3_solar2_start_address = 7200;
@@ -1327,6 +1329,8 @@ class Addresses:
         self.next3_solar2_warnings = self.next3_solar2_start_address + 14;
         self.next3_solar2_depolarizationstate = self.next3_solar2_start_address + 16;
         self.next3_solar2_limitationstate = self.next3_solar2_start_address + 18;
+        self.next3_solar2_usercurrentlimit = self.next3_solar2_start_address + 20;
+        self.next3_solar2_userpowerlimit = self.next3_solar2_start_address + 22;
 
         # Object AlgoMppt1 Modbus Address
         self.next3_algomppt1_start_address = 7500;
@@ -1823,7 +1827,11 @@ class Addresses:
 
         # Object Webcommand Modbus Address
         self.nextgateway_webcommand_start_address = 8400;
+        self.nextgateway_webcommand_username = self.nextgateway_webcommand_start_address + 0;
+        self.nextgateway_webcommand_password = self.nextgateway_webcommand_start_address + 13;
         self.nextgateway_webcommand_webcommandstatus = self.nextgateway_webcommand_start_address + 21;
         self.nextgateway_webcommand_connections = self.nextgateway_webcommand_start_address + 23;
+        self.nextgateway_webcommand_accesspointname = self.nextgateway_webcommand_start_address + 25;
+        self.nextgateway_webcommand_accesspointpassword = self.nextgateway_webcommand_start_address + 38;
 
 
