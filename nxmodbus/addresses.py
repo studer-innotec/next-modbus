@@ -7,7 +7,7 @@ class Addresses:
     """
     def __init__(self, offset):
         self.version_major = 10
-        self.version_minor = 82
+        self.version_minor = 93
 
         self.deviceAddressDefault = offset + 1
         self.device_address_system = offset + 1;
@@ -28,6 +28,8 @@ class Addresses:
         self.system_earthingscheme_relayisclosed = self.system_earthingscheme_start_address + 4;
         self.system_earthingscheme_earthingerrors = self.system_earthingscheme_start_address + 5;
         self.system_earthingscheme_earthingwarnings = self.system_earthingscheme_start_address + 18;
+        self.system_earthingscheme_discontinuitycheckokcnt = self.system_earthingscheme_start_address + 20;
+        self.system_earthingscheme_discontinuitychecknokcnt = self.system_earthingscheme_start_address + 22;
 
         # Object EnergyPolicy Modbus Address
         self.system_energypolicy_start_address = 1800;
@@ -883,6 +885,8 @@ class Addresses:
         self.acsource_source_cmdentryidxforreducofactivepowerat90 = self.acsource_source_start_address + 283;
         self.acsource_source_phasebalancing = self.acsource_source_start_address + 285;
         self.acsource_source_voltageandfrequencytolerance = self.acsource_source_start_address + 287;
+        self.acsource_source_synchrothreshold = self.acsource_source_start_address + 289;
+        self.acsource_source_synchroduration = self.acsource_source_start_address + 291;
 
         # Object L1Source Modbus Address
         self.acsource_l1source_start_address = 1800;
@@ -1061,6 +1065,7 @@ class Addresses:
         self.acflexload_l1flexloadcontrrelay_presetcmdentryidx = self.acflexload_l1flexloadcontrrelay_start_address + 41;
         self.acflexload_l1flexloadcontrrelay_preseterrorwarningselect = self.acflexload_l1flexloadcontrrelay_start_address + 43;
         self.acflexload_l1flexloadcontrrelay_presetonsourceselect = self.acflexload_l1flexloadcontrrelay_start_address + 45;
+        self.acflexload_l1flexloadcontrrelay_presetaccouplingblankingtime = self.acflexload_l1flexloadcontrrelay_start_address + 47;
 
         # Object L2FlexLoadContrRelay Modbus Address
         self.acflexload_l2flexloadcontrrelay_start_address = 1500;
@@ -1085,6 +1090,7 @@ class Addresses:
         self.acflexload_l2flexloadcontrrelay_presetcmdentryidx = self.acflexload_l2flexloadcontrrelay_start_address + 41;
         self.acflexload_l2flexloadcontrrelay_preseterrorwarningselect = self.acflexload_l2flexloadcontrrelay_start_address + 43;
         self.acflexload_l2flexloadcontrrelay_presetonsourceselect = self.acflexload_l2flexloadcontrrelay_start_address + 45;
+        self.acflexload_l2flexloadcontrrelay_presetaccouplingblankingtime = self.acflexload_l2flexloadcontrrelay_start_address + 47;
 
         # Object L3FlexLoadContrRelay Modbus Address
         self.acflexload_l3flexloadcontrrelay_start_address = 1800;
@@ -1109,6 +1115,7 @@ class Addresses:
         self.acflexload_l3flexloadcontrrelay_presetcmdentryidx = self.acflexload_l3flexloadcontrrelay_start_address + 41;
         self.acflexload_l3flexloadcontrrelay_preseterrorwarningselect = self.acflexload_l3flexloadcontrrelay_start_address + 43;
         self.acflexload_l3flexloadcontrrelay_presetonsourceselect = self.acflexload_l3flexloadcontrrelay_start_address + 45;
+        self.acflexload_l3flexloadcontrrelay_presetaccouplingblankingtime = self.acflexload_l3flexloadcontrrelay_start_address + 47;
 
         # Object L1FlexLoadTimeCtrl Modbus Address
         self.acflexload_l1flexloadtimectrl_start_address = 2100;
@@ -1373,6 +1380,7 @@ class Addresses:
         self.next3_relayaux1_presetcmdentryidx = self.next3_relayaux1_start_address + 41;
         self.next3_relayaux1_preseterrorwarningselect = self.next3_relayaux1_start_address + 43;
         self.next3_relayaux1_presetonsourceselect = self.next3_relayaux1_start_address + 45;
+        self.next3_relayaux1_presetaccouplingblankingtime = self.next3_relayaux1_start_address + 47;
 
         # Object RelayAux2 Modbus Address
         self.next3_relayaux2_start_address = 8400;
@@ -1397,6 +1405,7 @@ class Addresses:
         self.next3_relayaux2_presetcmdentryidx = self.next3_relayaux2_start_address + 41;
         self.next3_relayaux2_preseterrorwarningselect = self.next3_relayaux2_start_address + 43;
         self.next3_relayaux2_presetonsourceselect = self.next3_relayaux2_start_address + 45;
+        self.next3_relayaux2_presetaccouplingblankingtime = self.next3_relayaux2_start_address + 47;
 
         # Object RelayAux1TimeCtrl Modbus Address
         self.next3_relayaux1timectrl_start_address = 8700;
@@ -1532,6 +1541,7 @@ class Addresses:
         self.next1_relayaux1_presetcmdentryidx = self.next1_relayaux1_start_address + 41;
         self.next1_relayaux1_preseterrorwarningselect = self.next1_relayaux1_start_address + 43;
         self.next1_relayaux1_presetonsourceselect = self.next1_relayaux1_start_address + 45;
+        self.next1_relayaux1_presetaccouplingblankingtime = self.next1_relayaux1_start_address + 47;
 
         # Object RelayAux2 Modbus Address
         self.next1_relayaux2_start_address = 3300;
@@ -1556,6 +1566,7 @@ class Addresses:
         self.next1_relayaux2_presetcmdentryidx = self.next1_relayaux2_start_address + 41;
         self.next1_relayaux2_preseterrorwarningselect = self.next1_relayaux2_start_address + 43;
         self.next1_relayaux2_presetonsourceselect = self.next1_relayaux2_start_address + 45;
+        self.next1_relayaux2_presetaccouplingblankingtime = self.next1_relayaux2_start_address + 47;
 
         # Object RelayAux1TimeCtrl Modbus Address
         self.next1_relayaux1timectrl_start_address = 3600;
@@ -1798,6 +1809,9 @@ class Addresses:
         self.nextgateway_webportal_certificateexpirydate = self.nextgateway_webportal_start_address + 6;
         self.nextgateway_webportal_uploaddebugdata = self.nextgateway_webportal_start_address + 8;
         self.nextgateway_webportal_readonly = self.nextgateway_webportal_start_address + 9;
+        self.nextgateway_webportal_certificateauthoritykeyidentifier = self.nextgateway_webportal_start_address + 10;
+        self.nextgateway_webportal_certificateauthoritycommonname = self.nextgateway_webportal_start_address + 60;
+        self.nextgateway_webportal_maxnumberofdaystosynchronize = self.nextgateway_webportal_start_address + 110;
 
         # Object UsbInterface1 Modbus Address
         self.nextgateway_usbinterface1_start_address = 6600;
