@@ -51,7 +51,7 @@ class NextModbusRtu:
         """
         self.serial_port.close()
 
-    def read_parameter(self, slave_id, address, prop_type, string_size=0):
+    def read_parameter(self, slave_id, address, prop_type, string_size=0, read_from_flash=False):
         """
         Read a parameter from a targeted device according to the given property type.
 
@@ -65,12 +65,14 @@ class NextModbusRtu:
         slave_id: int
             Slave identifier number (targeted device)
         address: int
-            Register starting address, see "Technical specification - Next Modbus appendix" for 
+            Register starting address, see "Technical specification - Next Modbus appendix" for
             the complete list of accessible register per device
         prop_type: PropType
             Property type given by the enum found in *proptypes.py*
         string_size: int
             When selecting String as prop_type, it is mandatory to give the string size.
+        read_from_flash: bool
+            Read from flash memory
 
         Returns
         -------
@@ -129,6 +131,13 @@ class NextModbusRtu:
                                                             nextModbus.addresses.system_earthingscheme_relayisclosed,
                                                             PropType.BOOL)
                     print('Earthing scheme relay status:', read_value)
+
+                    # Read the Earthing relay status from flash
+                    read_value = nextModbus.read_parameter( nextModbus.addresses.device_address_system,
+                                                            nextModbus.addresses.system_earthingscheme_relayisclosed,
+                                                            PropType.BOOL,
+                                                            read_from_flash=True)
+                    print('Earthing scheme relay status from flash:', read_value)
         """
         if (prop_type == PropType.STRING or prop_type == PropType.BYTEARRAY) and string_size == 0:
             logger.error("--> string_size parameter mandatory when reading a PropType.STRING")
@@ -150,7 +159,10 @@ class NextModbusRtu:
                 prop_type == PropType.UINT64 or \
                 prop_type == PropType.FLOAT64:
             size = 4
-        message = rtu.read_holding_registers(slave_id=slave_id, starting_address=address, quantity=size)
+        if read_from_flash:
+            message = rtu.read_input_registers(slave_id=slave_id, starting_address=address, quantity=size)
+        else:
+            message = rtu.read_holding_registers(slave_id=slave_id, starting_address=address, quantity=size)
         logger.debug("-> Transmit ADU : 0x%s", str(bytes(message).hex()))
         try:
             response = rtu.send_message(message, self.serial_port)
@@ -213,7 +225,7 @@ class NextModbusRtu:
         slave_id: int
             Slave identifier number (targeted device)
         address: int
-            Register starting address, see "Technical specification - Next Modbus appendix" for 
+            Register starting address, see "Technical specification - Next Modbus appendix" for
             the complete list of accessible register per device.
         value
             The value to write at the given address.
@@ -229,7 +241,7 @@ class NextModbusRtu:
         --------
         .. code-block:: python
 
-            # First check the version compatibility, then write the HMI display brightness, the GUI unlock code and 
+            # First check the version compatibility, then write the HMI display brightness, the GUI unlock code and
             # the nominal frequency of the tri-phased inverters.
             # Run this example within the 'examples/' folder using 'python ex_rtu_write_param.py' from a CLI after installing
             # nxmodbus package with 'pip install nxmodbus'
@@ -262,7 +274,7 @@ class NextModbusRtu:
                                                         PropType.BOOL)
                     assert echo == 1  # a value of 1 is expected on write action, represent the number of registers written
                     print('Number of registers written:', echo)
-                    
+
                     value = 20  # Brightness level at 10
                     echo = nextModbus.write_parameter(  nextModbus.addresses.device_address_nextgateway + INSTANCE,
                                                         nextModbus.addresses.nextgateway_hmidisplay_brightness,
@@ -343,12 +355,12 @@ class NextModbusRtu:
 
     def check_version(self):
         """
-        Read the NextGateway parameter which corresponds to the Object Model Version and compare it with 
+        Read the NextGateway parameter which corresponds to the Object Model Version and compare it with
         the version of the generated file *addresses.py*
 
         Note
         -----
-        A different major version means that the compatibility is broken and it is recommanded to update 
+        A different major version means that the compatibility is broken and it is recommanded to update
         the addresses list.
         A different minor version means that small modifications have been made. Some addresses could be
         removed or added.
@@ -362,7 +374,7 @@ class NextModbusRtu:
         --------
         None
         """
-        omv_remote = self.read_parameter(self.addresses.device_address_nextgateway, 
+        omv_remote = self.read_parameter(self.addresses.device_address_nextgateway,
                                             self.addresses.nextgateway_idcard_objectmodelversion,
                                             PropType.UINT)
         if omv_remote is not None:

@@ -58,7 +58,7 @@ class NextModbusTcp:
         """
         self.client.close()
 
-    def read_parameter(self, slave_id, address, prop_type, string_size=0):
+    def read_parameter(self, slave_id, address, prop_type, string_size=0, read_from_flash=False):
         """
         Read a parameter from a targeted device according to the given property type.
 
@@ -78,6 +78,8 @@ class NextModbusTcp:
             Property type given by the enum found in *proptypes.py*
         string_size: int
             When selecting String as prop_type, it is mandatory to give the string size.
+        read_from_flash: bool
+            Read from flash memory
 
         Returns
         -------
@@ -130,6 +132,13 @@ class NextModbusTcp:
                                                         nextModbus.addresses.system_earthingscheme_relayisclosed,
                                                         PropType.BOOL)
                 print('Earthing scheme relay status:', read_value)
+
+                # Read the Earthing relay status in Flash
+                read_value = nextModbus.read_parameter( nextModbus.addresses.device_address_system,
+                                                        nextModbus.addresses.system_earthingscheme_relayisclosed,
+                                                        PropType.BOOL,
+                                                        read_in_flash=True)
+                print('Earthing scheme relay status:', read_value)
         """
         if (prop_type == PropType.STRING or prop_type == PropType.BYTEARRAY) and string_size == 0:
             logger.error("--> string_size parameter mandatory when reading a PropType.STRING")
@@ -159,7 +168,10 @@ class NextModbusTcp:
                 logger.error("--> TCP connection error")
                 return None
         try:
-            response = self.client.read_holding_registers(reg_addr=address, reg_nb=size)
+            if read_from_flash:
+                response = self.client.read_input_registers(reg_addr=address, reg_nb=size)
+            else:
+                response = self.client.read_holding_registers(reg_addr=address, reg_nb=size)
         except (ValueError, KeyError) as e:
             logger.error("--> Modbus error : " + str(e))
             return None
