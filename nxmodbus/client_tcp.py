@@ -79,7 +79,9 @@ class NextModbusTcp:
         string_size: int
             When selecting String as prop_type, it is mandatory to give the string size.
         read_from_flash: bool
-            Read from flash memory
+            Read from flash memory. Slow reading operation to be used only when you want to
+            retrieve the default user-set value of a property that was previously overwritten by
+            a Modbus access
 
         Returns
         -------
