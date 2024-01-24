@@ -58,7 +58,7 @@ class NextModbusTcp:
         """
         self.client.close()
 
-    def read_parameter(self, slave_id, address, prop_type, string_size=0, read_from_flash=False):
+    def read_parameter(self, slave_id, address, prop_type, string_size=0, read_from_nvm=False):
         """
         Read a parameter from a targeted device according to the given property type.
 
@@ -78,8 +78,8 @@ class NextModbusTcp:
             Property type given by the enum found in *proptypes.py*
         string_size: int
             When selecting String as prop_type, it is mandatory to give the string size.
-        read_from_flash: bool
-            Read from flash memory. Slow reading operation to be used only when you want to
+        read_from_nvm: bool
+            Read from non-volatile memory. Slow reading operation to be used only when you want to
             retrieve the default user-set value of a property that was previously overwritten by
             a Modbus access
 
@@ -135,11 +135,11 @@ class NextModbusTcp:
                                                         PropType.BOOL)
                 print('Earthing scheme relay status:', read_value)
 
-                # Read the Earthing relay status in Flash
+                # Read the Earthing relay status in non-volatile memory
                 read_value = nextModbus.read_parameter( nextModbus.addresses.device_address_system,
                                                         nextModbus.addresses.system_earthingscheme_relayisclosed,
                                                         PropType.BOOL,
-                                                        read_in_flash=True)
+                                                        read_from_nvm=True)
                 print('Earthing scheme relay status:', read_value)
         """
         if (prop_type == PropType.STRING or prop_type == PropType.BYTEARRAY) and string_size == 0:
@@ -170,7 +170,7 @@ class NextModbusTcp:
                 logger.error("--> TCP connection error")
                 return None
         try:
-            if read_from_flash:
+            if read_from_nvm:
                 response = self.client.read_input_registers(reg_addr=address, reg_nb=size)
             else:
                 response = self.client.read_holding_registers(reg_addr=address, reg_nb=size)

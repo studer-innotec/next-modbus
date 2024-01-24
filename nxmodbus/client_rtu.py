@@ -51,7 +51,7 @@ class NextModbusRtu:
         """
         self.serial_port.close()
 
-    def read_parameter(self, slave_id, address, prop_type, string_size=0, read_from_flash=False):
+    def read_parameter(self, slave_id, address, prop_type, string_size=0, read_from_nvm=False):
         """
         Read a parameter from a targeted device according to the given property type.
 
@@ -71,8 +71,8 @@ class NextModbusRtu:
             Property type given by the enum found in *proptypes.py*
         string_size: int
             When selecting String as prop_type, it is mandatory to give the string size.
-        read_from_flash: bool
-            Read from flash memory. Slow reading operation to be used only when you want to
+        read_from_nvm: bool
+            Read from non-volatile memory. Slow reading operation to be used only when you want to
             retrieve the default user-set value of a property that was previously overwritten by
             a Modbus access
 
@@ -134,12 +134,12 @@ class NextModbusRtu:
                                                             PropType.BOOL)
                     print('Earthing scheme relay status:', read_value)
 
-                    # Read the Earthing relay status from flash
+                    # Read the Earthing relay status from non-volatile memory
                     read_value = nextModbus.read_parameter( nextModbus.addresses.device_address_system,
                                                             nextModbus.addresses.system_earthingscheme_relayisclosed,
                                                             PropType.BOOL,
-                                                            read_from_flash=True)
-                    print('Earthing scheme relay status from flash:', read_value)
+                                                            read_from_nvm=True)
+                    print('Earthing scheme relay status from non-volatile memory:', read_value)
         """
         if (prop_type == PropType.STRING or prop_type == PropType.BYTEARRAY) and string_size == 0:
             logger.error("--> string_size parameter mandatory when reading a PropType.STRING")
@@ -161,7 +161,7 @@ class NextModbusRtu:
                 prop_type == PropType.UINT64 or \
                 prop_type == PropType.FLOAT64:
             size = 4
-        if read_from_flash:
+        if read_from_nvm:
             message = rtu.read_input_registers(slave_id=slave_id, starting_address=address, quantity=size)
         else:
             message = rtu.read_holding_registers(slave_id=slave_id, starting_address=address, quantity=size)
