@@ -46,3 +46,10 @@ if __name__ == "__main__":
                                                 nextModbus.addresses.system_earthingscheme_relayisclosed,
                                                 PropType.BOOL)
         print('Earthing scheme relay status:', read_value)
+
+        # Read the Earthing relay status from non-volatile memory
+        read_value = nextModbus.read_parameter( nextModbus.addresses.device_address_system,
+                                                nextModbus.addresses.system_earthingscheme_relayisclosed,
+                                                PropType.BOOL,
+                                                read_from_nvm=True)
+        print('Earthing scheme relay status from non-volatile memory:', read_value)
