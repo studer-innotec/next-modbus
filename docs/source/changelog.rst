@@ -10,3 +10,9 @@ Changelog
 ++++++++++++++++++
 
 * Add Modbus TCP.
+
+0.3.0 (18-12-2024)
+++++++++++++++++++
+
+* Update modbus addresses for object model 10.127.
+* Minor improvements for examples.
