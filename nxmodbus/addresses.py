@@ -7,7 +7,7 @@ class Addresses:
     """
     def __init__(self, offset):
         self.version_major = 10
-        self.version_minor = 125
+        self.version_minor = 127
 
         self.deviceAddressDefault = offset + 1
         self.device_address_system = offset + 1
