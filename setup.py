@@ -9,8 +9,8 @@ with open(os.path.join(current_directory, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 name = "nxmodbus"
-version = "0.2"
-release = "0.2.0"
+version = "0.3"
+release = "0.3.0"
 
 setuptools.setup(
     name=name,
