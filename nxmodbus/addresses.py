@@ -7,7 +7,7 @@ class Addresses:
     """
     def __init__(self, offset):
         self.version_major = 10
-        self.version_minor = 127
+        self.version_minor = 137
 
         self.deviceAddressDefault = offset + 1
         self.device_address_system = offset + 1
@@ -17,7 +17,8 @@ class Addresses:
         self.device_address_next3 = offset + 14
         self.device_address_next1 = offset + 29
         self.device_address_nextgateway = offset + 59
-        self.device_address_last_valid_address = offset + self.device_address_nextgateway + 1
+        self.device_address_powermeters = offset + 89
+        self.device_address_last_valid_address = offset + self.device_address_powermeters + 5
 
         # Group System Modbus Address
         # Object EarthingScheme Modbus Address
@@ -428,6 +429,11 @@ class Addresses:
         self.system_solargroupall_start_address = 7800
         self.system_solargroupall_nbr = self.system_solargroupall_start_address + 0                                     # Property ID: 0, [-] (uint). Number of converters.
         self.system_solargroupall_status = self.system_solargroupall_start_address + 2                                  # Property ID: 1, [-] (bitfield). Current status.
+        self.system_solargroupall_vt40nbr = self.system_solargroupall_start_address + 4                                 # Property ID: 2, [-] (uint). Number of vt40.
+        self.system_solargroupall_vt65nbr = self.system_solargroupall_start_address + 6                                 # Property ID: 3, [-] (uint). Number of vt65.
+        self.system_solargroupall_vt80nbr = self.system_solargroupall_start_address + 8                                 # Property ID: 4, [-] (uint). Number of vt80.
+        self.system_solargroupall_vs70nbr = self.system_solargroupall_start_address + 10                                # Property ID: 5, [-] (uint). Number of vs70.
+        self.system_solargroupall_vs120nbr = self.system_solargroupall_start_address + 12                               # Property ID: 6, [-] (uint). Number of vs120.
 
         # Object SystemTotal Modbus Address
         self.system_systemtotal_start_address = 8100
@@ -453,6 +459,7 @@ class Addresses:
         self.system_systemtotal_acloadandflexloadproducedpower = self.system_systemtotal_start_address + 34             # Property ID: 22, [W] (float). AC Loads and FlexLoads produced power.
         self.system_systemtotal_acloadandflexloaddayconsumedenergy = self.system_systemtotal_start_address + 36         # Property ID: 25, [Wh] (float). AC Loads and FlexLoads day consumed energy.
         self.system_systemtotal_acloadandflexloaddayproducedenergy = self.system_systemtotal_start_address + 38         # Property ID: 26, [Wh] (float). AC Loads and FlexLoads day produced energy.
+        self.system_systemtotal_nbrofsmartmeters = self.system_systemtotal_start_address + 44                           # Property ID: 29, [-] (uint). Number of powermeters.
 
         # Object BatteryCommonAll Modbus Address
         self.system_batterycommonall_start_address = 8400
@@ -527,14 +534,14 @@ class Addresses:
         self.battery_battery_forcedtargetvoltagemax = self.battery_battery_start_address + 68                           # Property ID: 44, [V] (float). Forced value for \"Target voltage max\" (id 7) when \"Forced mode\" (id 43).
         self.battery_battery_forcedtargetvoltagemin = self.battery_battery_start_address + 70                           # Property ID: 45, [V] (float). Forced value for \"Target voltage min\" (id 8) when \"Forced mode\" (id 43).
         self.battery_battery_forcedtargetchargingcurrent = self.battery_battery_start_address + 72                      # Property ID: 46, [A] (float). Forced value for \"Target charging current low limit\" (id 3) and \"Target charging current high limit\" (id 4) when \"Forced mode\" (id 43). Please enter a positive value to set a target charging current and a negative value to set a target discharging current.
-        self.battery_battery_limitslevel = self.battery_battery_start_address + 74                                      # Property ID: 47, [-] (uint). Limits level sent to the power flow dispatcher.
+        self.battery_battery_lowlimitlevel = self.battery_battery_start_address + 74                                    # Property ID: 47, [-] (uint). Low limit level sent to the power flow dispatcher.
         self.battery_battery_setpointslevel = self.battery_battery_start_address + 76                                   # Property ID: 48, [-] (uint). Setpoints level sent to the power flow dispatcher.
         self.battery_battery_cominterface = self.battery_battery_start_address + 83                                     # Property ID: 52, [-] (enum). Indicates if the battery is communicating or not and if yes, indicates which communication interface is used. This property must be changed only by the wizard and never by the user !
         self.battery_battery_nominalvoltage = self.battery_battery_start_address + 85                                   # Property ID: 53, [V] (float). Battery nominal voltage. This property must be changed only by the wizard and never by the user !
         self.battery_battery_nominalcapacity = self.battery_battery_start_address + 89                                  # Property ID: 55, [Ah] (float). Battery nominal capacity. This property must be changed only by the wizard and never by the user !
         self.battery_battery_canprotocol = self.battery_battery_start_address + 91                                      # Property ID: 56, [-] (enum). Indicates which CAN protocol is used. This property must be changed only by the wizard and never by the user !
         self.battery_battery_rs485protocol = self.battery_battery_start_address + 93                                    # Property ID: 57, [-] (enum). Indicates which RS485 protocol is used. This property must be changed only by the wizard and never by the user !
-        self.battery_battery_manufacturername = self.battery_battery_start_address + 95                                 # Property ID: 58, [-] (enum). Battery manufacturer name. This property must be changed only by the wizard and never by the user !
+        self.battery_battery_manufacturername = self.battery_battery_start_address + 95                                 # Property ID: 58, [-] (enum). Battery brand. This property must be changed only by the wizard and never by the user !
         self.battery_battery_baudrate = self.battery_battery_start_address + 97                                         # Property ID: 59, [kbps] (uint). Communication baud rate. This property must be changed only by the wizard and never by the user !
         self.battery_battery_technology = self.battery_battery_start_address + 100                                      # Property ID: 61, [-] (enum). Battery technology. This property must be changed only by the wizard and never by the user !
         self.battery_battery_adaptivesocforbackupundervoltageincrement = self.battery_battery_start_address + 111       # Property ID: 67, [%] (uint). Used to try to recharge the battery when an undervoltage has been detected. \"Current SOC for backup\" (id 38) is set higher than the current SOC by a quantity set via this property. This function is disabled if \"Adaptive SOC for backup\" (id 33) is set to false or if this value is set to 0.
@@ -563,6 +570,7 @@ class Addresses:
         self.battery_battery_batterycontributorsvoltagedifferenceforerror = self.battery_battery_start_address + 155    # Property ID: 106, [V] (float). Useful only if at least two devices are connected to the battery. Set the voltage level at which \"Abnormal measured voltage\" (value 524288) is raised. The error is set if the highest battery voltage measured by one device - the lowest battery voltage measured by another device is greather than this value for 5s. If a current is flowing, the level is automatically adapted to take into account the voltage drop on the cables.
         self.battery_battery_batterycontributorstemperaturedifferenceforwarning = self.battery_battery_start_address + 157    # Property ID: 107, [°C] (float). Useful only with non communicating battery and if at least two devices are measuring the battery temperature. Set the temperature level at which \"Abnormal measured temperature\" (value 65536) is raised. The warning is set if the highest battery temperature measured by one device - the lowest battery temperature measured by another device is greather than this value.
         self.battery_battery_ignorebmschargerequest = self.battery_battery_start_address + 159                          # Property ID: 108, [-] (bool). Used only with communicating batteries. If true, the charge request received by the BMS is ignored.
+        self.battery_battery_highlimitlevel = self.battery_battery_start_address + 160                                  # Property ID: 109, [-] (uint). High limit level sent to the power flow dispatcher.
 
         # Object BatteryCycle Modbus Address
         self.battery_batterycycle_start_address = 600
@@ -851,10 +859,10 @@ class Addresses:
         self.acsource_source_observationtimeforstartgeneration = self.acsource_source_start_address + 206               # Property ID: 108, [s] (float). Observation time for connection. EN 50549-1 chapter 4.10.3.
         self.acsource_source_activepowerincreasegradientforstartgeneration = self.acsource_source_start_address + 208   # Property ID: 109, [%/min] (float). Active power increase gradient after connection. EN 50549-1 chapter 4.10.3.
         self.acsource_source_cmdentryidxtoallowtransfertripping = self.acsource_source_start_address + 210              # Property ID: 110, [-] (int). Index of the command entry interface used to allow transfer trip. DRED port index used for DRM0. (0 value disable remote operation). EN 50549-1 chapter 4.9.5. AS/NZS 4777.2 section 3.2.
-        self.acsource_source_cmdentryidxforceasingactivepower = self.acsource_source_start_address + 212                # Property ID: 111, [-] (int). Index of the command entry interface used for ceasing active power (0 value disable remote operation). EN 50549-1 chapter 4.11.1.
-        self.acsource_source_cmdentryidxforreductionofactivepoweronsetpoint = self.acsource_source_start_address + 214  # Property ID: 112, [-] (int). Index of the command entry interface used for reduction of active power on setpoint (0 value disable remote operation). EN 50549-1 chapter 4.11.2.
-        self.acsource_source_reductionofactivepowersetpoint = self.acsource_source_start_address + 216                  # Property ID: 113, [%] (float). Reduced active power in case of remote operation. EN 50549-1 chapter 4.11.2.
-        self.acsource_source_reductionofactivepowersetpointslope = self.acsource_source_start_address + 218             # Property ID: 114, [%/s] (float). Slope for the reduction of active power in case of remote operation. Slope limitation is disable if this value is set to 0. EN 50549-1 chapter 4.11.2.
+        self.acsource_source_cmdentryidxforceasingproducedactivepower = self.acsource_source_start_address + 212        # Property ID: 111, [-] (int). Index of the command entry interface used for ceasing produced active power (0 value disable remote operation). EN 50549-1 chapter 4.11.1.
+        self.acsource_source_cmdentryidxforreductionofproducedactivepoweronsetpoint = self.acsource_source_start_address + 214    # Property ID: 112, [-] (int). Index of the command entry interface used for reduction of produced active power (0 value disable remote operation). EN 50549-1 chapter 4.11.2.
+        self.acsource_source_reductionofproducedactivepowersetpoint = self.acsource_source_start_address + 216          # Property ID: 113, [%] (float). Reduced produced active power in case of remote operation. EN 50549-1 chapter 4.11.2.
+        self.acsource_source_reductionofproducedactivepowersetpointslope = self.acsource_source_start_address + 218     # Property ID: 114, [%/s] (float). Slope for the reduction of produced active power in case of remote operation. Slope limitation is disable if this value is set to 0. EN 50549-1 chapter 4.11.2.
         self.acsource_source_voltagetostartproducedactivepowerreduction = self.acsource_source_start_address + 220      # Property ID: 115, [%] (float). Voltage at which the the produced normalised active power start to be reduced. EN 50549-1 chapter 4.7.3. AS/NZS 4777.2 section 3.3.2.2
         self.acsource_source_voltageforreducedproducedactivepower = self.acsource_source_start_address + 222            # Property ID: 116, [%] (float). Voltage over which the produced normalised active power is reduced to \"Reduced produced active power\" (id 130). AS/NZS 4777.2 section 3.3.2.2
         self.acsource_source_activepowercurvetimeconstant = self.acsource_source_start_address + 224                    # Property ID: 117, [s] (float). Time constant of voltage-dependant active power curves P(U). TOR Erzeuger Typ A chapter 5.3.6. EN 50549-1 chapter 4.7.3. AS/NZS 4777.2 section 3.3.2.1
@@ -866,8 +874,8 @@ class Addresses:
         self.acsource_source_antiislanding = self.acsource_source_start_address + 242                                   # Property ID: 127, [-] (enum). Anti-islanding function activation and choice of the detection method.
         self.acsource_source_antiislandingrocofthreshold = self.acsource_source_start_address + 244                     # Property ID: 128, [Hz/s] (float). Anti-islanding RoCoF threshold used by the \"RoCoF tripping\" method.
         self.acsource_source_antiislandingrocofoperatetime = self.acsource_source_start_address + 246                   # Property ID: 129, [s] (float). Anti-islanding RoCoF operate time used by the \"RoCoF tripping\" method.
-        self.acsource_source_reducedproducedactivepower = self.acsource_source_start_address + 248                      # Property ID: 130, [%] (float). Reduced produced normalised active power at voltage over \"Voltage for reduced produced P\" (id 116). EN 50549-1 chapter 4.7.3. AS/NZS 4777.2 section 3.3.2.2
-        self.acsource_source_reducedconsummedactivepower = self.acsource_source_start_address + 250                     # Property ID: 131, [%] (float). Reduced consummed normalised active power at voltage under \"Voltage for reduced consummed P\" (id 132). AS/NZS 4777.2 section 3.4.3
+        self.acsource_source_reducedproducedactivepower = self.acsource_source_start_address + 248                      # Property ID: 130, [%] (float). Reduced produced normalised active power at voltages over \"Voltage for reduced produced P\" (id 116). EN 50549-1 chapter 4.7.3. AS/NZS 4777.2 section 3.3.2.2. Note that values < 0% correspond to inverting the power sign, i.e. switching to consumption. (CEI 0-21 chapter 8.5.3.1 / Bbis.7.1)
+        self.acsource_source_reducedconsummedactivepower = self.acsource_source_start_address + 250                     # Property ID: 131, [%] (float). Reduced consummed normalised active power at voltage under \"Voltage for reduced consummed P\" (id 132). AS/NZS 4777.2 section 3.4.3. Note that values < 0% correspond to inverting the power sign, i.e. switching to prduction.
         self.acsource_source_voltageforreducedconsummedactivepower = self.acsource_source_start_address + 252           # Property ID: 132, [%] (float). Voltage under which the normalised consummed active power is reduced to \"Reduced consummed active power\" (id 131). AS/NZS 4777.2 section 3.4.3
         self.acsource_source_voltagetostartconsummedactivepowerreduction = self.acsource_source_start_address + 254     # Property ID: 133, [%] (float). Voltage at which the the consummed normalised active power start to be reduced. AS/NZS 4777.2 section 3.4.3
         self.acsource_source_transitionfrequencyforoverfrequency = self.acsource_source_start_address + 256             # Property ID: 134, [Hz] (float). Frequency (relative to \"Nominal frequency\" (id 22)) where power output level is zero of frequency-dependant active power during over-frequency situation. Use a huge value to disable the feature. AS/NZS 4777.2 section 4.5.3.3 (f transition).
@@ -876,19 +884,29 @@ class Addresses:
         self.acsource_source_pmaxfrequencyforunderfrequency = self.acsource_source_start_address + 262                  # Property ID: 137, [Hz] (float). Frequency (relative to \"Nominal frequency\" (id 22)) where power output level is maximum of frequency-dependant active power during under-frequency situation. Use a huge value to disable the feature. AS/NZS 4777.2 section 4.5.3.2 (f Pmax).
         self.acsource_source_hystfrequencyforoverunderfrequency = self.acsource_source_start_address + 264              # Property ID: 138, [Hz] (float). Frequency hystereris for returning in continous operation after over/under-frequency situation. AS/NZS 4777.2 section 4.5.3.1 (f hyst).
         self.acsource_source_compensateharmonics = self.acsource_source_start_address + 266                             # Property ID: 139, [-] (bool). Compensation of the invreter current harmonics
-        self.acsource_source_cmdentryidxforreducofactivepowerat10 = self.acsource_source_start_address + 267            # Property ID: 140, [-] (int). Index of the command entry interface used for reduction of active power at 10% percent of the rated power (0 value disable remote operation).
-        self.acsource_source_cmdentryidxforreducofactivepowerat20 = self.acsource_source_start_address + 269            # Property ID: 141, [-] (int). Index of the command entry interface used for reduction of active power at 20% percent of the rated power (0 value disable remote operation).
-        self.acsource_source_cmdentryidxforreducofactivepowerat30 = self.acsource_source_start_address + 271            # Property ID: 142, [-] (int). Index of the command entry interface used for reduction of active power at 30% percent of the rated power (0 value disable remote operation).
-        self.acsource_source_cmdentryidxforreducofactivepowerat40 = self.acsource_source_start_address + 273            # Property ID: 143, [-] (int). Index of the command entry interface used for reduction of active power at 40% percent of the rated power (0 value disable remote operation).
-        self.acsource_source_cmdentryidxforreducofactivepowerat50 = self.acsource_source_start_address + 275            # Property ID: 144, [-] (int). Index of the command entry interface used for reduction of active power at 50% percent of the rated power (0 value disable remote operation).
-        self.acsource_source_cmdentryidxforreducofactivepowerat60 = self.acsource_source_start_address + 277            # Property ID: 145, [-] (int). Index of the command entry interface used for reduction of active power at 60% percent of the rated power (0 value disable remote operation).
-        self.acsource_source_cmdentryidxforreducofactivepowerat70 = self.acsource_source_start_address + 279            # Property ID: 146, [-] (int). Index of the command entry interface used for reduction of active power at 70% percent of the rated power (0 value disable remote operation).
-        self.acsource_source_cmdentryidxforreducofactivepowerat80 = self.acsource_source_start_address + 281            # Property ID: 147, [-] (int). Index of the command entry interface used for reduction of active power at 80% percent of the rated power (0 value disable remote operation).
-        self.acsource_source_cmdentryidxforreducofactivepowerat90 = self.acsource_source_start_address + 283            # Property ID: 148, [-] (int). Index of the command entry interface used for reduction of active power at 90% percent of the rated power (0 value disable remote operation).
+        self.acsource_source_cmdentryidxforreductionofproducedactivepowerat10 = self.acsource_source_start_address + 267    # Property ID: 140, [-] (int). Index of the command entry interface used for reduction of produced active power at 10% percent of the rated power (0 value disable remote operation).
+        self.acsource_source_cmdentryidxforreductionofproducedactivepowerat20 = self.acsource_source_start_address + 269    # Property ID: 141, [-] (int). Index of the command entry interface used for reduction of produced active power at 20% percent of the rated power (0 value disable remote operation).
+        self.acsource_source_cmdentryidxforreductionofproducedactivepowerat30 = self.acsource_source_start_address + 271    # Property ID: 142, [-] (int). Index of the command entry interface used for reduction of produced active power at 30% percent of the rated power (0 value disable remote operation).
+        self.acsource_source_cmdentryidxforreductionofproducedactivepowerat40 = self.acsource_source_start_address + 273    # Property ID: 143, [-] (int). Index of the command entry interface used for reduction of produced active power at 40% percent of the rated power (0 value disable remote operation).
+        self.acsource_source_cmdentryidxforreductionofproducedactivepowerat50 = self.acsource_source_start_address + 275    # Property ID: 144, [-] (int). Index of the command entry interface used for reduction of produced active power at 50% percent of the rated power (0 value disable remote operation).
+        self.acsource_source_cmdentryidxforreductionofproducedactivepowerat60 = self.acsource_source_start_address + 277    # Property ID: 145, [-] (int). Index of the command entry interface used for reduction of produced active power at 60% percent of the rated power (0 value disable remote operation).
+        self.acsource_source_cmdentryidxforreductionofproducedactivepowerat70 = self.acsource_source_start_address + 279    # Property ID: 146, [-] (int). Index of the command entry interface used for reduction of produced active power at 70% percent of the rated power (0 value disable remote operation).
+        self.acsource_source_cmdentryidxforreductionofproducedactivepowerat80 = self.acsource_source_start_address + 281    # Property ID: 147, [-] (int). Index of the command entry interface used for reduction of produced active power at 80% percent of the rated power (0 value disable remote operation).
+        self.acsource_source_cmdentryidxforreductionofproducedactivepowerat90 = self.acsource_source_start_address + 283    # Property ID: 148, [-] (int). Index of the command entry interface used for reduction of produced active power at 90% percent of the rated power (0 value disable remote operation).
         self.acsource_source_phasebalancing = self.acsource_source_start_address + 285                                  # Property ID: 149, [-] (enum). Method used to distribute the total required power to each phase.
         self.acsource_source_voltageandfrequencytolerance = self.acsource_source_start_address + 287                    # Property ID: 150, [-] (enum). Tolarance to voltage and frequency faults.
         self.acsource_source_synchrothreshold = self.acsource_source_start_address + 289                                # Property ID: 151, [V] (float). The voltage differance in between AC-Loads and AC-Source must be smaller than \"Synchro. threshold\" (id 151) during \"Synchro. duration\" (id 152) to allow the connection.
         self.acsource_source_synchroduration = self.acsource_source_start_address + 291                                 # Property ID: 152, [s] (float). The voltage differance in between AC-Loads and AC-Source must be smaller than \"Synchro. threshold\" (id 151) during \"Synchro. duration\" (id 152) to allow the connection.
+        self.acsource_source_undervoltagecurveu2 = self.acsource_source_start_address + 293                             # Property ID: 153, [%] (float). UVRT voltage extension at \"Under-voltage curve T1\" (id 34). This modification of the UVRT curve corresponds to CEI 0-21 chapter 8.5.1(b) Fig. 29 (Uclear). To disable this extension set this value equal to \"Under-voltage curve U1\" (id 33).
+        self.acsource_source_reactivepowercontrollockinvoltage = self.acsource_source_start_address + 295               # Property ID: 154, [%] (float). Normalised lock-in voltage of cos(φ) = f(P) control according to CEI 0-21 chapter E.2. This feature can be disabled by setting the value equal to \"React. pow. control lock-out volt.\" (id 155).
+        self.acsource_source_reactivepowercontrollockoutvoltage = self.acsource_source_start_address + 297              # Property ID: 155, [%] (float). Normalised lock-out voltage of cos(φ) = f(P) control according to CEI 0-21 chapter E.2. This feature can be disabled by setting the value equal to \"React. pow. control lock-in volt.\" (id 154).
+        self.acsource_source_clearingdelayforoverunderfrequency = self.acsource_source_start_address + 299              # Property ID: 156, [s] (float). Delay before returning into continous operation after over/under-frequency situation. AS/NZS 4777.2 section 4.5.3.2/4.5.3.3. CEI 0-21 chapter 8.5.3.4. Note that this is similar to tstop (EN 50549-1 Ch. 4.6.1 Fig. 10), but applied in over- and under-frequency conditions.
+        self.acsource_source_selftestactivationsignal = self.acsource_source_start_address + 301                        # Property ID: 157, [-] (signal). Activation of the voltage and frequency interface protection self-test according to CEI 0-21 A.4.4. Note that this test can take several minutes and the AC source relays will open/close multiple times, as well as errors and warnings will be present. If the test is passed, the device reconnects automatically to the grid. The test can be interrupted by disconnecting the AC source manually (turn-off system total or disable \"Connection allowed\" (id 4)).
+        self.acsource_source_selftestgradientvoltage = self.acsource_source_start_address + 302                         # Property ID: 158, [%/s] (float). Voltage gradient for the threshold variation of voltage protection functions during self-test (CEI 0-21 A.4.4).
+        self.acsource_source_selftestgradientfrequency = self.acsource_source_start_address + 304                       # Property ID: 159, [mHz/s] (float). Frequency gradient for the threshold variation of frequency protection functions during self-test (CEI 0-21 A.4.4).
+        self.acsource_source_selfteststatus = self.acsource_source_start_address + 306                                  # Property ID: 160, [-] (bitfield). Indicates the current state of the interface protection self-test. Note that a new test is only authorized when the AC Source is connected without errors/warnings.
+        self.acsource_source_cmdentryidxforreductionofconsumedactivepoweronsetpoint = self.acsource_source_start_address + 308    # Property ID: 161, [-] (int). Index of the command entry interface used for reduction of consumed active power (0 value disable remote operation).
+        self.acsource_source_reductionofconsumedactivepowersetpoint = self.acsource_source_start_address + 310          # Property ID: 162, [W] (float). Reduced consumed active power in case of remote operation. Unlike \"Reduction of produced P\" (id 113), which is expressed as a percentage of the nominal power of inverters connected to the phase (governed by grid connection standards), the reduction of consumed power is expressed in W (per phase).
 
         # Object L1Source Modbus Address
         self.acsource_l1source_start_address = 1800
@@ -905,8 +923,11 @@ class Addresses:
         self.acsource_l1source_maxsourcedreactivepower = self.acsource_l1source_start_address + 20                      # Property ID: 11, [VA] (float). Max sourced reactive power sent to the power flow dispatcher.
         self.acsource_l1source_maxsinkedreactivepower = self.acsource_l1source_start_address + 22                       # Property ID: 12, [VA] (float). Max sinked reactive power sent to the power flow dispatcher.
         self.acsource_l1source_targetsourcedactivepower = self.acsource_l1source_start_address + 24                     # Property ID: 13, [W] (float). Target sourced active power sent to the power flow dispatcher.
-        self.acsource_l1source_limitslevel = self.acsource_l1source_start_address + 28                                  # Property ID: 15, [-] (int). Limits level sent to the power flow dispatcher.
+        self.acsource_l1source_sinkedlimitlevel = self.acsource_l1source_start_address + 28                             # Property ID: 15, [-] (int). Sinked limit level sent to the power flow dispatcher.
         self.acsource_l1source_setpointslevel = self.acsource_l1source_start_address + 30                               # Property ID: 16, [-] (int). Setpoints level sent to the power flow dispatcher.
+        self.acsource_l1source_selftestresultsfield = self.acsource_l1source_start_address + 32                         # Property ID: 17, [-] (char[99]). The displayed values show encoded results of the interface protection self-test in hexadecimal format (FFF = invalid value). For Decoding (C=Column,R=Row): (C1,R1):(C2,R1):(C3,R1):(C4,R1) : Measured voltages at tripping, RealValue = 125/4095*DisplayValue [%]. (C5,R1):(C6,R1):(C7,R1):(C8,R1) : Measured frequencies at tripping, RealValue = 10/4095*DisplayValue + NominalFreq - 5 [Hz]. (C1,R2):(C2,R2):(C3,R2):(C4,R2) : Absolute errors on voltage thresholds, RealValue = 5/4095*DisplayValue [%]. (C5,R2):(C6,R2):(C7,R2):(C8,R2) : Absolute errors on frequency thresholds, RealValue = 20/4095*DisplayValue [mHz]. All Row3 : Absolute errors on trip time, RealValue = 1000/4095*DisplayValue [ms]. Note the test order per column : C1=UnderVoltageStage1, C2=UnderVoltageStage2, C3=OverVoltageStage1, C4=OverVoltageStage2, C5=UnderFrequencyStage1, C6=UnderFrequencyStage2, C7=OverFrequencyStage1, C8=OverFrequencyStage2. For more details see user manual.
+        self.acsource_l1source_sourcedlimitlevel = self.acsource_l1source_start_address + 84                            # Property ID: 19, [-] (int). Sourced limit level sent to the power flow dispatcher.
+        self.acsource_l1source_deviceid = self.acsource_l1source_start_address + 86                                     # Property ID: 20, [-] (int). The ID of the device associated with this AC input.
 
         # Object L2Source Modbus Address
         self.acsource_l2source_start_address = 2100
@@ -923,8 +944,11 @@ class Addresses:
         self.acsource_l2source_maxsourcedreactivepower = self.acsource_l2source_start_address + 20                      # Property ID: 11, [VA] (float). Max sourced reactive power sent to the power flow dispatcher.
         self.acsource_l2source_maxsinkedreactivepower = self.acsource_l2source_start_address + 22                       # Property ID: 12, [VA] (float). Max sinked reactive power sent to the power flow dispatcher.
         self.acsource_l2source_targetsourcedactivepower = self.acsource_l2source_start_address + 24                     # Property ID: 13, [W] (float). Target sourced active power sent to the power flow dispatcher.
-        self.acsource_l2source_limitslevel = self.acsource_l2source_start_address + 28                                  # Property ID: 15, [-] (int). Limits level sent to the power flow dispatcher.
+        self.acsource_l2source_sinkedlimitlevel = self.acsource_l2source_start_address + 28                             # Property ID: 15, [-] (int). Sinked limit level sent to the power flow dispatcher.
         self.acsource_l2source_setpointslevel = self.acsource_l2source_start_address + 30                               # Property ID: 16, [-] (int). Setpoints level sent to the power flow dispatcher.
+        self.acsource_l2source_selftestresultsfield = self.acsource_l2source_start_address + 32                         # Property ID: 17, [-] (char[99]). The displayed values show encoded results of the interface protection self-test in hexadecimal format (FFF = invalid value). For Decoding (C=Column,R=Row): (C1,R1):(C2,R1):(C3,R1):(C4,R1) : Measured voltages at tripping, RealValue = 125/4095*DisplayValue [%]. (C5,R1):(C6,R1):(C7,R1):(C8,R1) : Measured frequencies at tripping, RealValue = 10/4095*DisplayValue + NominalFreq - 5 [Hz]. (C1,R2):(C2,R2):(C3,R2):(C4,R2) : Absolute errors on voltage thresholds, RealValue = 5/4095*DisplayValue [%]. (C5,R2):(C6,R2):(C7,R2):(C8,R2) : Absolute errors on frequency thresholds, RealValue = 20/4095*DisplayValue [mHz]. All Row3 : Absolute errors on trip time, RealValue = 1000/4095*DisplayValue [ms]. Note the test order per column : C1=UnderVoltageStage1, C2=UnderVoltageStage2, C3=OverVoltageStage1, C4=OverVoltageStage2, C5=UnderFrequencyStage1, C6=UnderFrequencyStage2, C7=OverFrequencyStage1, C8=OverFrequencyStage2. For more details see user manual.
+        self.acsource_l2source_sourcedlimitlevel = self.acsource_l2source_start_address + 84                            # Property ID: 19, [-] (int). Sourced limit level sent to the power flow dispatcher.
+        self.acsource_l2source_deviceid = self.acsource_l2source_start_address + 86                                     # Property ID: 20, [-] (int). The ID of the device associated with this AC input.
 
         # Object L3Source Modbus Address
         self.acsource_l3source_start_address = 2400
@@ -941,8 +965,11 @@ class Addresses:
         self.acsource_l3source_maxsourcedreactivepower = self.acsource_l3source_start_address + 20                      # Property ID: 11, [VA] (float). Max sourced reactive power sent to the power flow dispatcher.
         self.acsource_l3source_maxsinkedreactivepower = self.acsource_l3source_start_address + 22                       # Property ID: 12, [VA] (float). Max sinked reactive power sent to the power flow dispatcher.
         self.acsource_l3source_targetsourcedactivepower = self.acsource_l3source_start_address + 24                     # Property ID: 13, [W] (float). Target sourced active power sent to the power flow dispatcher.
-        self.acsource_l3source_limitslevel = self.acsource_l3source_start_address + 28                                  # Property ID: 15, [-] (int). Limits level sent to the power flow dispatcher.
+        self.acsource_l3source_sinkedlimitlevel = self.acsource_l3source_start_address + 28                             # Property ID: 15, [-] (int). Sinked limit level sent to the power flow dispatcher.
         self.acsource_l3source_setpointslevel = self.acsource_l3source_start_address + 30                               # Property ID: 16, [-] (int). Setpoints level sent to the power flow dispatcher.
+        self.acsource_l3source_selftestresultsfield = self.acsource_l3source_start_address + 32                         # Property ID: 17, [-] (char[99]). The displayed values show encoded results of the interface protection self-test in hexadecimal format (FFF = invalid value). For Decoding (C=Column,R=Row): (C1,R1):(C2,R1):(C3,R1):(C4,R1) : Measured voltages at tripping, RealValue = 125/4095*DisplayValue [%]. (C5,R1):(C6,R1):(C7,R1):(C8,R1) : Measured frequencies at tripping, RealValue = 10/4095*DisplayValue + NominalFreq - 5 [Hz]. (C1,R2):(C2,R2):(C3,R2):(C4,R2) : Absolute errors on voltage thresholds, RealValue = 5/4095*DisplayValue [%]. (C5,R2):(C6,R2):(C7,R2):(C8,R2) : Absolute errors on frequency thresholds, RealValue = 20/4095*DisplayValue [mHz]. All Row3 : Absolute errors on trip time, RealValue = 1000/4095*DisplayValue [ms]. Note the test order per column : C1=UnderVoltageStage1, C2=UnderVoltageStage2, C3=OverVoltageStage1, C4=OverVoltageStage2, C5=UnderFrequencyStage1, C6=UnderFrequencyStage2, C7=OverFrequencyStage1, C8=OverFrequencyStage2. For more details see user manual.
+        self.acsource_l3source_sourcedlimitlevel = self.acsource_l3source_start_address + 84                            # Property ID: 19, [-] (int). Sourced limit level sent to the power flow dispatcher.
+        self.acsource_l3source_deviceid = self.acsource_l3source_start_address + 86                                     # Property ID: 20, [-] (int). The ID of the device associated with this AC input.
 
 
         # Group AcFlexLoad Modbus Address
@@ -1207,18 +1234,21 @@ class Addresses:
         self.acflexload_l1flexload_status = self.acflexload_l1flexload_start_address + 0                                # Property ID: 0, [-] (enum). Current status.
         self.acflexload_l1flexload_errors = self.acflexload_l1flexload_start_address + 2                                # Property ID: 1, [-] (bitfield). Current errors.
         self.acflexload_l1flexload_warnings = self.acflexload_l1flexload_start_address + 4                              # Property ID: 2, [-] (bitfield). Current warnings.
+        self.acflexload_l1flexload_deviceid = self.acflexload_l1flexload_start_address + 6                              # Property ID: 3, [-] (int). The ID of the device associated with this FlexLoad port.
 
         # Object L2FlexLoad Modbus Address
         self.acflexload_l2flexload_start_address = 3600
         self.acflexload_l2flexload_status = self.acflexload_l2flexload_start_address + 0                                # Property ID: 0, [-] (enum). Current status.
         self.acflexload_l2flexload_errors = self.acflexload_l2flexload_start_address + 2                                # Property ID: 1, [-] (bitfield). Current errors.
         self.acflexload_l2flexload_warnings = self.acflexload_l2flexload_start_address + 4                              # Property ID: 2, [-] (bitfield). Current warnings.
+        self.acflexload_l2flexload_deviceid = self.acflexload_l2flexload_start_address + 6                              # Property ID: 3, [-] (int). The ID of the device associated with this FlexLoad port.
 
         # Object L3FlexLoad Modbus Address
         self.acflexload_l3flexload_start_address = 3900
         self.acflexload_l3flexload_status = self.acflexload_l3flexload_start_address + 0                                # Property ID: 0, [-] (enum). Current status.
         self.acflexload_l3flexload_errors = self.acflexload_l3flexload_start_address + 2                                # Property ID: 1, [-] (bitfield). Current errors.
         self.acflexload_l3flexload_warnings = self.acflexload_l3flexload_start_address + 4                              # Property ID: 2, [-] (bitfield). Current warnings.
+        self.acflexload_l3flexload_deviceid = self.acflexload_l3flexload_start_address + 6                              # Property ID: 3, [-] (int). The ID of the device associated with this FlexLoad port.
 
 
         # Group Next3 Modbus Address
@@ -1263,6 +1293,8 @@ class Addresses:
         # Object Device Modbus Address
         self.next3_device_start_address = 4200
         self.next3_device_blinkingstate = self.next3_device_start_address + 0                                           # Property ID: 0, [-] (bool). If set, the device LEDs will blink.
+        self.next3_device_deviceid = self.next3_device_start_address + 1                                                # Property ID: 1, [-] (int). System-wide ID of the device in topology.
+        self.next3_device_batteryid = self.next3_device_start_address + 3                                               # Property ID: 2, [-] (int). System-wide ID of the battery in topology.
         self.next3_device_totalfunctioningtimesec = self.next3_device_start_address + 5                                 # Property ID: 3, [s] (uint). Total functioning time in this device's life.
 
         # Object Next3Converter Modbus Address
@@ -1327,6 +1359,11 @@ class Addresses:
         self.next3_solargroupdevice_start_address = 6600
         self.next3_solargroupdevice_nbr = self.next3_solargroupdevice_start_address + 0                                 # Property ID: 0, [-] (uint). Number of converters.
         self.next3_solargroupdevice_status = self.next3_solargroupdevice_start_address + 2                              # Property ID: 1, [-] (bitfield). Current status.
+        self.next3_solargroupdevice_vt40nbr = self.next3_solargroupdevice_start_address + 4                             # Property ID: 2, [-] (uint). Number of vt40.
+        self.next3_solargroupdevice_vt65nbr = self.next3_solargroupdevice_start_address + 6                             # Property ID: 3, [-] (uint). Number of vt65.
+        self.next3_solargroupdevice_vt80nbr = self.next3_solargroupdevice_start_address + 8                             # Property ID: 4, [-] (uint). Number of vt80.
+        self.next3_solargroupdevice_vs70nbr = self.next3_solargroupdevice_start_address + 10                            # Property ID: 5, [-] (uint). Number of vs70.
+        self.next3_solargroupdevice_vs120nbr = self.next3_solargroupdevice_start_address + 12                           # Property ID: 6, [-] (uint). Number of vs120.
 
         # Object Solar1 Modbus Address
         self.next3_solar1_start_address = 6900
@@ -1623,6 +1660,37 @@ class Addresses:
         self.next3_virtualrelayaux4timectrl_nbrofoccurrences = self.next3_virtualrelayaux4timectrl_start_address + 32   # Property ID: 16, [-] (uint). Schedule time: Number of occurrences.
         self.next3_virtualrelayaux4timectrl_resettimecontrolled = self.next3_virtualrelayaux4timectrl_start_address + 34    # Property ID: 17, [-] (signal). Reset all time controlled counters. For exampe the occurences counts.
 
+        # Object BatteryContributorExtSolarChargers Modbus Address
+        self.next3_batterycontributorextsolarchargers_start_address = 12000
+        self.next3_batterycontributorextsolarchargers_chargingcurrent = self.next3_batterycontributorextsolarchargers_start_address + 0    # Property ID: 0, [A] (float). Charging current measured.
+        self.next3_batterycontributorextsolarchargers_temperaturesensorstate = self.next3_batterycontributorextsolarchargers_start_address + 2    # Property ID: 1, [-] (enum). Indicates the temperature sensor state.
+        self.next3_batterycontributorextsolarchargers_temperature = self.next3_batterycontributorextsolarchargers_start_address + 4    # Property ID: 2, [°C] (float). Temperature measured.
+        self.next3_batterycontributorextsolarchargers_voltage = self.next3_batterycontributorextsolarchargers_start_address + 10    # Property ID: 5, [V] (float). Voltage measured.
+
+        # Object SolarCommonExtSolarChargers Modbus Address
+        self.next3_solarcommonextsolarchargers_start_address = 12300
+        self.next3_solarcommonextsolarchargers_turnon = self.next3_solarcommonextsolarchargers_start_address + 0        # Property ID: 0, [-] (signal). Turns on solar(s).
+        self.next3_solarcommonextsolarchargers_turnoff = self.next3_solarcommonextsolarchargers_start_address + 1       # Property ID: 1, [-] (signal). Turns off solar(s).
+        self.next3_solarcommonextsolarchargers_onoffstate = self.next3_solarcommonextsolarchargers_start_address + 2    # Property ID: 2, [-] (bool). Indicates solar(s) on/off state.
+        self.next3_solarcommonextsolarchargers_enabledepolarization = self.next3_solarcommonextsolarchargers_start_address + 3    # Property ID: 3, [-] (signal). Enables depolarization.
+        self.next3_solarcommonextsolarchargers_disabledepolarization = self.next3_solarcommonextsolarchargers_start_address + 4    # Property ID: 4, [-] (signal). Disables depolarization.
+        self.next3_solarcommonextsolarchargers_power = self.next3_solarcommonextsolarchargers_start_address + 5         # Property ID: 5, [W] (float). Power produced.
+        self.next3_solarcommonextsolarchargers_previousdayenergy = self.next3_solarcommonextsolarchargers_start_address + 7    # Property ID: 8, [Wh] (float). Energy produced for the previous day.
+        self.next3_solarcommonextsolarchargers_powerlimit = self.next3_solarcommonextsolarchargers_start_address + 9    # Property ID: 9, [W] (uint). Solar(s) max power limit.
+        self.next3_solarcommonextsolarchargers_dayenergy = self.next3_solarcommonextsolarchargers_start_address + 11    # Property ID: 10, [Wh] (float). Energy produced for the current day.
+        self.next3_solarcommonextsolarchargers_resetableenergy = self.next3_solarcommonextsolarchargers_start_address + 15    # Property ID: 12, [Wh] (float64). Energy produced (can be reset).
+        self.next3_solarcommonextsolarchargers_totalenergy = self.next3_solarcommonextsolarchargers_start_address + 19  # Property ID: 13, [Wh] (float64). Total energy produced (whole life).
+
+        # Object SolarGroupExtSolarChargers Modbus Address
+        self.next3_solargroupextsolarchargers_start_address = 12600
+        self.next3_solargroupextsolarchargers_nbr = self.next3_solargroupextsolarchargers_start_address + 0             # Property ID: 0, [-] (uint). Number of converters.
+        self.next3_solargroupextsolarchargers_status = self.next3_solargroupextsolarchargers_start_address + 2          # Property ID: 1, [-] (bitfield). Current status.
+        self.next3_solargroupextsolarchargers_vt40nbr = self.next3_solargroupextsolarchargers_start_address + 4         # Property ID: 2, [-] (uint). Number of vt40.
+        self.next3_solargroupextsolarchargers_vt65nbr = self.next3_solargroupextsolarchargers_start_address + 6         # Property ID: 3, [-] (uint). Number of vt65.
+        self.next3_solargroupextsolarchargers_vt80nbr = self.next3_solargroupextsolarchargers_start_address + 8         # Property ID: 4, [-] (uint). Number of vt80.
+        self.next3_solargroupextsolarchargers_vs70nbr = self.next3_solargroupextsolarchargers_start_address + 10        # Property ID: 5, [-] (uint). Number of vs70.
+        self.next3_solargroupextsolarchargers_vs120nbr = self.next3_solargroupextsolarchargers_start_address + 12       # Property ID: 6, [-] (uint). Number of vs120.
+
 
         # Group Next1 Modbus Address
         # Object IdCard Modbus Address
@@ -1647,6 +1715,8 @@ class Addresses:
         # Object Device Modbus Address
         self.next1_device_start_address = 1800
         self.next1_device_blinkingstate = self.next1_device_start_address + 0                                           # Property ID: 0, [-] (bool). If set, the device LEDs will blink.
+        self.next1_device_deviceid = self.next1_device_start_address + 1                                                # Property ID: 1, [-] (int). System-wide ID of the device in topology.
+        self.next1_device_batteryid = self.next1_device_start_address + 3                                               # Property ID: 2, [-] (int). System-wide ID of the battery in topology.
         self.next1_device_totalfunctioningtimesec = self.next1_device_start_address + 5                                 # Property ID: 3, [s] (uint). Total functioning time in this device's life.
 
         # Object Next1 Modbus Address
@@ -1661,7 +1731,6 @@ class Addresses:
         self.next1_next1_temppowerbridgec = self.next1_next1_start_address + 28                                         # Property ID: 14, [°C] (float). Temperature power bridge C measured.
         self.next1_next1_fan1speed = self.next1_next1_start_address + 32                                                # Property ID: 16, [RPM] (float). Revolution speed of fan 1 measured.
         self.next1_next1_fan2speed = self.next1_next1_start_address + 34                                                # Property ID: 17, [RPM] (float). Revolution speed of fan 2 measured.
-        self.next1_next1_fan3speed = self.next1_next1_start_address + 36                                                # Property ID: 18, [RPM] (float). Revolution speed of fan 3 measured.
         self.next1_next1_externalpowersupplycurrent = self.next1_next1_start_address + 42                               # Property ID: 21, [A] (float). External power supply current measured.
         self.next1_next1_tempmaxacboard = self.next1_next1_start_address + 44                                           # Property ID: 22, [°C] (float). Maximal temperature measured on AC board.
         self.next1_next1_tempmcu = self.next1_next1_start_address + 46                                                  # Property ID: 23, [°C] (float). Temperature of MCU.
@@ -1939,6 +2008,37 @@ class Addresses:
         self.next1_cmdentry4_analogvalue = self.next1_cmdentry4_start_address + 11                                      # Property ID: 7, [-] (float). Current command entry analog value. 0 when the measured analog voltage is 0V. 1 when the measured analog voltage is \"Max analog voltage\" (id 8). Always 1 if analog mode is not available or \"Cmd entry configuration\" (id 4) is not set to \"Analog mode\" (value 128).
         self.next1_cmdentry4_maxanalogvoltage = self.next1_cmdentry4_start_address + 13                                 # Property ID: 8, [V] (float). Maximum voltage value of the power supply used. \"Current analog value\" (id 7) is 1 when the measured analog voltage is greater than or equal to this value.
 
+        # Object BatteryContributorExtSolarChargers Modbus Address
+        self.next1_batterycontributorextsolarchargers_start_address = 7500
+        self.next1_batterycontributorextsolarchargers_chargingcurrent = self.next1_batterycontributorextsolarchargers_start_address + 0    # Property ID: 0, [A] (float). Charging current measured.
+        self.next1_batterycontributorextsolarchargers_temperaturesensorstate = self.next1_batterycontributorextsolarchargers_start_address + 2    # Property ID: 1, [-] (enum). Indicates the temperature sensor state.
+        self.next1_batterycontributorextsolarchargers_temperature = self.next1_batterycontributorextsolarchargers_start_address + 4    # Property ID: 2, [°C] (float). Temperature measured.
+        self.next1_batterycontributorextsolarchargers_voltage = self.next1_batterycontributorextsolarchargers_start_address + 10    # Property ID: 5, [V] (float). Voltage measured.
+
+        # Object SolarCommonExtSolarChargers Modbus Address
+        self.next1_solarcommonextsolarchargers_start_address = 7800
+        self.next1_solarcommonextsolarchargers_turnon = self.next1_solarcommonextsolarchargers_start_address + 0        # Property ID: 0, [-] (signal). Turns on solar(s).
+        self.next1_solarcommonextsolarchargers_turnoff = self.next1_solarcommonextsolarchargers_start_address + 1       # Property ID: 1, [-] (signal). Turns off solar(s).
+        self.next1_solarcommonextsolarchargers_onoffstate = self.next1_solarcommonextsolarchargers_start_address + 2    # Property ID: 2, [-] (bool). Indicates solar(s) on/off state.
+        self.next1_solarcommonextsolarchargers_enabledepolarization = self.next1_solarcommonextsolarchargers_start_address + 3    # Property ID: 3, [-] (signal). Enables depolarization.
+        self.next1_solarcommonextsolarchargers_disabledepolarization = self.next1_solarcommonextsolarchargers_start_address + 4    # Property ID: 4, [-] (signal). Disables depolarization.
+        self.next1_solarcommonextsolarchargers_power = self.next1_solarcommonextsolarchargers_start_address + 5         # Property ID: 5, [W] (float). Power produced.
+        self.next1_solarcommonextsolarchargers_previousdayenergy = self.next1_solarcommonextsolarchargers_start_address + 7    # Property ID: 8, [Wh] (float). Energy produced for the previous day.
+        self.next1_solarcommonextsolarchargers_powerlimit = self.next1_solarcommonextsolarchargers_start_address + 9    # Property ID: 9, [W] (uint). Solar(s) max power limit.
+        self.next1_solarcommonextsolarchargers_dayenergy = self.next1_solarcommonextsolarchargers_start_address + 11    # Property ID: 10, [Wh] (float). Energy produced for the current day.
+        self.next1_solarcommonextsolarchargers_resetableenergy = self.next1_solarcommonextsolarchargers_start_address + 15    # Property ID: 12, [Wh] (float64). Energy produced (can be reset).
+        self.next1_solarcommonextsolarchargers_totalenergy = self.next1_solarcommonextsolarchargers_start_address + 19  # Property ID: 13, [Wh] (float64). Total energy produced (whole life).
+
+        # Object SolarGroupExtSolarChargers Modbus Address
+        self.next1_solargroupextsolarchargers_start_address = 8100
+        self.next1_solargroupextsolarchargers_nbr = self.next1_solargroupextsolarchargers_start_address + 0             # Property ID: 0, [-] (uint). Number of converters.
+        self.next1_solargroupextsolarchargers_status = self.next1_solargroupextsolarchargers_start_address + 2          # Property ID: 1, [-] (bitfield). Current status.
+        self.next1_solargroupextsolarchargers_vt40nbr = self.next1_solargroupextsolarchargers_start_address + 4         # Property ID: 2, [-] (uint). Number of vt40.
+        self.next1_solargroupextsolarchargers_vt65nbr = self.next1_solargroupextsolarchargers_start_address + 6         # Property ID: 3, [-] (uint). Number of vt65.
+        self.next1_solargroupextsolarchargers_vt80nbr = self.next1_solargroupextsolarchargers_start_address + 8         # Property ID: 4, [-] (uint). Number of vt80.
+        self.next1_solargroupextsolarchargers_vs70nbr = self.next1_solargroupextsolarchargers_start_address + 10        # Property ID: 5, [-] (uint). Number of vs70.
+        self.next1_solargroupextsolarchargers_vs120nbr = self.next1_solargroupextsolarchargers_start_address + 12       # Property ID: 6, [-] (uint). Number of vs120.
+
 
         # Group NextGateway Modbus Address
         # Object IdCard Modbus Address
@@ -1963,6 +2063,8 @@ class Addresses:
         # Object Device Modbus Address
         self.nextgateway_device_start_address = 900
         self.nextgateway_device_blinkingstate = self.nextgateway_device_start_address + 0                               # Property ID: 0, [-] (bool). If set, the device LEDs will blink.
+        self.nextgateway_device_deviceid = self.nextgateway_device_start_address + 1                                    # Property ID: 1, [-] (int). System-wide ID of the device in topology.
+        self.nextgateway_device_batteryid = self.nextgateway_device_start_address + 3                                   # Property ID: 2, [-] (int). System-wide ID of the battery in topology.
         self.nextgateway_device_totalfunctioningtimesec = self.nextgateway_device_start_address + 5                     # Property ID: 3, [s] (uint). Total functioning time in this device's life.
 
         # Object GatewayModule Modbus Address
@@ -1974,6 +2076,7 @@ class Addresses:
         self.nextgateway_gatewaymodule_cputemperature = self.nextgateway_gatewaymodule_start_address + 16               # Property ID: 7, [°C] (float). The current temperature of the CPU chip.
         self.nextgateway_gatewaymodule_internetstatus = self.nextgateway_gatewaymodule_start_address + 20               # Property ID: 10, [-] (enum). The internet connection status.
         self.nextgateway_gatewaymodule_saveconfigfile = self.nextgateway_gatewaymodule_start_address + 22               # Property ID: 11, [-] (signal). Signal used to save the config file on the gateway and the USB drive.
+        self.nextgateway_gatewaymodule_firstwizarddone = self.nextgateway_gatewaymodule_start_address + 23              # Property ID: 12, [-] (bool). Flag indicating that the first wizard configuration is done.
 
         # Object HmiDisplay Modbus Address
         self.nextgateway_hmidisplay_start_address = 1500
@@ -2048,7 +2151,10 @@ class Addresses:
         self.nextgateway_modbus_modbustcpserverstatus = self.nextgateway_modbus_start_address + 14                      # Property ID: 3, [-] (enum). The current status of the connection to the Modbus TCP server
         self.nextgateway_modbus_modbusrtuserverstatus = self.nextgateway_modbus_start_address + 16                      # Property ID: 4, [-] (enum). The current status of the connection to the Modbus RTU server
         self.nextgateway_modbus_mode = self.nextgateway_modbus_start_address + 18                                       # Property ID: 5, [-] (enum). The current modbus server selected.
-        self.nextgateway_modbus_writepersistent = self.nextgateway_modbus_start_address + 20                            # Property ID: 6, [-] (bool).  Force writing persistently using Modbus.
+        self.nextgateway_modbus_writepersistent = self.nextgateway_modbus_start_address + 20                            # Property ID: 6, [-] (bool). Force writing persistently using Modbus.
+        self.nextgateway_modbus_smartmeteremulatoraddress = self.nextgateway_modbus_start_address + 21                  # Property ID: 7, [-] (int). Address for powermeter emulator. If this address is positive and valid, a request to this address will emulate access to a powermeter on AC input 1.
+        self.nextgateway_modbus_emulatorbatterysoc = self.nextgateway_modbus_start_address + 23                         # Property ID: 8, [%] (float). In powermeter emulator, battery state-of-charge above which the battery charging power is displayed as available (injected) power.
+        self.nextgateway_modbus_emulatorbatterychargeconsign = self.nextgateway_modbus_start_address + 25               # Property ID: 9, [W] (float). In powermeter emulator, battery charging power consign for system battery when SoC is above \"Emulator battery priority limit SoC\" (id 8).
 
         # Object ModbusUserLevel Modbus Address
         self.nextgateway_modbususerlevel_start_address = 4500
@@ -2180,5 +2286,31 @@ class Addresses:
         self.nextgateway_networkinterfaceaccesspoint_wishedgatewayv4 = self.nextgateway_networkinterfaceaccesspoint_start_address + 77    # Property ID: 11, [-] (char[20]). The wished network gateway IP (v4) address of this interface.
         self.nextgateway_networkinterfaceaccesspoint_dnsipaddressv4 = self.nextgateway_networkinterfaceaccesspoint_start_address + 87    # Property ID: 12, [-] (char[20]). The DNS server IP (v4) address of this interface.
         self.nextgateway_networkinterfaceaccesspoint_enablestaticip = self.nextgateway_networkinterfaceaccesspoint_start_address + 97    # Property ID: 13, [-] (bool). Enable the static IP wished by the user.
+
+
+        # Group Powermeters Modbus Address
+        # Object Powermeter Modbus Address
+        self.powermeters_powermeter_start_address = 0
+        self.powermeters_powermeter_brandmodel = self.powermeters_powermeter_start_address + 0                          # Property ID: 0, [-] (enum). The brand and model of the powermeter.
+        self.powermeters_powermeter_baseaddress = self.powermeters_powermeter_start_address + 2                         # Property ID: 1, [-] (uint). Modbus device address used by the powermeter.
+        self.powermeters_powermeter_function = self.powermeters_powermeter_start_address + 4                            # Property ID: 2, [-] (enum). The function of the powermeter.
+        self.powermeters_powermeter_warnings = self.powermeters_powermeter_start_address + 6                            # Property ID: 3, [-] (bitfield). Current warning(s).
+        self.powermeters_powermeter_errors = self.powermeters_powermeter_start_address + 8                              # Property ID: 4, [-] (bitfield). Current error(s).
+        self.powermeters_powermeter_deviceid = self.powermeters_powermeter_start_address + 10                           # Property ID: 5, [-] (int). The ID of the device connected to this powermeter.
+
+        # Object PowermeterMeasure Modbus Address
+        self.powermeters_powermetermeasure_start_address = 300
+        self.powermeters_powermetermeasure_activepowerl1 = self.powermeters_powermetermeasure_start_address + 0         # Property ID: 0, [W] (float). Active power L1 measured.
+        self.powermeters_powermetermeasure_activepowerl2 = self.powermeters_powermetermeasure_start_address + 2         # Property ID: 2, [W] (float). Active power L2 measured.
+        self.powermeters_powermetermeasure_activepowerl3 = self.powermeters_powermetermeasure_start_address + 4         # Property ID: 4, [W] (float). Active power L3 measured.
+        self.powermeters_powermetermeasure_reactivepowerl1 = self.powermeters_powermetermeasure_start_address + 6       # Property ID: 6, [VAR] (float). Reactive power L1 measured.
+        self.powermeters_powermetermeasure_reactivepowerl2 = self.powermeters_powermetermeasure_start_address + 8       # Property ID: 8, [VAR] (float). Reactive power L2 measured.
+        self.powermeters_powermetermeasure_reactivepowerl3 = self.powermeters_powermetermeasure_start_address + 10      # Property ID: 10, [VAR] (float). Reactive power L3 measured.
+        self.powermeters_powermetermeasure_dayconsumedenergyl1 = self.powermeters_powermetermeasure_start_address + 12  # Property ID: 12, [Wh] (float). Consumed energy of the current day on L1.
+        self.powermeters_powermetermeasure_dayconsumedenergyl2 = self.powermeters_powermetermeasure_start_address + 14  # Property ID: 13, [Wh] (float). Consumed energy of the current day on L2.
+        self.powermeters_powermetermeasure_dayconsumedenergyl3 = self.powermeters_powermetermeasure_start_address + 16  # Property ID: 14, [Wh] (float). Consumed energy of the current day on L3.
+        self.powermeters_powermetermeasure_dayproducedenergyl1 = self.powermeters_powermetermeasure_start_address + 18  # Property ID: 15, [Wh] (float). Produced energy of the current day on L1.
+        self.powermeters_powermetermeasure_dayproducedenergyl2 = self.powermeters_powermetermeasure_start_address + 20  # Property ID: 16, [Wh] (float). Produced energy of the current day on L2.
+        self.powermeters_powermetermeasure_dayproducedenergyl3 = self.powermeters_powermetermeasure_start_address + 22  # Property ID: 17, [Wh] (float). Produced energy of the current day on L3.
 
 
