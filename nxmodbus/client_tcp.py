@@ -4,7 +4,9 @@
 from struct import pack, unpack
 from pyModbusTCP.client import ModbusClient
 from nxmodbus.addresses import Addresses
+from nxmodbus.modbus_types import ModbusTypes
 from nxmodbus.proptypes import PropType
+from nxmodbus.utils import get_type_and_string_length, check_versions
 import logging
 
 logger = logging.getLogger(__name__)
@@ -40,6 +42,8 @@ class NextModbusTcp:
         if debug is True:
             logging.basicConfig(level=logging.DEBUG)
         self.addresses = Addresses(offset)
+        self.modbus_types = ModbusTypes(offset)
+        self.offset = offset
         # Init modbus TCP client
         try:
             self.client = ModbusClient(host=server_host, port=server_port, debug=debug)
@@ -58,7 +62,7 @@ class NextModbusTcp:
         """
         self.client.close()
 
-    def read_parameter(self, slave_id, address, prop_type, string_size=0, read_from_nvm=False):
+    def read_parameter(self, slave_id, address, prop_type=None, string_size=0, read_from_nvm=False):
         """
         Read a parameter from a targeted device according to the given property type.
 
@@ -142,16 +146,20 @@ class NextModbusTcp:
                                                         read_from_nvm=True)
                 print('Earthing scheme relay status:', read_value)
         """
-        if (prop_type == PropType.STRING or prop_type == PropType.BYTEARRAY) and string_size == 0:
-            logger.error("--> string_size parameter mandatory when reading a PropType.STRING")
-            return None
-        if prop_type == PropType.SIGNAL:
-            logger.error("--> PropType.SIGNAL is not readable")
-            return None
-        if string_size % 2 == 0:
-            size = int(string_size / 2)
+        if prop_type is not None:
+            if (prop_type == PropType.STRING or prop_type == PropType.BYTEARRAY) and string_size == 0:
+                logger.error("--> string_size parameter mandatory when reading a PropType.STRING")
+                return None
+            if prop_type == PropType.SIGNAL:
+                logger.error("--> PropType.SIGNAL is not readable")
+                return None
+            if string_size % 2 == 0:
+                size = int(string_size / 2)
+            else:
+                size = int(string_size / 2) + 1
         else:
-            size = int(string_size / 2) + 1
+            prop_type, string_size = get_type_and_string_length(slave_id, address, self.modbus_types)
+
         if prop_type == PropType.BOOL:
             size = 1
         elif prop_type == PropType.INT or \
@@ -217,7 +225,7 @@ class NextModbusTcp:
                 logger.error("--> Data type not supported")
                 return None
 
-    def write_parameter(self, slave_id, address, value, prop_type):
+    def write_parameter(self, slave_id, address, value, prop_type=None):
         """
          Write a parameter value into a targeted device.
 
@@ -308,6 +316,8 @@ class NextModbusTcp:
                 else:
                     print('Error when writing nominal frequency')
         """
+        if prop_type is None:
+            prop_type, _ = get_type_and_string_length(slave_id, address, self.modbus_types)
         if prop_type == PropType.BOOL or prop_type == PropType.SIGNAL:
             size = 1
             ba = b'\x00' + pack('>?', value)
@@ -332,7 +342,7 @@ class NextModbusTcp:
             size = 4
             ba = pack('>d', value)
         elif prop_type == PropType.STRING:
-            ba = bytes(value,'UTF-8')
+            ba = bytes(value, 'UTF-8')
             if len(value) % 2 == 0:
                 size = int(len(value) / 2)
             else:
@@ -368,22 +378,21 @@ class NextModbusTcp:
         Note
         -----
         A different major version means that the compatibility is broken and it is recommanded to update
-        the addresses list.
+        the addresses list and modbus type list.
         A different minor version means that small modifications have been made. Some addresses could be
         removed or added.
 
         Returns
         -------
         bool
-            True if the addresses class version is same as the nx-gateway (minor and major).
+            True if the addresses class version and the and modbus type class is same as the nx-gateway (minor and major).
 
         See also
         --------
         None
         """
         omv_remote = self.read_parameter(self.addresses.device_address_nextgateway,
-                                            self.addresses.nextgateway_idcard_objectmodelversion,
-                                            PropType.UINT)
+                                         self.addresses.nextgateway_idcard_objectmodelversion)
         if omv_remote is not None:
             ba = pack('>I', omv_remote)
             unpack('>HH', ba)
@@ -391,5 +400,5 @@ class NextModbusTcp:
             omv_minor = ba[2] << 8 | ba[3]
             logger.debug("--> Gateway OMV version : %s.%s", omv_major, omv_minor)
             logger.debug("--> Class OMV version : %s.%s", self.addresses.version_major, self.addresses.version_minor)
-            return omv_major == self.addresses.version_major and \
-                    omv_minor == self.addresses.version_minor
+            return check_versions(current_omv_major=omv_major, current_omv_minor=omv_minor,
+                                  addresses=self.addresses, modbus_types=self.modbus_types)

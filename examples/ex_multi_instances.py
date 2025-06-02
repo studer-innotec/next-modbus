@@ -15,7 +15,6 @@ import os
 sys.path.append(os.path.abspath('..'))
 
 from nxmodbus.client_tcp import NextModbusTcp
-from nxmodbus.proptypes import PropType
 
 ADDRESS_OFFSET = 0  # the modbus address offset as set inside the Next system
 INSTANCE = 0  # The instance of the requested device
@@ -32,48 +31,40 @@ if __name__ == "__main__":
 
     # Read the number of next3 devices in the installation.
     read_value_nx3_nbr = nextModbus.read_parameter(nextModbus.addresses.device_address_system,
-                                                   nextModbus.addresses.system_alldevices_nbrofnext3,
-                                                   PropType.INT)
+                                                   nextModbus.addresses.system_alldevices_nbrofnext3)
     print('Number of next3:', read_value_nx3_nbr)
     for nx3_instance in range(read_value_nx3_nbr):
         # For each battery, read the status and voltage. Instance starts at 0.
         read_value = nextModbus.read_parameter(nextModbus.addresses.device_address_next3 + nx3_instance,
-                                               nextModbus.addresses.next3_next3converter_status,
-                                               PropType.ENUM)
+                                               nextModbus.addresses.next3_next3converter_status)
         print(f"Status of next3 {nx3_instance + 1} : {read_value}")
 
     # Read the number of next1 devices in the installation.
     read_value_nx1_nbr = nextModbus.read_parameter(nextModbus.addresses.device_address_system,
-                                                   nextModbus.addresses.system_alldevices_nbrofnext1,
-                                                   PropType.INT)
+                                                   nextModbus.addresses.system_alldevices_nbrofnext1)
     print('Number of next1:', read_value_nx1_nbr)
     for nx1_instance in range(read_value_nx1_nbr):
         # For each battery, read the status and voltage. Instance starts at 0.
         read_value = nextModbus.read_parameter(nextModbus.addresses.device_address_next1 + nx1_instance,
-                                               nextModbus.addresses.next1_next1_status,
-                                               PropType.ENUM)
+                                               nextModbus.addresses.next1_next1_status)
         print(f"Status of next1 {nx1_instance + 1} : {read_value}")
 
     # Read the number of batteries in the installation.
     read_value_bat_nbr = nextModbus.read_parameter(nextModbus.addresses.device_address_system,
-                                                   nextModbus.addresses.system_batterygroupall_nbr,
-                                                   PropType.INT)
+                                                   nextModbus.addresses.system_batterygroupall_nbr)
     print('Number of batteries:', read_value_bat_nbr)
     for bat_instance in range(read_value_bat_nbr):
         # For each battery, read the status and voltage. Instance starts at 0.
         read_value = nextModbus.read_parameter(nextModbus.addresses.device_address_battery + bat_instance,
-                                               nextModbus.addresses.battery_battery_status,
-                                               PropType.ENUM)
+                                               nextModbus.addresses.battery_battery_status)
         print(f"Status of battery {bat_instance + 1} : {read_value}")
         read_value = nextModbus.read_parameter(nextModbus.addresses.device_address_battery + bat_instance,
-                                               nextModbus.addresses.battery_battery_voltage,
-                                               PropType.FLOAT)
+                                               nextModbus.addresses.battery_battery_voltage)
         print(f"Voltage of battery {bat_instance + 1} : {read_value}")
 
     # Read the number of AC source in the installation.
     read_value_ac_source_nbr = nextModbus.read_parameter(nextModbus.addresses.device_address_system,
-                                                         nextModbus.addresses.system_systemtotal_acsourcenbr,
-                                                         PropType.INT)
+                                                         nextModbus.addresses.system_systemtotal_acsourcenbr)
     print('Number of AC source:', read_value_ac_source_nbr)
     for ac_source_instance in range(read_value_ac_source_nbr):
         # For each AC source, read the status of the 3 phases and active power. Instance starts at 0.
@@ -84,24 +75,21 @@ if __name__ == "__main__":
         #   L3 is bit 2 (2^2 = 4)
         read_value_phase_existance = nextModbus.read_parameter(
             nextModbus.addresses.device_address_acsource + ac_source_instance,
-            nextModbus.addresses.acsource_source_phaseexistance,
-            PropType.BITFIELD)
+            nextModbus.addresses.acsource_source_phaseexistance)
         if read_value_phase_existance & 2 ** 0:
             read_value = nextModbus.read_parameter(nextModbus.addresses.device_address_acsource + ac_source_instance,
-                                                   nextModbus.addresses.acsource_l1source_status,
-                                                   PropType.ENUM)
+                                                   nextModbus.addresses.acsource_l1source_status)
             print(f"Status of AC source L1 {ac_source_instance + 1} : {read_value}")
         if read_value_phase_existance & 2 ** 1:
             read_value = nextModbus.read_parameter(nextModbus.addresses.device_address_acsource + ac_source_instance,
-                                                   nextModbus.addresses.acsource_l2source_status,
-                                                   PropType.ENUM)
+                                                   nextModbus.addresses.acsource_l2source_status)
             print(f"Status of AC source L2 {ac_source_instance + 1} : {read_value}")
         if read_value_phase_existance & 2 ** 2:
             read_value = nextModbus.read_parameter(nextModbus.addresses.device_address_acsource + ac_source_instance,
-                                                   nextModbus.addresses.acsource_l3source_status,
-                                                   PropType.ENUM)
+                                                   nextModbus.addresses.acsource_l3source_status)
             print(f"Status of AC source L3 {ac_source_instance + 1} : {read_value}")
         read_value = nextModbus.read_parameter(nextModbus.addresses.device_address_acsource + ac_source_instance,
-                                               nextModbus.addresses.acsource_triphasemeasure_totalactivepower,
-                                               PropType.FLOAT)
+                                               nextModbus.addresses.acsource_triphasemeasure_totalactivepower)
         print(f"Total active power of AC source {ac_source_instance + 1} : {read_value}")
+        print(nextModbus.addresses.next1_idcard_serialnumber,
+                                               nextModbus.addresses.next3_idcardconverter_serialnumber)
