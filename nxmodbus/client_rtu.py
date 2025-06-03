@@ -71,10 +71,11 @@ class NextModbusRtu:
         address: int
             Register starting address, see "Technical specification - Next Modbus appendix" for
             the complete list of accessible register per device
-        prop_type: PropType
+        prop_type: PropType, optional
             Property type given by the enum found in *proptypes.py*
+            This parameter is retained for backward compatibility and is no longer required.
         string_size: int
-            When selecting String as prop_type, it is mandatory to give the string size.
+            When the type of property is a String, it is mandatory to give the string size.
         read_from_nvm: bool
             Read from non-volatile memory. Slow reading operation to be used only when you want to
             retrieve the default user-set value of a property that was previously overwritten by
@@ -240,8 +241,9 @@ class NextModbusRtu:
             the complete list of accessible register per device.
         value
             The value to write at the given address.
-        prop_type
-            Property type
+        prop_type: PropType, optional
+            Property type given by the enum found in *proptypes.py*
+            This parameter is retained for backward compatibility and is no longer required.
 
         Returns
         -------
@@ -262,13 +264,12 @@ class NextModbusRtu:
             import os
 
             sys.path.append(os.path.abspath('..'))
-            from nxmodbus.client import NextModbus
-            from nxmodbus.proptypes import PropType
+            from nxmodbus.client_rtu import NextModbusRtu
 
-            SERIAL_PORT_NAME = 'COM4'       # your serial port interface name
-            SERIAL_PORT_BAUDRATE = 9600     # baudrate used by your serial interface
-            ADDRESS_OFFSET = 0              # your modbus address offset as set inside the Next system
-            INSTANCE = 0                    # The instance of the requested device
+            SERIAL_PORT_NAME = 'COM3'  # your serial port interface name
+            SERIAL_PORT_BAUDRATE = 9600  # baudrate used by your serial interface
+            ADDRESS_OFFSET = 0  # your modbus address offset as set inside the Next system
+            INSTANCE = 0  # The instance of the requested device
 
             if __name__ == "__main__":
                 try:
@@ -276,38 +277,38 @@ class NextModbusRtu:
                 except serial.serialutil.SerialException as e:
                     print("Check your serial configuration : ", e)
                 else:
-                    nextModbus = NextModbus(serial_port, ADDRESS_OFFSET, debug=False)
+                    nextModbus = NextModbusRtu(serial_port, ADDRESS_OFFSET, debug=False)
+
+                    # check the version
+                    if not nextModbus.check_version():
+                        print("WARNING : The version is not correct")
 
                     value = True  # Earthing scheme disable check at TRUE
-                    echo = nextModbus.write_parameter(  nextModbus.addresses.device_address_system + INSTANCE,
-                                                        nextModbus.addresses.system_earthingscheme_disablecheck,
-                                                        value,
-                                                        PropType.BOOL)
+                    echo = nextModbus.write_parameter(nextModbus.addresses.device_address_system + INSTANCE,
+                                                      nextModbus.addresses.system_earthingscheme_disablecheck,
+                                                      value)
                     assert echo == 1  # a value of 1 is expected on write action, represent the number of registers written
                     print('Number of registers written:', echo)
 
                     value = 20  # Brightness level at 10
-                    echo = nextModbus.write_parameter(  nextModbus.addresses.device_address_nextgateway + INSTANCE,
-                                                        nextModbus.addresses.nextgateway_hmidisplay_brightness,
-                                                        value,
-                                                        PropType.UINT)
+                    echo = nextModbus.write_parameter(nextModbus.addresses.device_address_nextgateway + INSTANCE,
+                                                      nextModbus.addresses.nextgateway_hmidisplay_brightness,
+                                                      value)
 
                     assert echo == 2  # a value of 2 is expected on write action, represent the number of registers written
                     print('Number of registers written:', echo)
 
                     value = "12345"  # Unlock code
-                    echo = nextModbus.write_parameter(  nextModbus.addresses.device_address_nextgateway + INSTANCE,
-                                                        nextModbus.addresses.nextgateway_hmidisplay_unlockcode,
-                                                        value,
-                                                        PropType.STRING)
+                    echo = nextModbus.write_parameter(nextModbus.addresses.device_address_nextgateway + INSTANCE,
+                                                      nextModbus.addresses.nextgateway_hmidisplay_unlockcode,
+                                                      value)
                     assert echo == 3  # a value of 3 is expected on write action, represent the number of registers written
                     print('Number of registers written:', echo)
 
                     value = 50.2  # Nominal frequency of the tri-phased inverters
-                    echo = nextModbus.write_parameter(  nextModbus.addresses.device_address_system,
-                                                        nextModbus.addresses.system_triphaseinverter_nominalfrequency,
-                                                        value,
-                                                        PropType.FLOAT)
+                    echo = nextModbus.write_parameter(nextModbus.addresses.device_address_system,
+                                                      nextModbus.addresses.system_triphaseinverter_nominalfrequency,
+                                                      value)
                     assert echo == 2  # a value of 3 is expected on write action, represent the number of registers written
                     print('Number of registers written:', echo)
         """
