@@ -9,23 +9,22 @@ import os
 sys.path.append(os.path.abspath('..'))
 from nxmodbus.client_tcp import NextModbusTcp
 
-ADDRESS_OFFSET = 0                                      # the modbus address offset as set inside the Next system
-INSTANCE = 0                                            # The instance of the requested device
-SERVER_HOST = "192.168.51.74"                           # ipv4 address of nx-interface
-SERVER_PORT = 502                                       # listening port of nx-interface
+ADDRESS_OFFSET = 0  # the modbus address offset as set inside the Next system
+INSTANCE = 0  # The instance of the requested device
+SERVER_HOST = "192.168.0.0"  # ipv4 address of nx-interface
+SERVER_PORT = 502  # listening port of nx-interface
 
 if __name__ == "__main__":
 
     nextModbus = NextModbusTcp(SERVER_HOST, SERVER_PORT, ADDRESS_OFFSET, debug=False)
-    
+
     # check the version
     if not nextModbus.check_version():
         print("WARNING : The version is not correct")
 
     value = True  # Earthing scheme disable check at TRUE
     ok = nextModbus.write_parameter(nextModbus.addresses.device_address_system + INSTANCE,
-                                    nextModbus.addresses.system_earthingscheme_disablecheck,
-                                    value)
+                                    nextModbus.addresses.system_earthingscheme_disablecheck, value)
     if ok:
         print('Disable check written successfully')
     else:
@@ -33,17 +32,15 @@ if __name__ == "__main__":
 
     value = 10  # Brightness level at 10
     ok = nextModbus.write_parameter(nextModbus.addresses.device_address_nextgateway + INSTANCE,
-                                    nextModbus.addresses.nextgateway_hmidisplay_brightness,
-                                    value)
+                                    nextModbus.addresses.nextgateway_hmidisplay_brightness, value)
     if ok:
         print('Brightness written successfully')
     else:
         print('Error when writing brightness')
 
     value = "12345"  # Unlock code
-    ok = nextModbus.write_parameter( nextModbus.addresses.device_address_nextgateway + INSTANCE,
-                                    nextModbus.addresses.nextgateway_hmidisplay_unlockcode,
-                                    value)
+    ok = nextModbus.write_parameter(nextModbus.addresses.device_address_nextgateway + INSTANCE,
+                                    nextModbus.addresses.nextgateway_hmidisplay_unlockcode, value)
     if ok:
         print('Unlock code written successfully')
     else:
@@ -51,8 +48,7 @@ if __name__ == "__main__":
 
     value = 50.2  # Nominal frequency of the tri-phased inverters
     ok = nextModbus.write_parameter(nextModbus.addresses.device_address_system,
-                                    nextModbus.addresses.system_triphaseinverter_nominalfrequency,
-                                    value)
+                                    nextModbus.addresses.system_triphaseinverter_nominalfrequency, value)
     if ok:
         print('Nominal frequency written successfully')
     else:

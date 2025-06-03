@@ -10,10 +10,10 @@ sys.path.append(os.path.abspath('..'))
 from nxmodbus.client_tcp import NextModbusTcp
 from nxmodbus.proptypes import PropType
 
-ADDRESS_OFFSET = 0                                      # the modbus address offset as set inside the Next system
-INSTANCE = 0                                            # The instance of the requested device
-SERVER_HOST = "192.168.0.100"                           # ipv4 address of nx-interface
-SERVER_PORT = 502                                       # listening port of nx-interface
+ADDRESS_OFFSET = 0  # the modbus address offset as set inside the Next system
+INSTANCE = 0  # The instance of the requested device
+SERVER_HOST = "192.168.0.0"  # ipv4 address of nx-interface
+SERVER_PORT = 502  # listening port of nx-interface
 
 if __name__ == "__main__":
 
@@ -24,27 +24,26 @@ if __name__ == "__main__":
         print("WARNING : The version is not correct")
 
     # Read the serial number
-    read_value = nextModbus.read_parameter( nextModbus.addresses.device_address_nextgateway + INSTANCE,
-                                            nextModbus.addresses.nextgateway_idcard_serialnumber,
-                                            PropType.STRING,
-                                            8)
+    read_value = nextModbus.read_parameter(nextModbus.addresses.device_address_nextgateway + INSTANCE,
+                                           nextModbus.addresses.nextgateway_idcard_serialnumber, string_size=8
+                                           )
     print('Serial number:', read_value)
 
     # Read the modbus TCP port used by the TCP modbus server
-    read_value = nextModbus.read_parameter( nextModbus.addresses.device_address_nextgateway + INSTANCE,
-                                            nextModbus.addresses.nextgateway_modbus_modbustcpport,
-                                            PropType.UINT)
+    read_value = nextModbus.read_parameter(nextModbus.addresses.device_address_nextgateway + INSTANCE,
+                                           nextModbus.addresses.nextgateway_modbus_modbustcpport,
+                                           PropType.UINT)
     print('Modbus TCP port:', read_value)
 
     # Read the Earthing relay status
-    read_value = nextModbus.read_parameter( nextModbus.addresses.device_address_system,
-                                            nextModbus.addresses.system_earthingscheme_relayisclosed,
-                                            PropType.BOOL)
+    read_value = nextModbus.read_parameter(nextModbus.addresses.device_address_system,
+                                           nextModbus.addresses.system_earthingscheme_relayisclosed,
+                                           PropType.BOOL)
     print('Earthing scheme relay status:', read_value)
 
     # Read the Earthing relay status from non-volatile memory
-    read_value = nextModbus.read_parameter( nextModbus.addresses.device_address_system,
-                                            nextModbus.addresses.system_earthingscheme_relayisclosed,
-                                            PropType.BOOL,
-                                            read_from_nvm=True)
+    read_value = nextModbus.read_parameter(nextModbus.addresses.device_address_system,
+                                           nextModbus.addresses.system_earthingscheme_relayisclosed,
+                                           PropType.BOOL,
+                                           read_from_nvm=True)
     print('Earthing scheme relay status from non-volatile memory:', read_value)

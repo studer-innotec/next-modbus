@@ -6,7 +6,7 @@ from pyModbusTCP.client import ModbusClient
 from nxmodbus.addresses import Addresses
 from nxmodbus.modbus_types import ModbusTypes
 from nxmodbus.proptypes import PropType
-from nxmodbus.utils import get_type_and_string_length, check_versions
+from nxmodbus.utils import get_prop_type, check_versions
 import logging
 
 logger = logging.getLogger(__name__)
@@ -146,20 +146,18 @@ class NextModbusTcp:
                                                         read_from_nvm=True)
                 print('Earthing scheme relay status:', read_value)
         """
-        if prop_type is not None:
-            if (prop_type == PropType.STRING or prop_type == PropType.BYTEARRAY) and string_size == 0:
-                logger.error("--> string_size parameter mandatory when reading a PropType.STRING")
-                return None
-            if prop_type == PropType.SIGNAL:
-                logger.error("--> PropType.SIGNAL is not readable")
-                return None
-            if string_size % 2 == 0:
-                size = int(string_size / 2)
-            else:
-                size = int(string_size / 2) + 1
+        if prop_type is None:
+            prop_type = get_prop_type(slave_id, address, self.modbus_types)
+        if (prop_type == PropType.STRING or prop_type == PropType.BYTEARRAY) and string_size == 0:
+            logger.error("--> string_size parameter mandatory when reading a PropType.STRING")
+            return None
+        if prop_type == PropType.SIGNAL:
+            logger.error("--> PropType.SIGNAL is not readable")
+            return None
+        if string_size % 2 == 0:
+            size = int(string_size / 2)
         else:
-            prop_type, string_size = get_type_and_string_length(slave_id, address, self.modbus_types)
-
+            size = int(string_size / 2) + 1
         if prop_type == PropType.BOOL:
             size = 1
         elif prop_type == PropType.INT or \
@@ -317,7 +315,7 @@ class NextModbusTcp:
                     print('Error when writing nominal frequency')
         """
         if prop_type is None:
-            prop_type, _ = get_type_and_string_length(slave_id, address, self.modbus_types)
+            prop_type = get_prop_type(slave_id, address, self.modbus_types)
         if prop_type == PropType.BOOL or prop_type == PropType.SIGNAL:
             size = 1
             ba = b'\x00' + pack('>?', value)

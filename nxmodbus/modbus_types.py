@@ -20,7 +20,7 @@ class ModbusObjectGroup:
 class ModbusTypes:
     def __init__(self, offset):
         self.version_major = 10
-        self.version_minor = 138
+        self.version_minor = 139
         self.objects = [
             # Group System
             ModbusObjectGroup(
@@ -42,10 +42,10 @@ class ModbusTypes:
                     Property(address=1800, prop_type=PropType.ENUM),
                     Property(address=1802, prop_type=PropType.INT),
                     # Object Installation Modbus Addresses
-                    Property(address=2103, prop_type=PropType.STRING, string_size=36),
+                    Property(address=2103, prop_type=PropType.STRING),
                     Property(address=2121, prop_type=PropType.BOOL),
                     Property(address=2122, prop_type=PropType.INT),
-                    Property(address=2124, prop_type=PropType.STRING, string_size=50),
+                    Property(address=2124, prop_type=PropType.STRING),
                     # Object AllDevices Modbus Addresses
                     Property(address=2403, prop_type=PropType.BOOL),
                     Property(address=2404, prop_type=PropType.BOOL),
@@ -871,7 +871,7 @@ class ModbusTypes:
                     Property(address=1824, prop_type=PropType.FLOAT),
                     Property(address=1828, prop_type=PropType.INT),
                     Property(address=1830, prop_type=PropType.INT),
-                    Property(address=1832, prop_type=PropType.STRING, string_size=99),
+                    Property(address=1832, prop_type=PropType.STRING),
                     Property(address=1884, prop_type=PropType.INT),
                     Property(address=1886, prop_type=PropType.INT),
                     # Object L2Source Modbus Addresses
@@ -890,7 +890,7 @@ class ModbusTypes:
                     Property(address=2124, prop_type=PropType.FLOAT),
                     Property(address=2128, prop_type=PropType.INT),
                     Property(address=2130, prop_type=PropType.INT),
-                    Property(address=2132, prop_type=PropType.STRING, string_size=99),
+                    Property(address=2132, prop_type=PropType.STRING),
                     Property(address=2184, prop_type=PropType.INT),
                     Property(address=2186, prop_type=PropType.INT),
                     # Object L3Source Modbus Addresses
@@ -909,7 +909,7 @@ class ModbusTypes:
                     Property(address=2424, prop_type=PropType.FLOAT),
                     Property(address=2428, prop_type=PropType.INT),
                     Property(address=2430, prop_type=PropType.INT),
-                    Property(address=2432, prop_type=PropType.STRING, string_size=99),
+                    Property(address=2432, prop_type=PropType.STRING),
                     Property(address=2484, prop_type=PropType.INT),
                     Property(address=2486, prop_type=PropType.INT),
                 ]
@@ -1174,14 +1174,14 @@ class ModbusTypes:
                 modbus_device_start_address=14 + offset,
                 props=[
                     # Object IdCardConverter Modbus Addresses
-                    Property(address=4, prop_type=PropType.STRING, string_size=15),
+                    Property(address=4, prop_type=PropType.STRING),
                     Property(address=14, prop_type=PropType.UINT),
-                    Property(address=18, prop_type=PropType.STRING, string_size=7),
+                    Property(address=18, prop_type=PropType.STRING),
                     Property(address=30, prop_type=PropType.UINT),
                     # Object IdCardTransfer Modbus Addresses
-                    Property(address=304, prop_type=PropType.STRING, string_size=15),
+                    Property(address=304, prop_type=PropType.STRING),
                     Property(address=314, prop_type=PropType.UINT),
-                    Property(address=318, prop_type=PropType.STRING, string_size=7),
+                    Property(address=318, prop_type=PropType.STRING),
                     Property(address=330, prop_type=PropType.UINT),
                     # Object BaseAppConverter Modbus Addresses
                     Property(address=605, prop_type=PropType.BITFIELD),
@@ -1567,9 +1567,9 @@ class ModbusTypes:
                 modbus_device_start_address=29 + offset,
                 props=[
                     # Object IdCard Modbus Addresses
-                    Property(address=4, prop_type=PropType.STRING, string_size=15),
+                    Property(address=4, prop_type=PropType.STRING),
                     Property(address=14, prop_type=PropType.UINT),
-                    Property(address=18, prop_type=PropType.STRING, string_size=7),
+                    Property(address=18, prop_type=PropType.STRING),
                     Property(address=30, prop_type=PropType.UINT),
                     # Object BaseApp Modbus Addresses
                     Property(address=305, prop_type=PropType.BITFIELD),
@@ -1879,9 +1879,9 @@ class ModbusTypes:
                 modbus_device_start_address=59 + offset,
                 props=[
                     # Object IdCard Modbus Addresses
-                    Property(address=4, prop_type=PropType.STRING, string_size=15),
+                    Property(address=4, prop_type=PropType.STRING),
                     Property(address=14, prop_type=PropType.UINT),
-                    Property(address=18, prop_type=PropType.STRING, string_size=7),
+                    Property(address=18, prop_type=PropType.STRING),
                     Property(address=30, prop_type=PropType.UINT),
                     # Object BaseApplication Modbus Addresses
                     Property(address=305, prop_type=PropType.BITFIELD),
@@ -1908,7 +1908,7 @@ class ModbusTypes:
                     # Object HmiDisplay Modbus Addresses
                     Property(address=1500, prop_type=PropType.INT),
                     Property(address=1502, prop_type=PropType.INT),
-                    Property(address=1504, prop_type=PropType.STRING, string_size=7),
+                    Property(address=1504, prop_type=PropType.STRING),
                     Property(address=1508, prop_type=PropType.ENUM),
                     Property(address=1514, prop_type=PropType.UINT),
                     # Object Rs485iCommunicationBus Modbus Addresses
@@ -1965,57 +1965,57 @@ class ModbusTypes:
                     Property(address=4225, prop_type=PropType.FLOAT),
                     # Object ModbusUserLevel Modbus Addresses
                     Property(address=4500, prop_type=PropType.UINT),
-                    Property(address=4502, prop_type=PropType.STRING, string_size=7),
+                    Property(address=4502, prop_type=PropType.STRING),
                     # Object TermsAndConditions Modbus Addresses
-                    Property(address=4800, prop_type=PropType.STRING, string_size=12),
+                    Property(address=4800, prop_type=PropType.STRING),
                     Property(address=4806, prop_type=PropType.UINT),
                     Property(address=4808, prop_type=PropType.BITFIELD),
                     Property(address=4810, prop_type=PropType.UINT64),
                     # Object NetworkInterfaceEthernet Modbus Addresses
                     Property(address=5102, prop_type=PropType.ENUM),
-                    Property(address=5104, prop_type=PropType.STRING, string_size=20),
-                    Property(address=5114, prop_type=PropType.STRING, string_size=20),
-                    Property(address=5124, prop_type=PropType.STRING, string_size=20),
-                    Property(address=5134, prop_type=PropType.STRING, string_size=20),
-                    Property(address=5144, prop_type=PropType.STRING, string_size=20),
+                    Property(address=5104, prop_type=PropType.STRING),
+                    Property(address=5114, prop_type=PropType.STRING),
+                    Property(address=5124, prop_type=PropType.STRING),
+                    Property(address=5134, prop_type=PropType.STRING),
+                    Property(address=5144, prop_type=PropType.STRING),
                     Property(address=5154, prop_type=PropType.ENUM),
                     Property(address=5156, prop_type=PropType.BOOL),
-                    Property(address=5157, prop_type=PropType.STRING, string_size=20),
-                    Property(address=5167, prop_type=PropType.STRING, string_size=20),
-                    Property(address=5177, prop_type=PropType.STRING, string_size=20),
-                    Property(address=5187, prop_type=PropType.STRING, string_size=20),
+                    Property(address=5157, prop_type=PropType.STRING),
+                    Property(address=5167, prop_type=PropType.STRING),
+                    Property(address=5177, prop_type=PropType.STRING),
+                    Property(address=5187, prop_type=PropType.STRING),
                     Property(address=5197, prop_type=PropType.BOOL),
                     # Object NetworkInterfaceWifi Modbus Addresses
                     Property(address=5402, prop_type=PropType.ENUM),
-                    Property(address=5404, prop_type=PropType.STRING, string_size=20),
-                    Property(address=5414, prop_type=PropType.STRING, string_size=20),
-                    Property(address=5424, prop_type=PropType.STRING, string_size=20),
-                    Property(address=5434, prop_type=PropType.STRING, string_size=20),
-                    Property(address=5444, prop_type=PropType.STRING, string_size=20),
+                    Property(address=5404, prop_type=PropType.STRING),
+                    Property(address=5414, prop_type=PropType.STRING),
+                    Property(address=5424, prop_type=PropType.STRING),
+                    Property(address=5434, prop_type=PropType.STRING),
+                    Property(address=5444, prop_type=PropType.STRING),
                     Property(address=5454, prop_type=PropType.ENUM),
                     Property(address=5456, prop_type=PropType.BOOL),
-                    Property(address=5457, prop_type=PropType.STRING, string_size=20),
-                    Property(address=5467, prop_type=PropType.STRING, string_size=20),
-                    Property(address=5477, prop_type=PropType.STRING, string_size=20),
-                    Property(address=5487, prop_type=PropType.STRING, string_size=20),
+                    Property(address=5457, prop_type=PropType.STRING),
+                    Property(address=5467, prop_type=PropType.STRING),
+                    Property(address=5477, prop_type=PropType.STRING),
+                    Property(address=5487, prop_type=PropType.STRING),
                     Property(address=5497, prop_type=PropType.BOOL),
                     # Object NetworkInterfaceExternal Modbus Addresses
                     Property(address=5702, prop_type=PropType.ENUM),
-                    Property(address=5704, prop_type=PropType.STRING, string_size=20),
-                    Property(address=5714, prop_type=PropType.STRING, string_size=20),
-                    Property(address=5724, prop_type=PropType.STRING, string_size=20),
-                    Property(address=5734, prop_type=PropType.STRING, string_size=20),
-                    Property(address=5744, prop_type=PropType.STRING, string_size=20),
+                    Property(address=5704, prop_type=PropType.STRING),
+                    Property(address=5714, prop_type=PropType.STRING),
+                    Property(address=5724, prop_type=PropType.STRING),
+                    Property(address=5734, prop_type=PropType.STRING),
+                    Property(address=5744, prop_type=PropType.STRING),
                     Property(address=5754, prop_type=PropType.ENUM),
                     Property(address=5756, prop_type=PropType.BOOL),
-                    Property(address=5757, prop_type=PropType.STRING, string_size=20),
-                    Property(address=5767, prop_type=PropType.STRING, string_size=20),
-                    Property(address=5777, prop_type=PropType.STRING, string_size=20),
-                    Property(address=5787, prop_type=PropType.STRING, string_size=20),
+                    Property(address=5757, prop_type=PropType.STRING),
+                    Property(address=5767, prop_type=PropType.STRING),
+                    Property(address=5777, prop_type=PropType.STRING),
+                    Property(address=5787, prop_type=PropType.STRING),
                     Property(address=5797, prop_type=PropType.BOOL),
                     # Object GatewayUserLevel Modbus Addresses
                     Property(address=6000, prop_type=PropType.UINT),
-                    Property(address=6002, prop_type=PropType.STRING, string_size=7),
+                    Property(address=6002, prop_type=PropType.STRING),
                     # Object Webportal Modbus Addresses
                     Property(address=6300, prop_type=PropType.ENUM),
                     Property(address=6302, prop_type=PropType.ENUM),
@@ -2023,8 +2023,8 @@ class ModbusTypes:
                     Property(address=6306, prop_type=PropType.UINT),
                     Property(address=6308, prop_type=PropType.SIGNAL),
                     Property(address=6309, prop_type=PropType.BOOL),
-                    Property(address=6310, prop_type=PropType.STRING, string_size=100),
-                    Property(address=6360, prop_type=PropType.STRING, string_size=100),
+                    Property(address=6310, prop_type=PropType.STRING),
+                    Property(address=6360, prop_type=PropType.STRING),
                     Property(address=6410, prop_type=PropType.UINT),
                     # Object UsbInterface1 Modbus Addresses
                     Property(address=6602, prop_type=PropType.ENUM),
@@ -2044,25 +2044,25 @@ class ModbusTypes:
                     Property(address=8105, prop_type=PropType.UINT),
                     Property(address=8107, prop_type=PropType.SIGNAL),
                     # Object Webcommand Modbus Addresses
-                    Property(address=8400, prop_type=PropType.STRING, string_size=25),
-                    Property(address=8413, prop_type=PropType.STRING, string_size=15),
+                    Property(address=8400, prop_type=PropType.STRING),
+                    Property(address=8413, prop_type=PropType.STRING),
                     Property(address=8421, prop_type=PropType.ENUM),
                     Property(address=8423, prop_type=PropType.UINT),
-                    Property(address=8425, prop_type=PropType.STRING, string_size=25),
-                    Property(address=8438, prop_type=PropType.STRING, string_size=25),
+                    Property(address=8425, prop_type=PropType.STRING),
+                    Property(address=8438, prop_type=PropType.STRING),
                     # Object NetworkInterfaceAccessPoint Modbus Addresses
                     Property(address=8702, prop_type=PropType.ENUM),
-                    Property(address=8704, prop_type=PropType.STRING, string_size=20),
-                    Property(address=8714, prop_type=PropType.STRING, string_size=20),
-                    Property(address=8724, prop_type=PropType.STRING, string_size=20),
-                    Property(address=8734, prop_type=PropType.STRING, string_size=20),
-                    Property(address=8744, prop_type=PropType.STRING, string_size=20),
+                    Property(address=8704, prop_type=PropType.STRING),
+                    Property(address=8714, prop_type=PropType.STRING),
+                    Property(address=8724, prop_type=PropType.STRING),
+                    Property(address=8734, prop_type=PropType.STRING),
+                    Property(address=8744, prop_type=PropType.STRING),
                     Property(address=8754, prop_type=PropType.ENUM),
                     Property(address=8756, prop_type=PropType.BOOL),
-                    Property(address=8757, prop_type=PropType.STRING, string_size=20),
-                    Property(address=8767, prop_type=PropType.STRING, string_size=20),
-                    Property(address=8777, prop_type=PropType.STRING, string_size=20),
-                    Property(address=8787, prop_type=PropType.STRING, string_size=20),
+                    Property(address=8757, prop_type=PropType.STRING),
+                    Property(address=8767, prop_type=PropType.STRING),
+                    Property(address=8777, prop_type=PropType.STRING),
+                    Property(address=8787, prop_type=PropType.STRING),
                     Property(address=8797, prop_type=PropType.BOOL),
                 ]
             ),
