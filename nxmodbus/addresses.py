@@ -7,7 +7,7 @@ class Addresses:
     """
     def __init__(self, offset):
         self.version_major = 10
-        self.version_minor = 137
+        self.version_minor = 139
 
         self.deviceAddressDefault = offset + 1
         self.device_address_system = offset + 1
@@ -434,6 +434,7 @@ class Addresses:
         self.system_solargroupall_vt80nbr = self.system_solargroupall_start_address + 8                                 # Property ID: 4, [-] (uint). Number of vt80.
         self.system_solargroupall_vs70nbr = self.system_solargroupall_start_address + 10                                # Property ID: 5, [-] (uint). Number of vs70.
         self.system_solargroupall_vs120nbr = self.system_solargroupall_start_address + 12                               # Property ID: 6, [-] (uint). Number of vs120.
+        self.system_solargroupall_updateext = self.system_solargroupall_start_address + 14                              # Property ID: 7, [-] (signal). Update the numbers of external solar chargers.
 
         # Object SystemTotal Modbus Address
         self.system_systemtotal_start_address = 8100
@@ -1364,6 +1365,7 @@ class Addresses:
         self.next3_solargroupdevice_vt80nbr = self.next3_solargroupdevice_start_address + 8                             # Property ID: 4, [-] (uint). Number of vt80.
         self.next3_solargroupdevice_vs70nbr = self.next3_solargroupdevice_start_address + 10                            # Property ID: 5, [-] (uint). Number of vs70.
         self.next3_solargroupdevice_vs120nbr = self.next3_solargroupdevice_start_address + 12                           # Property ID: 6, [-] (uint). Number of vs120.
+        self.next3_solargroupdevice_updateext = self.next3_solargroupdevice_start_address + 14                          # Property ID: 7, [-] (signal). Update the numbers of external solar chargers.
 
         # Object Solar1 Modbus Address
         self.next3_solar1_start_address = 6900
@@ -1690,6 +1692,7 @@ class Addresses:
         self.next3_solargroupextsolarchargers_vt80nbr = self.next3_solargroupextsolarchargers_start_address + 8         # Property ID: 4, [-] (uint). Number of vt80.
         self.next3_solargroupextsolarchargers_vs70nbr = self.next3_solargroupextsolarchargers_start_address + 10        # Property ID: 5, [-] (uint). Number of vs70.
         self.next3_solargroupextsolarchargers_vs120nbr = self.next3_solargroupextsolarchargers_start_address + 12       # Property ID: 6, [-] (uint). Number of vs120.
+        self.next3_solargroupextsolarchargers_updateext = self.next3_solargroupextsolarchargers_start_address + 14      # Property ID: 7, [-] (signal). Update the numbers of external solar chargers.
 
 
         # Group Next1 Modbus Address
@@ -2038,6 +2041,7 @@ class Addresses:
         self.next1_solargroupextsolarchargers_vt80nbr = self.next1_solargroupextsolarchargers_start_address + 8         # Property ID: 4, [-] (uint). Number of vt80.
         self.next1_solargroupextsolarchargers_vs70nbr = self.next1_solargroupextsolarchargers_start_address + 10        # Property ID: 5, [-] (uint). Number of vs70.
         self.next1_solargroupextsolarchargers_vs120nbr = self.next1_solargroupextsolarchargers_start_address + 12       # Property ID: 6, [-] (uint). Number of vs120.
+        self.next1_solargroupextsolarchargers_updateext = self.next1_solargroupextsolarchargers_start_address + 14      # Property ID: 7, [-] (signal). Update the numbers of external solar chargers.
 
 
         # Group NextGateway Modbus Address
