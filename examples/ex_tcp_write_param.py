@@ -1,5 +1,5 @@
-# First check the version compatibility, then write the HMI display brightness, the GUI unlock code and 
-# the nominal frequency of the tri-phased inverters.
+# First check the version compatibility, then write the HMI display brightness,
+# set the basic user level code for modbus, and send debug data to Studer Innotec.
 # Run this example within the 'examples/' folder using 'python ex_tcp_write_param.py' from a CLI after installing
 # nxmodbus package with 'pip install nxmodbus'
 
@@ -22,34 +22,26 @@ if __name__ == "__main__":
     if not nextModbus.check_version():
         print("WARNING : The version is not correct")
 
-    value = True  # Earthing scheme disable check at TRUE
-    ok = nextModbus.write_parameter(nextModbus.addresses.device_address_system + INSTANCE,
-                                    nextModbus.addresses.system_earthingscheme_disablecheck, value)
-    if ok:
-        print('Disable check written successfully')
-    else:
-        print('Error when writing disable check')
+    instance_gateway = 0  # Instance of the gateway. Starts at 0.
+    value = 20  # Brightness level at 10
+    echo = nextModbus.write_parameter(nextModbus.addresses.device_address_nextgateway + instance_gateway,
+                                      nextModbus.addresses.nextgateway_hmidisplay_brightness,
+                                      value)
 
-    value = 10  # Brightness level at 10
-    ok = nextModbus.write_parameter(nextModbus.addresses.device_address_nextgateway + INSTANCE,
-                                    nextModbus.addresses.nextgateway_hmidisplay_brightness, value)
-    if ok:
-        print('Brightness written successfully')
-    else:
-        print('Error when writing brightness')
+    assert echo == 2  # a value of 2 is expected on write action, represent the number of registers written
+    print('Number of registers written:', echo)
 
-    value = "12345"  # Unlock code
-    ok = nextModbus.write_parameter(nextModbus.addresses.device_address_nextgateway + INSTANCE,
-                                    nextModbus.addresses.nextgateway_hmidisplay_unlockcode, value)
-    if ok:
-        print('Unlock code written successfully')
-    else:
-        print('Error when writing unlock code')
+    value = "815566"  # Basic user level code for modbus.
+    echo = nextModbus.write_parameter(nextModbus.addresses.device_address_nextgateway + instance_gateway,
+                                      nextModbus.addresses.nextgateway_modbususerlevel_userlevelcodeinput,
+                                      value)
+    assert echo == 3  # a value of 3 is expected on write action, represent the number of registers written
+    print('Number of registers written:', echo)
 
-    value = 50.2  # Nominal frequency of the tri-phased inverters
-    ok = nextModbus.write_parameter(nextModbus.addresses.device_address_system,
-                                    nextModbus.addresses.system_triphaseinverter_nominalfrequency, value)
-    if ok:
-        print('Nominal frequency written successfully')
-    else:
-        print('Error when writing nominal frequency')
+    value = 1  # Signal property, we set the value to 1.
+    echo = nextModbus.write_parameter(nextModbus.addresses.device_address_nextgateway + instance_gateway,
+                                      nextModbus.addresses.nextgateway_webportal_uploaddebugdata,
+                                      value)
+    # a value of 1 is expected on write action, represent the number of registers written for a bool / signal
+    assert echo == 1
+    print('Number of registers written:', echo)

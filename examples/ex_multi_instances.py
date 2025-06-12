@@ -17,7 +17,6 @@ sys.path.append(os.path.abspath('..'))
 from nxmodbus.client_tcp import NextModbusTcp
 
 ADDRESS_OFFSET = 0  # the modbus address offset as set inside the Next system
-INSTANCE = 0  # The instance of the requested device
 SERVER_HOST = "192.168.0.0"  # ipv4 address of nx-interface
 SERVER_PORT = 502  # listening port of nx-interface
 
