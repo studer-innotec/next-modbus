@@ -4,6 +4,7 @@
 from struct import pack, unpack
 from pyModbusTCP.client import ModbusClient
 from nxmodbus.addresses import Addresses
+from nxmodbus.modbus_object_model import ModbusObjectModel
 from nxmodbus.proptypes import PropType
 import logging
 
@@ -40,6 +41,8 @@ class NextModbusTcp:
         if debug is True:
             logging.basicConfig(level=logging.DEBUG)
         self.addresses = Addresses(offset)
+        self.modbus_object_model = ModbusObjectModel(self.addresses)
+        self.offset = offset
         # Init modbus TCP client
         try:
             self.client = ModbusClient(host=server_host, port=server_port, debug=debug)
@@ -58,7 +61,7 @@ class NextModbusTcp:
         """
         self.client.close()
 
-    def read_parameter(self, slave_id, address, prop_type, string_size=0, read_from_nvm=False):
+    def read_parameter(self, slave_id, address, prop_type=None, string_size=0, read_from_nvm=False):
         """
         Read a parameter from a targeted device according to the given property type.
 
@@ -74,10 +77,11 @@ class NextModbusTcp:
         address: int
             Register starting address, see "Technical specification - Next Modbus appendix" for
             the complete list of accessible register per device
-        prop_type: PropType
+        prop_type: PropType, optional
             Property type given by the enum found in *proptypes.py*
+            This parameter is retained for backward compatibility and is no longer required.
         string_size: int
-            When selecting String as prop_type, it is mandatory to give the string size.
+            When the type of property is a String, it is mandatory to give the string size.
         read_from_nvm: bool
             Read from non-volatile memory. Slow reading operation to be used only when you want to
             retrieve the default user-set value of a property that was previously overwritten by
@@ -88,60 +92,9 @@ class NextModbusTcp:
         PropType
             parameter read returned with the given property type.
 
-        Example
-        --------
-        .. code-block:: python
-
-            # First check the version compatibility, then read the serial number, the modbus tcp port and earthing
-            # scheme relay status.
-            # Run this example within the 'examples/' folder using 'python ex_tcp_read_param.py' from a CLI after installing
-            # nxmodbus package with 'pip install nxmodbus'
-
-            import sys
-            import os
-
-            sys.path.append(os.path.abspath('..'))
-            from nxmodbus.client_tcp import NextModbusTcp
-            from nxmodbus.proptypes import PropType
-
-            ADDRESS_OFFSET = 0                                      # the modbus address offset as set inside the Next system
-            INSTANCE = 0                                            # The instance of the requested device
-            SERVER_HOST = "192.168.0.100"                           # ipv4 address of nx-interface
-            SERVER_PORT = 502                                       # listening port of nx-interface
-
-            if __name__ == "__main__":
-
-                nextModbus = NextModbusTcp(SERVER_HOST, SERVER_PORT, ADDRESS_OFFSET, False)
-                # check the version
-                if not nextModbus.check_version():
-                    print("WARNING : The version is not correct")
-
-                # Read the serial number
-                read_value = nextModbus.read_parameter( nextModbus.addresses.device_address_nextgateway + INSTANCE,
-                                                        nextModbus.addresses.nextgateway_idcard_serialnumber,
-                                                        PropType.STRING,
-                                                        8)
-                print('Serial number:', read_value)
-
-                # Read the modbus TCP port used by the TCP modbus server
-                read_value = nextModbus.read_parameter( nextModbus.addresses.device_address_nextgateway + INSTANCE,
-                                                        nextModbus.addresses.nextgateway_modbus_modbustcpport,
-                                                        PropType.UINT)
-                print('Modbus TCP port:', read_value)
-
-                # Read the Earthing relay status
-                read_value = nextModbus.read_parameter( nextModbus.addresses.device_address_system,
-                                                        nextModbus.addresses.system_earthingscheme_relayisclosed,
-                                                        PropType.BOOL)
-                print('Earthing scheme relay status:', read_value)
-
-                # Read the Earthing relay status in non-volatile memory
-                read_value = nextModbus.read_parameter( nextModbus.addresses.device_address_system,
-                                                        nextModbus.addresses.system_earthingscheme_relayisclosed,
-                                                        PropType.BOOL,
-                                                        read_from_nvm=True)
-                print('Earthing scheme relay status:', read_value)
         """
+        if prop_type is None:
+            prop_type = self.modbus_object_model.get_prop_type(slave_id, address)
         if (prop_type == PropType.STRING or prop_type == PropType.BYTEARRAY) and string_size == 0:
             logger.error("--> string_size parameter mandatory when reading a PropType.STRING")
             return None
@@ -193,7 +146,7 @@ class NextModbusTcp:
             elif size == 4:
                 ba = pack('>HHHH', response[0], response[1], response[2], response[3])
             else:
-                logger.error("--> Unpossible to unpack the received data")
+                logger.error("--> Impossible to unpack the received data")
                 return None
             if prop_type == PropType.BOOL:
                 return unpack('>?', ba)[0]
@@ -217,7 +170,7 @@ class NextModbusTcp:
                 logger.error("--> Data type not supported")
                 return None
 
-    def write_parameter(self, slave_id, address, value, prop_type):
+    def write_parameter(self, slave_id, address, value, prop_type=None):
         """
          Write a parameter value into a targeted device.
 
@@ -235,79 +188,17 @@ class NextModbusTcp:
             the complete list of accessible register per device.
         value
             The value to write at the given address.
-        prop_type
-            Property type
+        prop_type: PropType, optional
+            Property type given by the enum found in *proptypes.py*
+            This parameter is retained for backward compatibility and is no longer required.
 
         Returns
         -------
         bool
             True if write successful else None
-
-        Example
-        --------
-        .. code-block:: python
-
-            # First check the version compatibility, then write the HMI display brightness, the GUI unlock code and
-            # the nominal frequency of the tri-phased inverters.
-            # Run this example within the 'examples/' folder using 'python ex_tcp_write_param.py' from a CLI after installing
-            # nxmodbus package with 'pip install nxmodbus'
-
-            import sys
-            import os
-
-            sys.path.append(os.path.abspath('..'))
-            from nxmodbus.client_tcp import NextModbusTcp
-            from nxmodbus.proptypes import PropType
-
-            ADDRESS_OFFSET = 0                                      # the modbus address offset as set inside the Next system
-            INSTANCE = 0                                            # The instance of the requested device
-            SERVER_HOST = "192.168.0.100"                           # ipv4 address of nx-interface
-            SERVER_PORT = 502                                       # listening port of nx-interface
-
-            if __name__ == "__main__":
-
-                nextModbus = NextModbusTcp(SERVER_HOST, SERVER_PORT, ADDRESS_OFFSET, debug=False)
-
-                value = True  # Earthing scheme disable check at TRUE
-                ok = nextModbus.write_parameter(nextModbus.addresses.device_address_system + INSTANCE,
-                                                nextModbus.addresses.system_earthingscheme_disablecheck,
-                                                value,
-                                                PropType.BOOL)
-                if ok:
-                    print('Disable check written successfully')
-                else:
-                    print('Error when writing disable check')
-
-                value = 10  # Brightness level at 10
-                ok = nextModbus.write_parameter(nextModbus.addresses.device_address_nextgateway + INSTANCE,
-                                                nextModbus.addresses.nextgateway_hmidisplay_brightness,
-                                                value,
-                                                PropType.UINT)
-                if ok:
-                    print('Brightness written successfully')
-                else:
-                    print('Error when writing brightness')
-
-                value = "12345"  # Unlock code
-                ok = nextModbus.write_parameter( nextModbus.addresses.device_address_nextgateway + INSTANCE,
-                                                nextModbus.addresses.nextgateway_hmidisplay_unlockcode,
-                                                value,
-                                                PropType.STRING)
-                if ok:
-                    print('Unlock code written successfully')
-                else:
-                    print('Error when writing unlock code')
-
-                value = 50.2  # Nominal frequency of the tri-phased inverters
-                ok = nextModbus.write_parameter(nextModbus.addresses.device_address_system,
-                                                nextModbus.addresses.system_triphaseinverter_nominalfrequency,
-                                                value,
-                                                PropType.FLOAT)
-                if ok:
-                    print('Nominal frequency written successfully')
-                else:
-                    print('Error when writing nominal frequency')
         """
+        if prop_type is None:
+            prop_type = self.modbus_object_model.get_prop_type(slave_id, address)
         if prop_type == PropType.BOOL or prop_type == PropType.SIGNAL:
             size = 1
             ba = b'\x00' + pack('>?', value)
@@ -332,7 +223,7 @@ class NextModbusTcp:
             size = 4
             ba = pack('>d', value)
         elif prop_type == PropType.STRING:
-            ba = bytes(value,'UTF-8')
+            ba = bytes(value, 'UTF-8')
             if len(value) % 2 == 0:
                 size = int(len(value) / 2)
             else:
@@ -368,22 +259,17 @@ class NextModbusTcp:
         Note
         -----
         A different major version means that the compatibility is broken and it is recommanded to update
-        the addresses list.
+        the addresses list and modbus type list.
         A different minor version means that small modifications have been made. Some addresses could be
         removed or added.
 
         Returns
         -------
         bool
-            True if the addresses class version is same as the nx-gateway (minor and major).
-
-        See also
-        --------
-        None
+            True if the addresses class version and the and modbus type class is same as the nx-gateway (minor and major).
         """
         omv_remote = self.read_parameter(self.addresses.device_address_nextgateway,
-                                            self.addresses.nextgateway_idcard_objectmodelversion,
-                                            PropType.UINT)
+                                         self.addresses.nextgateway_idcard_objectmodelversion)
         if omv_remote is not None:
             ba = pack('>I', omv_remote)
             unpack('>HH', ba)
@@ -391,5 +277,4 @@ class NextModbusTcp:
             omv_minor = ba[2] << 8 | ba[3]
             logger.debug("--> Gateway OMV version : %s.%s", omv_major, omv_minor)
             logger.debug("--> Class OMV version : %s.%s", self.addresses.version_major, self.addresses.version_minor)
-            return omv_major == self.addresses.version_major and \
-                    omv_minor == self.addresses.version_minor
+            return self.modbus_object_model.check_all_versions(current_omv_major=omv_major, current_omv_minor=omv_minor)
