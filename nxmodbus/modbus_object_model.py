@@ -27,8 +27,6 @@ class ModbusObjectModel:
             ModbusObjectGroup(
                 modbus_device_start_address=addresses.device_address_system,
                 props=[
-                    # Object InstallationTopology Modbus Addresses
-                    # Object TimeBase Modbus Addresses
                     # Object EarthingScheme Modbus Addresses
                     Property(address=addresses.system_earthingscheme_earthingmodeselection, prop_type=PropType.ENUM),
                     Property(address=addresses.system_earthingscheme_disablecheck, prop_type=PropType.BOOL),
@@ -38,7 +36,6 @@ class ModbusObjectModel:
                     Property(address=addresses.system_earthingscheme_earthingwarnings, prop_type=PropType.BITFIELD),
                     Property(address=addresses.system_earthingscheme_discontinuitycheckokcnt, prop_type=PropType.INT),
                     Property(address=addresses.system_earthingscheme_discontinuitychecknokcnt, prop_type=PropType.INT),
-                    # Object PowerFlowDispatcher Modbus Addresses
                     # Object EnergyPolicy Modbus Addresses
                     Property(address=addresses.system_energypolicy_acsourcepriority, prop_type=PropType.ENUM),
                     Property(address=addresses.system_energypolicy_currentlyactiveacsourceindex,
@@ -1612,8 +1609,6 @@ class ModbusObjectModel:
                     # Object BaseAppTransfer Modbus Addresses
                     Property(address=addresses.next3_baseapptransfer_warnings, prop_type=PropType.BITFIELD),
                     Property(address=addresses.next3_baseapptransfer_restoreallnvmvalues, prop_type=PropType.SIGNAL),
-                    # Object EmbeddedNvmsConverter Modbus Addresses
-                    # Object EmbeddedNvmsTransfer Modbus Addresses
                     # Object CanNodeConverter Modbus Addresses
                     Property(address=addresses.next3_cannodeconverter_status, prop_type=PropType.ENUM),
                     Property(address=addresses.next3_cannodeconverter_txerrorcounter, prop_type=PropType.INT),
@@ -1624,18 +1619,11 @@ class ModbusObjectModel:
                     Property(address=addresses.next3_cannodetransfer_txerrorcounter, prop_type=PropType.INT),
                     Property(address=addresses.next3_cannodetransfer_rxerrorcounter, prop_type=PropType.INT),
                     Property(address=addresses.next3_cannodetransfer_busterminationset, prop_type=PropType.BOOL),
-                    # Object FpgaFastComConverter Modbus Addresses
-                    # Object FpgaFastComTransfer Modbus Addresses
-                    # Object BaseDebuggerConverter Modbus Addresses
-                    # Object BaseDebuggerTransfer Modbus Addresses
-                    # Object DebugNext3Converter Modbus Addresses
                     # Object Device Modbus Addresses
                     Property(address=addresses.next3_device_blinkingstate, prop_type=PropType.BOOL),
                     Property(address=addresses.next3_device_deviceid, prop_type=PropType.INT),
                     Property(address=addresses.next3_device_batteryid, prop_type=PropType.INT),
                     Property(address=addresses.next3_device_totalfunctioningtimesec, prop_type=PropType.UINT),
-                    # Object LedPanel Modbus Addresses
-                    # Object Next3Transfer Modbus Addresses
                     # Object Next3Converter Modbus Addresses
                     Property(address=addresses.next3_next3converter_status, prop_type=PropType.ENUM),
                     Property(address=addresses.next3_next3converter_errors, prop_type=PropType.BITFIELD),
@@ -1653,7 +1641,6 @@ class ModbusObjectModel:
                              prop_type=PropType.BITFIELD),
                     Property(address=addresses.next3_next3converter_selectedadcchannel, prop_type=PropType.ENUM),
                     Property(address=addresses.next3_next3converter_selectedadcchannelnoise, prop_type=PropType.FLOAT),
-                    # Object DebugNext3Transfer Modbus Addresses
                     # Object SolarCommonDevice Modbus Addresses
                     Property(address=addresses.next3_solarcommondevice_turnon, prop_type=PropType.SIGNAL),
                     Property(address=addresses.next3_solarcommondevice_turnoff, prop_type=PropType.SIGNAL),
@@ -2047,21 +2034,16 @@ class ModbusObjectModel:
                     # Object BaseApp Modbus Addresses
                     Property(address=addresses.next1_baseapp_warnings, prop_type=PropType.BITFIELD),
                     Property(address=addresses.next1_baseapp_restoreallnvmvalues, prop_type=PropType.SIGNAL),
-                    # Object EmbeddedNvms Modbus Addresses
                     # Object CanNode Modbus Addresses
                     Property(address=addresses.next1_cannode_status, prop_type=PropType.ENUM),
                     Property(address=addresses.next1_cannode_txerrorcounter, prop_type=PropType.INT),
                     Property(address=addresses.next1_cannode_rxerrorcounter, prop_type=PropType.INT),
                     Property(address=addresses.next1_cannode_busterminationset, prop_type=PropType.BOOL),
-                    # Object FpgaFastCom Modbus Addresses
-                    # Object BaseDebugger Modbus Addresses
                     # Object Device Modbus Addresses
                     Property(address=addresses.next1_device_blinkingstate, prop_type=PropType.BOOL),
                     Property(address=addresses.next1_device_deviceid, prop_type=PropType.INT),
                     Property(address=addresses.next1_device_batteryid, prop_type=PropType.INT),
                     Property(address=addresses.next1_device_totalfunctioningtimesec, prop_type=PropType.UINT),
-                    # Object LedPanel Modbus Addresses
-                    # Object DebugNext1 Modbus Addresses
                     # Object Next1 Modbus Addresses
                     Property(address=addresses.next1_next1_status, prop_type=PropType.ENUM),
                     Property(address=addresses.next1_next1_errors, prop_type=PropType.BITFIELD),
@@ -2695,7 +2677,7 @@ class ModbusObjectModel:
 
     def get_prop_type(self, slave_id, address):
         """
-        Get the type of a given property from a property id.
+        Get the type of given property from a property id.
 
         Parameters
         ----------

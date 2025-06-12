@@ -188,8 +188,9 @@ class NextModbusTcp:
             the complete list of accessible register per device.
         value
             The value to write at the given address.
-        prop_type
-            Property type
+        prop_type: PropType, optional
+            Property type given by the enum found in *proptypes.py*
+            This parameter is retained for backward compatibility and is no longer required.
 
         Returns
         -------
