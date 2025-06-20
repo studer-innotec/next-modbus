@@ -2693,8 +2693,11 @@ class ModbusObjectModel:
         """
         modbus_start_address = slave_id
         prop_type = None
-        for current_object in self.objects:
-            if current_object.modbus_device_start_address == modbus_start_address:
+        for i in range(len(self.objects) - 1):
+            current_object = self.objects[i]
+            next_object = self.objects[i + 1]
+            if current_object.modbus_device_start_address < modbus_start_address < \
+                    next_object.modbus_device_start_address:
                 for prop in current_object.props:
                     if prop.address == address:
                         prop_type = prop.type
