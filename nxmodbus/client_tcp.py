@@ -25,8 +25,7 @@ class NextModbusTcp:
 
     def __init__(self, server_host, server_port=502, offset=0, debug=False):
         """
-        serial device must be configured with the configuration set with the Nx-Interface.\n
-        Moreover, a timeout of 1 second must be set.\n
+        Ensure to set a 1-second timeout for all Modbus requests.\n
         Parameters
         ----------
         server_host
@@ -256,7 +255,7 @@ class NextModbusTcp:
         Returns
         -------
         bool
-            True if the addresses class version and the and modbus object model class is same as the nx-gateway
+            True if the addresses class version and the and modbus object model class is same as the next gateway
             (minor and major).
         """
         omv_remote = self.read_parameter(self.addresses.device_address_nextgateway,

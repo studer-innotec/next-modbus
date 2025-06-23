@@ -26,8 +26,8 @@ class NextModbusRtu:
 
     def __init__(self, serial_port, offset=0, debug=False):
         """
-        serial device must be configured with the configuration set with the Nx-Interface.\n
-        Moreover, a timeout of 1 second must be set.\n
+        Serial device must be configured with the configuration set with the next gateway.\n
+        Ensure to set a 1-second timeout for all Modbus requests.\n
         Parameters
         ----------
         serial_port
@@ -105,7 +105,7 @@ class NextModbusRtu:
             response = rtu.send_message(message, self.serial_port)
         except (ValueError, KeyError) as e:
             logger.error(
-                "--> Please match your configurations and the values set with the Nx-Interface")
+                "--> Please match your configurations and the values set with the next gateway")
         except IllegalDataAddressError:
             logger.error(
                 "--> Illegal Data Address Error : please check the \"Studer Modbus Addresses\" and select a valid address")
@@ -220,7 +220,7 @@ class NextModbusRtu:
             response = rtu.send_message(message, self.serial_port)
         except (ValueError, KeyError) as e:
             logger.error(
-                "--> Please match your configurations and the values set with the Nx-Interface")
+                "--> Please match your configurations and the values set with the next gateway")
         except IllegalDataAddressError:
             logger.error(
                 "--> Illegal Data Address Error : please check the \"Studer Modbus Addresses\" and select a valid address")
