@@ -26,8 +26,8 @@ class NextModbusRtu:
 
     def __init__(self, serial_port, offset=0, debug=False):
         """
-        serial device must be configured with the configuration set with the Nx-Interface.\n
-        Moreover, a timeout of 1 second must be set.\n
+        Serial device must be configured with the configuration set with the next gateway.\n
+        Ensure to set a 1-second timeout for all Modbus requests.\n
         Parameters
         ----------
         serial_port
@@ -86,28 +86,16 @@ class NextModbusRtu:
         """
         if prop_type is None:
             prop_type = self.modbus_object_model.get_prop_type(slave_id, address)
+        if prop_type is None:
+            logger.error(f"--> Did not find a valid property with slave id {slave_id} and address {address}")
+            return None
         if (prop_type == PropType.STRING or prop_type == PropType.BYTEARRAY) and string_size == 0:
             logger.error("--> string_size parameter mandatory when reading a PropType.STRING")
             return None
         if prop_type == PropType.SIGNAL:
             logger.error("--> PropType.SIGNAL is not readable")
             return None
-        if string_size % 2 == 0:
-            size = int(string_size / 2)
-        else:
-            size = int(string_size / 2) + 1
-        if prop_type == PropType.BOOL:
-            size = 1
-        elif prop_type == PropType.INT or \
-                prop_type == PropType.UINT or \
-                prop_type == PropType.FLOAT or \
-                prop_type == PropType.ENUM or \
-                prop_type == PropType.BITFIELD:
-            size = 2
-        elif prop_type == PropType.INT64 or \
-                prop_type == PropType.UINT64 or \
-                prop_type == PropType.FLOAT64:
-            size = 4
+        size = self.modbus_object_model.get_prop_size(slave_id, prop_type, string_size)
         if read_from_nvm:
             message = rtu.read_input_registers(slave_id=slave_id, starting_address=address, quantity=size)
         else:
@@ -117,7 +105,7 @@ class NextModbusRtu:
             response = rtu.send_message(message, self.serial_port)
         except (ValueError, KeyError) as e:
             logger.error(
-                "--> Please match your configurations and the values set with the Nx-Interface")
+                "--> Please match your configurations and the values set with the next gateway")
         except IllegalDataAddressError:
             logger.error(
                 "--> Illegal Data Address Error : please check the \"Studer Modbus Addresses\" and select a valid address")
@@ -232,7 +220,7 @@ class NextModbusRtu:
             response = rtu.send_message(message, self.serial_port)
         except (ValueError, KeyError) as e:
             logger.error(
-                "--> Please match your configurations and the values set with the Nx-Interface")
+                "--> Please match your configurations and the values set with the next gateway")
         except IllegalDataAddressError:
             logger.error(
                 "--> Illegal Data Address Error : please check the \"Studer Modbus Addresses\" and select a valid address")
@@ -259,11 +247,11 @@ class NextModbusRtu:
         Returns
         -------
         bool
-            True if the addresses class version is same as the nx-gateway (minor and major).
+            True if the addresses class version and the and modbus object model class is same as the nx-gateway
+            (minor and major).
         """
         omv_remote = self.read_parameter(self.addresses.device_address_nextgateway,
-                                         self.addresses.nextgateway_idcard_objectmodelversion,
-                                         PropType.UINT)
+                                         self.addresses.nextgateway_idcard_objectmodelversion)
         if omv_remote is not None:
             ba = pack('>I', omv_remote)
             unpack('>HH', ba)
@@ -271,4 +259,13 @@ class NextModbusRtu:
             omv_minor = ba[2] << 8 | ba[3]
             logger.debug("--> Gateway OMV version : %s.%s", omv_major, omv_minor)
             logger.debug("--> Class OMV version : %s.%s", self.addresses.version_major, self.addresses.version_minor)
-            return self.modbus_object_model.check_all_versions(current_omv_major=omv_major, current_omv_minor=omv_minor)
+            is_major_ok, is_minor_ok = self.modbus_object_model.check_versions(current_omv_major=omv_major,
+                                                                               current_omv_minor=omv_minor)
+            if not is_major_ok:
+                logger.error(
+                    '--> Major Object Model Version of the device mismatch with modbus_object_model.py version')
+            if not is_minor_ok:
+                logger.error(
+                    '--> Minor Object Model Version of the device mismatch with modbus_object_model.py version')
+            return is_major_ok and is_minor_ok
+        return False

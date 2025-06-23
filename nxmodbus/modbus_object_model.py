@@ -22,6 +22,12 @@ class ModbusObjectModel:
         self.version_major = 10
         self.version_minor = 139
         self.addresses = addresses
+        if not self.addresses.version_major == self.version_major :
+            raise ValueError(f"Version mismatch. Modbus Object Model major version {self.version_major} != addresses"
+                             f".py major version {self.addresses.version_major}")
+        if not self.addresses.version_minor == self.version_minor :
+            raise ValueError(f"Version mismatch. Modbus Object Model minor version {self.version_minor} != addresses"
+                             f".py minor version {self.addresses.version_minor}")
         self.objects = [
             # Group System
             ModbusObjectGroup(
@@ -2693,37 +2699,51 @@ class ModbusObjectModel:
         """
         modbus_start_address = slave_id
         prop_type = None
-        for current_object in self.objects:
-            if current_object.modbus_device_start_address == modbus_start_address:
+        for i in range(len(self.objects) - 1):
+            current_object = self.objects[i]
+            next_object = self.objects[i + 1]
+            # Find the object corresponding to the modbus start address.
+            # modbus_start_address is the address corresponding to current object, added with the instance of the object.
+            if current_object.modbus_device_start_address <= modbus_start_address < \
+                    next_object.modbus_device_start_address:
                 for prop in current_object.props:
                     if prop.address == address:
                         prop_type = prop.type
         return prop_type
 
-    def check_version(self, current_omv, is_major):
+    @staticmethod
+    def get_prop_size(slave_id, prop_type, string_size=0):
         """
-        Checks the compatibility of the provided Object Model Version (OMV) with local definitions.
 
         Parameters
         ----------
-        current_omv : int
-            The major or minor Object Model Version retrieved from the device.
-        is_major : bool
-            Indicates whether to check the major version (True) or minor version (False).
+        slave_id
+        prop_type
+        string_size
 
         Returns
         -------
-        tuple of bool
-            A tuple containing:
-            - A boolean indicating whether the version corresponds to addresses.py.
-            - A boolean indicating whether the version corresponds to the Modbus Object Model.
+
         """
+        if string_size % 2 == 0:
+            size = int(string_size / 2)
+        else:
+            size = int(string_size / 2) + 1
+        if prop_type == PropType.BOOL:
+            size = 1
+        elif prop_type == PropType.INT or \
+                prop_type == PropType.UINT or \
+                prop_type == PropType.FLOAT or \
+                prop_type == PropType.ENUM or \
+                prop_type == PropType.BITFIELD:
+            size = 2
+        elif prop_type == PropType.INT64 or \
+                prop_type == PropType.UINT64 or \
+                prop_type == PropType.FLOAT64:
+            size = 4
+        return size
 
-        if is_major:
-            return current_omv == self.addresses.version_major, current_omv == self.version_major
-        return current_omv == self.addresses.version_minor, current_omv == self.version_minor
-
-    def check_all_versions(self, current_omv_major, current_omv_minor):
+    def check_versions(self, current_omv_major, current_omv_minor):
         """
         Checks the compatibility of the provided Object Model Version (OMV) major and minor with local definitions.
 
@@ -2735,25 +2755,9 @@ class ModbusObjectModel:
                 Minor Object Model Version read from the device.
         Returns
         -------
-        is_all_versions_ok: bool
-                A boolean indicating if major / minor OMV in addresses.py and modbus_object_model.py correspond to
-                current versions
+        tuple of bool
+            A tuple containing:
+            - A boolean indicating whether the major version corresponds to the Modbus Object Model.
+            - A boolean indicating whether the minor version corresponds to the Modbus Object Model.
         """
-        is_addresses_omv_major_ok, is_types_omv_major_ok = self.check_version(current_omv_major, is_major=True)
-        is_addresses_omv_minor_ok, is_types_omv_minor_ok = self.check_version(current_omv_minor, is_major=False)
-        if not is_addresses_omv_major_ok:
-            print(f"Major version of object model ({self.addresses.version_major}) in addresses.py doesn't match "
-                  f"current version of your device ({self.version_major})")
-        if not is_types_omv_major_ok:
-            print(f"Major version of object model ({self.addresses.version_major}) in modbus_object_model.py doesn't "
-                  f"match current version of your device ({self.version_major})")
-        if not is_addresses_omv_minor_ok:
-            print(f"Minor version of object model ({self.addresses.version_minor}) in addresses.py doesn't match "
-                  f"current version of your device ({self.version_minor})")
-        if not is_types_omv_minor_ok:
-            print(f"Minor version of object model ({self.addresses.version_minor}) in modbus_object_model.py doesn't "
-                  f"match current version of your device ({self.version_minor})")
-        if is_addresses_omv_major_ok and is_types_omv_major_ok and is_addresses_omv_minor_ok and is_types_omv_minor_ok:
-            return True
-        else:
-            return False
+        return current_omv_major == self.version_major, current_omv_minor == self.version_minor

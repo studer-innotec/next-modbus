@@ -1,5 +1,5 @@
 # First check the version compatibility, then read the serial number, the modbus tcp port and earthing
-# scheme relay status. Then read the nominal capacity of the battery from the Non-Volatile Memory (NVM)
+# scheme relay closing state. Then read the nominal capacity of the battery from the Non-Volatile Memory (NVM)
 # Run this example within the 'examples/' folder using 'python ex_rtu_read_param.py' from a CLI after installing
 # nxmodbus package with 'pip install nxmodbus'
 
@@ -17,34 +17,36 @@ ADDRESS_OFFSET = 0  # your modbus address offset as set inside the Next system
 if __name__ == "__main__":
     try:
         serial_port = serial.Serial(SERIAL_PORT_NAME, SERIAL_PORT_BAUDRATE, parity=serial.PARITY_EVEN, timeout=1)
-    except serial.serialutil.SerialException as e:
-        print("Check your serial configuration : ", e)
-    else:
+
         nextModbus = NextModbusRtu(serial_port, ADDRESS_OFFSET, debug=False)
 
         # check the version
         if not nextModbus.check_version():
-            print("WARNING : The version is not correct")
+            raise ValueError("Version check failed")
 
         instance_gateway = 0 # Instance of the gateway. Starts at 0.
         # Read the serial number
         read_value = nextModbus.read_parameter(nextModbus.addresses.device_address_nextgateway + instance_gateway,
                                                nextModbus.addresses.nextgateway_idcard_serialnumber, string_size=8)
-        print('Serial number:', read_value)
+        print('Serial number: ', read_value)
 
         # Read the modbus TCP port used by the TCP modbus server
         read_value = nextModbus.read_parameter(nextModbus.addresses.device_address_nextgateway + instance_gateway,
                                                nextModbus.addresses.nextgateway_modbus_modbustcpport)
-        print('Modbus TCP port:', read_value)
+        print('Modbus TCP port: ', read_value)
 
         # Read the Earthing relay status
         read_value = nextModbus.read_parameter(nextModbus.addresses.device_address_system,
                                                nextModbus.addresses.system_earthingscheme_relayisclosed)
-        print('Earthing scheme relay status:', read_value)
+        print('Earthing scheme relay is closed : ', read_value)
 
         instance_battery = 0  # Instance of the battery. Starts at 0.
-        # Read the nominal capacity of the battery from non-volatile memory
+        # Read the nominal capacity of the first battery from non-volatile memory
         read_value = nextModbus.read_parameter(nextModbus.addresses.device_address_battery + instance_battery,
                                                nextModbus.addresses.battery_battery_nominalcapacity,
                                                read_from_nvm=True)
-        print('Battery nominal capacity from non-volatile memory:', read_value)
+        print('Battery nominal capacity from non-volatile memory: ', read_value)
+    except serial.serialutil.SerialException as e:
+        print(f"Check your serial configuration : {e}")
+    except Exception as e:
+        print(f"Example script returned an error. {e}")
