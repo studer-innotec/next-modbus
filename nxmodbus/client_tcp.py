@@ -40,9 +40,10 @@ class NextModbusTcp:
         """
         if debug is True:
             logging.basicConfig(level=logging.DEBUG)
+
+        self.client = None
         self.addresses = Addresses(offset)
         self.modbus_object_model = ModbusObjectModel(self.addresses)
-        self.offset = offset
         # Init modbus TCP client
         try:
             self.client = ModbusClient(host=server_host, port=server_port, debug=debug)
@@ -59,7 +60,8 @@ class NextModbusTcp:
         -------
         None
         """
-        self.client.close()
+        if self.client:
+            self.client.close()
 
     def read_parameter(self, slave_id, address, prop_type=None, string_size=0, read_from_nvm=False):
         """
@@ -95,28 +97,16 @@ class NextModbusTcp:
         """
         if prop_type is None:
             prop_type = self.modbus_object_model.get_prop_type(slave_id, address)
+        if prop_type is None:
+            logger.error(f"--> Did not find a valid property with slave id {slave_id} and address {address}")
+            return None
         if (prop_type == PropType.STRING or prop_type == PropType.BYTEARRAY) and string_size == 0:
             logger.error("--> string_size parameter mandatory when reading a PropType.STRING")
             return None
         if prop_type == PropType.SIGNAL:
             logger.error("--> PropType.SIGNAL is not readable")
             return None
-        if string_size % 2 == 0:
-            size = int(string_size / 2)
-        else:
-            size = int(string_size / 2) + 1
-        if prop_type == PropType.BOOL:
-            size = 1
-        elif prop_type == PropType.INT or \
-                prop_type == PropType.UINT or \
-                prop_type == PropType.FLOAT or \
-                prop_type == PropType.ENUM or \
-                prop_type == PropType.BITFIELD:
-            size = 2
-        elif prop_type == PropType.INT64 or \
-                prop_type == PropType.UINT64 or \
-                prop_type == PropType.FLOAT64:
-            size = 4
+        size = self.modbus_object_model.get_prop_size(slave_id, prop_type, string_size)
         self.client.unit_id(slave_id)
         if not self.client.is_open():
             if not self.client.open():
@@ -266,7 +256,8 @@ class NextModbusTcp:
         Returns
         -------
         bool
-            True if the addresses class version and the and modbus type class is same as the nx-gateway (minor and major).
+            True if the addresses class version and the and modbus object model class is same as the nx-gateway
+            (minor and major).
         """
         omv_remote = self.read_parameter(self.addresses.device_address_nextgateway,
                                          self.addresses.nextgateway_idcard_objectmodelversion)
@@ -277,4 +268,13 @@ class NextModbusTcp:
             omv_minor = ba[2] << 8 | ba[3]
             logger.debug("--> Gateway OMV version : %s.%s", omv_major, omv_minor)
             logger.debug("--> Class OMV version : %s.%s", self.addresses.version_major, self.addresses.version_minor)
-            return self.modbus_object_model.check_all_versions(current_omv_major=omv_major, current_omv_minor=omv_minor)
+            is_major_ok, is_minor_ok = self.modbus_object_model.check_versions(current_omv_major=omv_major,
+                                                                               current_omv_minor=omv_minor)
+            if not is_major_ok:
+                logger.error(
+                    '--> Major Object Model Version of the device mismatch with modbus_object_model.py version')
+            if not is_minor_ok:
+                logger.error(
+                    '--> Minor Object Model Version of the device mismatch with modbus_object_model.py version')
+            return is_major_ok and is_minor_ok
+        return False
