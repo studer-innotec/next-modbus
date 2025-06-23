@@ -17,8 +17,8 @@ sys.path.append(os.path.abspath('..'))
 from nxmodbus.client_tcp import NextModbusTcp
 
 ADDRESS_OFFSET = 0  # the modbus address offset as set inside the Next system
-SERVER_HOST = "192.168.0.1"  # ipv4 address of nx gateway
-SERVER_PORT = 502  # listening port of nx-interface
+SERVER_HOST = "192.168.0.1"  # ipv4 address of next gateway
+SERVER_PORT = 502  # listening port of next gateway
 
 if __name__ == "__main__":
     try:
