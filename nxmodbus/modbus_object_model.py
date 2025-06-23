@@ -749,9 +749,8 @@ class ModbusObjectModel:
                              prop_type=PropType.FLOAT),
                     Property(address=addresses.battery_batterycycle_periodicalabsorptionmaxduration,
                              prop_type=PropType.UINT),
-                    Property(
-                        address=addresses.battery_batterycycle_timeinreducedfloatingbeforeaskingperiodicalabsorption,
-                        prop_type=PropType.UINT),
+                    Property(address=addresses.battery_batterycycle_timeinreducedfloatingbeforeaskingperiodicalabsorption,
+                             prop_type=PropType.UINT),
                     Property(address=addresses.battery_batterycycle_absorption, prop_type=PropType.BOOL),
                     Property(address=addresses.battery_batterycycle_absorptionconditions, prop_type=PropType.BITFIELD),
                     Property(address=addresses.battery_batterycycle_absorptionvoltage, prop_type=PropType.FLOAT),
@@ -787,19 +786,16 @@ class ModbusObjectModel:
                     Property(address=addresses.battery_batterycycle_transitionreasons, prop_type=PropType.BITFIELD),
                     Property(address=addresses.battery_batterycycle_remainingtimebeforenextabsorptionallowed,
                              prop_type=PropType.UINT),
-                    Property(
-                        address=addresses.battery_batterycycle_remainingamphourdischargedbeforeabsorptionistriggered,
-                        prop_type=PropType.FLOAT),
+                    Property(address=addresses.battery_batterycycle_remainingamphourdischargedbeforeabsorptionistriggered,
+                             prop_type=PropType.FLOAT),
                     Property(address=addresses.battery_batterycycle_remainingtimebeforeabsorptionistriggeredbylowsoc,
                              prop_type=PropType.UINT),
                     Property(address=addresses.battery_batterycycle_remainingtimebeforeabsorptionistriggeredbyvoltage,
                              prop_type=PropType.UINT),
-                    Property(
-                        address=addresses.battery_batterycycle_remainingtimebeforeequalizationistriggeredbytimeperiod,
-                        prop_type=PropType.UINT),
-                    Property(
-                        address=addresses.battery_batterycycle_remainingamphourdischargedbeforeequalizationistriggered,
-                        prop_type=PropType.FLOAT),
+                    Property(address=addresses.battery_batterycycle_remainingtimebeforeequalizationistriggeredbytimeperiod,
+                             prop_type=PropType.UINT),
+                    Property(address=addresses.battery_batterycycle_remainingamphourdischargedbeforeequalizationistriggered,
+                             prop_type=PropType.FLOAT),
                     Property(address=addresses.battery_batterycycle_remainingtimebeforeequalizationistriggeredbylowsoc,
                              prop_type=PropType.UINT),
                     # Object BatteryProtection Modbus Addresses
@@ -814,9 +810,8 @@ class ModbusObjectModel:
                              prop_type=PropType.UINT),
                     Property(address=addresses.battery_batteryprotection_timeperiodforresetingcriticalundervoltagecnt,
                              prop_type=PropType.UINT),
-                    Property(
-                        address=addresses.battery_batteryprotection_criticalundervoltagecntvalueforprohibitautorestart,
-                        prop_type=PropType.UINT),
+                    Property(address=addresses.battery_batteryprotection_criticalundervoltagecntvalueforprohibitautorestart,
+                             prop_type=PropType.UINT),
                     Property(address=addresses.battery_batteryprotection_restartvoltageafterundervoltageoccured,
                              prop_type=PropType.FLOAT),
                     Property(address=addresses.battery_batteryprotection_bloenabled, prop_type=PropType.BOOL),
@@ -2707,7 +2702,9 @@ class ModbusObjectModel:
         for i in range(len(self.objects) - 1):
             current_object = self.objects[i]
             next_object = self.objects[i + 1]
-            if current_object.modbus_device_start_address < modbus_start_address < \
+            # Find the object corresponding to the modbus start address.
+            # modbus_start_address is the address corresponding to current object, added with the instance of the object.
+            if current_object.modbus_device_start_address <= modbus_start_address < \
                     next_object.modbus_device_start_address:
                 for prop in current_object.props:
                     if prop.address == address:
