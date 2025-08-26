@@ -2709,6 +2709,14 @@ class ModbusObjectModel:
                 for prop in current_object.props:
                     if prop.address == address:
                         prop_type = prop.type
+        if prop_type is None:
+            # Check in the last object
+            current_object = self.objects[-1]
+            if current_object.modbus_device_start_address <= modbus_start_address < \
+                self.addresses.device_address_last_valid_address:
+                for prop in current_object.props:
+                    if prop.address == address:
+                        prop_type = prop.type
         return prop_type
 
     @staticmethod
