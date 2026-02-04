@@ -5,6 +5,7 @@ from struct import pack, unpack
 from umodbus.client.serial import rtu
 from umodbus.exceptions import *
 from nxmodbus.addresses import Addresses
+from nxmodbus.modbus_object_model import ModbusObjectModel
 from nxmodbus.proptypes import PropType
 import logging
 
@@ -25,8 +26,8 @@ class NextModbusRtu:
 
     def __init__(self, serial_port, offset=0, debug=False):
         """
-        serial device must be configured with the configuration set with the Nx-Interface.\n
-        Moreover, a timeout of 1 second must be set.\n
+        Serial device must be configured with the configuration set with the next gateway.\n
+        Ensure to set a 1-second timeout for all Modbus requests.\n
         Parameters
         ----------
         serial_port
@@ -40,6 +41,7 @@ class NextModbusRtu:
         if debug is True:
             logging.basicConfig(level=logging.DEBUG)
         self.addresses = Addresses(offset)
+        self.modbus_object_model = ModbusObjectModel(self.addresses)
 
     def __del__(self):
         """
@@ -51,7 +53,7 @@ class NextModbusRtu:
         """
         self.serial_port.close()
 
-    def read_parameter(self, slave_id, address, prop_type, string_size=0, read_from_nvm=False):
+    def read_parameter(self, slave_id, address, prop_type=None, string_size=0, read_from_nvm=False):
         """
         Read a parameter from a targeted device according to the given property type.
 
@@ -67,10 +69,11 @@ class NextModbusRtu:
         address: int
             Register starting address, see "Technical specification - Next Modbus appendix" for
             the complete list of accessible register per device
-        prop_type: PropType
+        prop_type: PropType, optional
             Property type given by the enum found in *proptypes.py*
+            This parameter is retained for backward compatibility and is no longer required.
         string_size: int
-            When selecting String as prop_type, it is mandatory to give the string size.
+            When the type of property is a String, it is mandatory to give the string size.
         read_from_nvm: bool
             Read from non-volatile memory. Slow reading operation to be used only when you want to
             retrieve the default user-set value of a property that was previously overwritten by
@@ -80,87 +83,19 @@ class NextModbusRtu:
         -------
         PropType
             parameter read returned with the given property type.
-
-        Example
-        --------
-        .. code-block:: python
-
-            # First check the version compatibility, then read the serial number, the modbus tcp port and earthing
-            # scheme relay status.
-            # Run this example within the 'examples/' folder using 'python ex_rtu_read_param.py' from a CLI after installing
-            # nxmodbus package with 'pip install nxmodbus'
-
-            import serial
-            import sys
-            import os
-
-            sys.path.append(os.path.abspath('..'))
-            from nxmodbus.client import NextModbus
-            from nxmodbus.proptypes import PropType
-
-            SERIAL_PORT_NAME = 'COM4'       # your serial port interface name
-            SERIAL_PORT_BAUDRATE = 9600     # baudrate used by your serial interface
-            ADDRESS_OFFSET = 0              # your modbus address offset as set inside the Next system
-            INSTANCE = 0                    # The instance of the requested device
-
-            if __name__ == "__main__":
-                try:
-                    serial_port = serial.Serial(SERIAL_PORT_NAME, SERIAL_PORT_BAUDRATE, parity=serial.PARITY_EVEN, timeout=1)
-                except serial.serialutil.SerialException as e:
-                    print("Check your serial configuration : ", e)
-                else:
-                    nextModbus = NextModbus(serial_port, ADDRESS_OFFSET, debug=False)
-
-                    # check the version
-                    if not nextModbus.check_version():
-                        print("WARNING : The version is not correct")
-
-                    # Read the serial number
-                    read_value = nextModbus.read_parameter( nextModbus.addresses.device_address_nextgateway + INSTANCE,
-                                                            nextModbus.addresses.nextgateway_idcard_serialnumber,
-                                                            PropType.STRING,
-                                                            8)
-                    print('Serial number:', read_value)
-
-                    # Read the modbus TCP port used by the TCP modbus server
-                    read_value = nextModbus.read_parameter( nextModbus.addresses.device_address_nextgateway + INSTANCE,
-                                                            nextModbus.addresses.nextgateway_modbus_modbustcpport,
-                                                            PropType.UINT)
-                    print('Modbus TCP port:', read_value)
-
-                    # Read the Earthing relay status
-                    read_value = nextModbus.read_parameter( nextModbus.addresses.device_address_system,
-                                                            nextModbus.addresses.system_earthingscheme_relayisclosed,
-                                                            PropType.BOOL)
-                    print('Earthing scheme relay status:', read_value)
-
-                    # Read the Earthing relay status from non-volatile memory
-                    read_value = nextModbus.read_parameter( nextModbus.addresses.device_address_system,
-                                                            nextModbus.addresses.system_earthingscheme_relayisclosed,
-                                                            PropType.BOOL,
-                                                            read_from_nvm=True)
-                    print('Earthing scheme relay status from non-volatile memory:', read_value)
         """
+        if prop_type is None:
+            prop_type = self.modbus_object_model.get_prop_type(slave_id, address)
+        if prop_type is None:
+            logger.error(f"--> Did not find a valid property with slave id {slave_id} and address {address}")
+            return None
         if (prop_type == PropType.STRING or prop_type == PropType.BYTEARRAY) and string_size == 0:
             logger.error("--> string_size parameter mandatory when reading a PropType.STRING")
+            return None
         if prop_type == PropType.SIGNAL:
             logger.error("--> PropType.SIGNAL is not readable")
-        if string_size % 2 == 0:
-            size = int(string_size / 2)
-        else:
-            size = int(string_size / 2) + 1
-        if prop_type == PropType.BOOL:
-            size = 1
-        elif prop_type == PropType.INT or \
-                prop_type == PropType.UINT or \
-                prop_type == PropType.FLOAT or \
-                prop_type == PropType.ENUM or \
-                prop_type == PropType.BITFIELD:
-            size = 2
-        elif prop_type == PropType.INT64 or \
-                prop_type == PropType.UINT64 or \
-                prop_type == PropType.FLOAT64:
-            size = 4
+            return None
+        size = self.modbus_object_model.get_prop_size(slave_id, prop_type, string_size)
         if read_from_nvm:
             message = rtu.read_input_registers(slave_id=slave_id, starting_address=address, quantity=size)
         else:
@@ -170,9 +105,10 @@ class NextModbusRtu:
             response = rtu.send_message(message, self.serial_port)
         except (ValueError, KeyError) as e:
             logger.error(
-                "--> Please match your configurations and the values set with the Nx-Interface")
+                "--> Please match your configurations and the values set with the next gateway")
         except IllegalDataAddressError:
-            logger.error("--> Illegal Data Address Error : please check the \"Studer Modbus Addresses\" and select a valid address")
+            logger.error(
+                "--> Illegal Data Address Error : please check the \"Studer Modbus Addresses\" and select a valid address")
         except IllegalDataValueError:
             logger.error("--> Illegal Data Value Error : please check the PropType or ensure that your system is ready")
         except ModbusError as e:
@@ -213,7 +149,7 @@ class NextModbusRtu:
             else:
                 raise Exception("Data type not supported")
 
-    def write_parameter(self, slave_id, address, value, prop_type):
+    def write_parameter(self, slave_id, address, value, prop_type=None):
         """
          Write a parameter value into a targeted device.
 
@@ -231,77 +167,17 @@ class NextModbusRtu:
             the complete list of accessible register per device.
         value
             The value to write at the given address.
-        prop_type
-            Property type
+        prop_type: PropType, optional
+            Property type given by the enum found in *proptypes.py*
+            This parameter is retained for backward compatibility and is no longer required.
 
         Returns
         -------
         int
             Quantity of written registers
-
-        Example
-        --------
-        .. code-block:: python
-
-            # First check the version compatibility, then write the HMI display brightness, the GUI unlock code and
-            # the nominal frequency of the tri-phased inverters.
-            # Run this example within the 'examples/' folder using 'python ex_rtu_write_param.py' from a CLI after installing
-            # nxmodbus package with 'pip install nxmodbus'
-
-            import serial
-            import sys
-            import os
-
-            sys.path.append(os.path.abspath('..'))
-            from nxmodbus.client import NextModbus
-            from nxmodbus.proptypes import PropType
-
-            SERIAL_PORT_NAME = 'COM4'       # your serial port interface name
-            SERIAL_PORT_BAUDRATE = 9600     # baudrate used by your serial interface
-            ADDRESS_OFFSET = 0              # your modbus address offset as set inside the Next system
-            INSTANCE = 0                    # The instance of the requested device
-
-            if __name__ == "__main__":
-                try:
-                    serial_port = serial.Serial(SERIAL_PORT_NAME, SERIAL_PORT_BAUDRATE, parity=serial.PARITY_EVEN, timeout=1)
-                except serial.serialutil.SerialException as e:
-                    print("Check your serial configuration : ", e)
-                else:
-                    nextModbus = NextModbus(serial_port, ADDRESS_OFFSET, debug=False)
-
-                    value = True  # Earthing scheme disable check at TRUE
-                    echo = nextModbus.write_parameter(  nextModbus.addresses.device_address_system + INSTANCE,
-                                                        nextModbus.addresses.system_earthingscheme_disablecheck,
-                                                        value,
-                                                        PropType.BOOL)
-                    assert echo == 1  # a value of 1 is expected on write action, represent the number of registers written
-                    print('Number of registers written:', echo)
-
-                    value = 20  # Brightness level at 10
-                    echo = nextModbus.write_parameter(  nextModbus.addresses.device_address_nextgateway + INSTANCE,
-                                                        nextModbus.addresses.nextgateway_hmidisplay_brightness,
-                                                        value,
-                                                        PropType.UINT)
-
-                    assert echo == 2  # a value of 2 is expected on write action, represent the number of registers written
-                    print('Number of registers written:', echo)
-
-                    value = "12345"  # Unlock code
-                    echo = nextModbus.write_parameter(  nextModbus.addresses.device_address_nextgateway + INSTANCE,
-                                                        nextModbus.addresses.nextgateway_hmidisplay_unlockcode,
-                                                        value,
-                                                        PropType.STRING)
-                    assert echo == 3  # a value of 3 is expected on write action, represent the number of registers written
-                    print('Number of registers written:', echo)
-
-                    value = 50.2  # Nominal frequency of the tri-phased inverters
-                    echo = nextModbus.write_parameter(  nextModbus.addresses.device_address_system,
-                                                        nextModbus.addresses.system_triphaseinverter_nominalfrequency,
-                                                        value,
-                                                        PropType.FLOAT)
-                    assert echo == 2  # a value of 3 is expected on write action, represent the number of registers written
-                    print('Number of registers written:', echo)
         """
+        if prop_type is None:
+            prop_type = self.modbus_object_model.get_prop_type(slave_id, address)
         if prop_type == PropType.BOOL or prop_type == PropType.SIGNAL:
             size = 1
             ba = b'\x00' + pack('>?', value)
@@ -326,7 +202,7 @@ class NextModbusRtu:
             size = 4
             ba = pack('>d', value)
         elif prop_type == PropType.STRING:
-            ba = bytes(value,'UTF-8')
+            ba = bytes(value, 'UTF-8')
             if len(value) % 2 == 0:
                 size = int(len(value) / 2)
             else:
@@ -344,9 +220,10 @@ class NextModbusRtu:
             response = rtu.send_message(message, self.serial_port)
         except (ValueError, KeyError) as e:
             logger.error(
-                "--> Please match your configurations and the values set with the Nx-Interface")
+                "--> Please match your configurations and the values set with the next gateway")
         except IllegalDataAddressError:
-            logger.error("--> Illegal Data Address Error : please check the \"Studer Modbus Addresses\" and select a valid address")
+            logger.error(
+                "--> Illegal Data Address Error : please check the \"Studer Modbus Addresses\" and select a valid address")
         except IllegalDataValueError:
             logger.error("--> Illegal Data Value Error : please check the PropType or ensure that your system is ready")
         except ModbusError as e:
@@ -363,22 +240,18 @@ class NextModbusRtu:
         Note
         -----
         A different major version means that the compatibility is broken and it is recommanded to update
-        the addresses list.
+        the addresses list and modbus type list.
         A different minor version means that small modifications have been made. Some addresses could be
         removed or added.
 
         Returns
         -------
         bool
-            True if the addresses class version is same as the nx-gateway (minor and major).
-
-        See also
-        --------
-        None
+            True if the addresses class version and the and modbus object model class is same as the nx-gateway
+            (minor and major).
         """
         omv_remote = self.read_parameter(self.addresses.device_address_nextgateway,
-                                            self.addresses.nextgateway_idcard_objectmodelversion,
-                                            PropType.UINT)
+                                         self.addresses.nextgateway_idcard_objectmodelversion)
         if omv_remote is not None:
             ba = pack('>I', omv_remote)
             unpack('>HH', ba)
@@ -386,5 +259,13 @@ class NextModbusRtu:
             omv_minor = ba[2] << 8 | ba[3]
             logger.debug("--> Gateway OMV version : %s.%s", omv_major, omv_minor)
             logger.debug("--> Class OMV version : %s.%s", self.addresses.version_major, self.addresses.version_minor)
-            return omv_major == self.addresses.version_major and \
-                    omv_minor == self.addresses.version_minor
+            is_major_ok, is_minor_ok = self.modbus_object_model.check_versions(current_omv_major=omv_major,
+                                                                               current_omv_minor=omv_minor)
+            if not is_major_ok:
+                logger.error(
+                    '--> Major Object Model Version of the device mismatch with modbus_object_model.py version')
+            if not is_minor_ok:
+                logger.error(
+                    '--> Minor Object Model Version of the device mismatch with modbus_object_model.py version')
+            return is_major_ok and is_minor_ok
+        return False

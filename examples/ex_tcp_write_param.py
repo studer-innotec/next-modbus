@@ -1,5 +1,5 @@
-# First check the version compatibility, then write the HMI display brightness, the GUI unlock code and 
-# the nominal frequency of the tri-phased inverters.
+# First check the version compatibility, then write the HMI display brightness,
+# set the basic user level code for modbus, and send debug data to Studer Innotec.
 # Run this example within the 'examples/' folder using 'python ex_tcp_write_param.py' from a CLI after installing
 # nxmodbus package with 'pip install nxmodbus'
 
@@ -8,57 +8,42 @@ import os
 
 sys.path.append(os.path.abspath('..'))
 from nxmodbus.client_tcp import NextModbusTcp
-from nxmodbus.proptypes import PropType
 
-ADDRESS_OFFSET = 0                                      # the modbus address offset as set inside the Next system
-INSTANCE = 0                                            # The instance of the requested device
-SERVER_HOST = "192.168.0.100"                           # ipv4 address of nx-interface
-SERVER_PORT = 502                                       # listening port of nx-interface
+ADDRESS_OFFSET = 0  # the modbus address offset as set inside the Next system
+INSTANCE = 0  # The instance of the requested device
+SERVER_HOST = "192.168.0.1"  # ipv4 address of next gateway
+SERVER_PORT = 502  # listening port of next gateway
 
 if __name__ == "__main__":
+    try:
+        nextModbus = NextModbusTcp(SERVER_HOST, SERVER_PORT, ADDRESS_OFFSET, debug=False)
 
-    nextModbus = NextModbusTcp(SERVER_HOST, SERVER_PORT, ADDRESS_OFFSET, debug=False)
-    
-    # check the version
-    if not nextModbus.check_version():
-        print("WARNING : The version is not correct")
+        # check the version
+        if not nextModbus.check_version():
+            raise ValueError("Version check failed")
 
-    value = True  # Earthing scheme disable check at TRUE
-    ok = nextModbus.write_parameter(nextModbus.addresses.device_address_system + INSTANCE,
-                                    nextModbus.addresses.system_earthingscheme_disablecheck,
-                                    value,
-                                    PropType.BOOL)
-    if ok:
-        print('Disable check written successfully')
-    else:
-        print('Error when writing disable check')
+        instance_gateway = 0  # Instance of the gateway. Starts at 0.
+        value = 10  # Brightness level at 10
+        echo = nextModbus.write_parameter(nextModbus.addresses.device_address_nextgateway + instance_gateway,
+                                          nextModbus.addresses.nextgateway_hmidisplay_brightness,
+                                          value)
 
-    value = 10  # Brightness level at 10
-    ok = nextModbus.write_parameter(nextModbus.addresses.device_address_nextgateway + INSTANCE,
-                                    nextModbus.addresses.nextgateway_hmidisplay_brightness,
-                                    value,
-                                    PropType.UINT)
-    if ok:
-        print('Brightness written successfully')
-    else:
-        print('Error when writing brightness')
+        assert echo == 2  # a value of 2 is expected on write action, represent the number of registers written
+        print('Number of registers written: ', echo)
 
-    value = "12345"  # Unlock code
-    ok = nextModbus.write_parameter( nextModbus.addresses.device_address_nextgateway + INSTANCE,
-                                    nextModbus.addresses.nextgateway_hmidisplay_unlockcode,
-                                    value,
-                                    PropType.STRING)
-    if ok:
-        print('Unlock code written successfully')
-    else:
-        print('Error when writing unlock code')
+        value = "815566"  # Basic user level code for modbus.
+        echo = nextModbus.write_parameter(nextModbus.addresses.device_address_nextgateway + instance_gateway,
+                                          nextModbus.addresses.nextgateway_modbususerlevel_userlevelcodeinput,
+                                          value)
+        assert echo == 3  # a value of 3 is expected on write action, represent the number of registers written
+        print('Number of registers written: ', echo)
 
-    value = 50.2  # Nominal frequency of the tri-phased inverters
-    ok = nextModbus.write_parameter(nextModbus.addresses.device_address_system,
-                                    nextModbus.addresses.system_triphaseinverter_nominalfrequency,
-                                    value,
-                                    PropType.FLOAT)
-    if ok:
-        print('Nominal frequency written successfully')
-    else:
-        print('Error when writing nominal frequency')
+        value = 1  # Signal property, we set the value to 1.
+        echo = nextModbus.write_parameter(nextModbus.addresses.device_address_nextgateway + instance_gateway,
+                                          nextModbus.addresses.nextgateway_webportal_uploaddebugdata,
+                                          value)
+        # a value of 1 is expected on write action, represent the number of registers written for a bool / signal
+        assert echo == 1
+        print('Number of registers written: ', echo)
+    except Exception as e:
+        print(f"Example script returned an error. {e}")
