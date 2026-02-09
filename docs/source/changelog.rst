@@ -16,3 +16,11 @@ Changelog
 
 * Update modbus addresses for object model 10.127.
 * Minor improvements for examples.
+
+0.4.0 (09-02-2026)
+++++++++++++++++++
+
+* Update modbus addresses for object model 10.153.
+* Add examples for multiple instances.
+* Improve examples for read/write.
+* Improve object model handling.
