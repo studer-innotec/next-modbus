@@ -20,7 +20,7 @@ class ModbusObjectGroup:
 class ModbusObjectModel:
     def __init__(self, addresses):
         self.version_major = 10
-        self.version_minor = 153
+        self.version_minor = 154
         self.addresses = addresses
         if not self.addresses.version_major == self.version_major :
             raise ValueError(f"Version mismatch. Modbus Object Model major version {self.version_major} != addresses"
