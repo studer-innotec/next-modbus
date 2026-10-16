@@ -20,7 +20,7 @@ class ModbusObjectGroup:
 class ModbusObjectModel:
     def __init__(self, addresses):
         self.version_major = 10
-        self.version_minor = 162
+        self.version_minor = 165
         self.addresses = addresses
         if not self.addresses.version_major == self.version_major :
             raise ValueError(f"Version mismatch. Modbus Object Model major version {self.version_major} != addresses"
@@ -2763,7 +2763,7 @@ class ModbusObjectModel:
                     Property(address=addresses.nextsolarcharger_nextsolarcharger_errors, prop_type=PropType.BITFIELD),
                     Property(address=addresses.nextsolarcharger_nextsolarcharger_externalpowersupplycurrent,
                              prop_type=PropType.FLOAT),
-                    Property(address=addresses.nextsolarcharger_nextsolarcharger_temppcbpower,
+                    Property(address=addresses.nextsolarcharger_nextsolarcharger_fandetectionvoltage,
                              prop_type=PropType.FLOAT),
                     Property(address=addresses.nextsolarcharger_nextsolarcharger_temppcbcmd, prop_type=PropType.FLOAT),
                     Property(address=addresses.nextsolarcharger_nextsolarcharger_tempmcu, prop_type=PropType.FLOAT),
