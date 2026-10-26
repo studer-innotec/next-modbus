@@ -24,3 +24,8 @@ Changelog
 * Add examples for multiple instances.
 * Improve examples for read/write.
 * Improve object model handling.
+
+0.5.0 (26-10-2026)
+++++++++++++++++++
+
+* Update modbus addresses for object model 10.165.
